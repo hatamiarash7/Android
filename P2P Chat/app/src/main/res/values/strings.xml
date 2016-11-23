@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">آماتا</string>
+    <string name="title_activity_main">آماتا</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">تنظیمات</string>
+    <string name="service_name">سرویس گفتگو</string>
+    <string name="title_activity_chat_room">اتاق گفتگو</string>
+    <string name="chat_service">سرویس گفتگو</string>
+    <string name="search_chatrooms">جستجوی اتاق گفتگو</string>
+    <string name="btn_send">ارسال</string>
+    <string name="txt_hint">پیام</string>
+    <string name="title_activity_chat">گفتگو</string>
+    <string name="uname">نام مستعار</string>
+    <string name="start">شروع</string>
+    <string name="gname">نام گروه را وارد کنید</string>
+    <string name="search">جستجو</string>
+</resources>
