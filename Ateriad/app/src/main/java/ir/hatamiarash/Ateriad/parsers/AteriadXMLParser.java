@@ -10,11 +10,8 @@ import java.util.List;
 import ir.hatamiarash.Ateriad.model.Ateriad;
 
 public class AteriadXMLParser {
-
     public static List<Ateriad> parseFeed(String content) {
-
         try {
-
             boolean inDataItemTag = false;
             String currentTagName = "";
             Ateriad ateriad = null;
@@ -23,11 +20,8 @@ public class AteriadXMLParser {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser parser = factory.newPullParser();
             parser.setInput(new StringReader(content));
-
             int eventType = parser.getEventType();
-
             while (eventType != XmlPullParser.END_DOCUMENT) {
-
                 switch (eventType) {
                     case XmlPullParser.START_TAG:
                         currentTagName = parser.getName();
@@ -37,14 +31,12 @@ public class AteriadXMLParser {
                             ateriadList.add(ateriad);
                         }
                         break;
-
                     case XmlPullParser.END_TAG:
                         if (parser.getName().equals("Employee")) {
                             inDataItemTag = false;
                         }
                         currentTagName = "";
                         break;
-
                     case XmlPullParser.TEXT:
                         if (inDataItemTag && ateriad != null) {
                             switch (currentTagName) {
@@ -74,18 +66,12 @@ public class AteriadXMLParser {
                         }
                         break;
                 }
-
                 eventType = parser.next();
-
             }
-
             return ateriadList;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
-
     }
-
 }

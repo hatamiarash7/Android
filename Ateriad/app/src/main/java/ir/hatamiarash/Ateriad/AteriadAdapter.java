@@ -20,17 +20,14 @@ import java.util.List;
 import ir.hatamiarash.Ateriad.model.Ateriad;
 
 public class AteriadAdapter extends ArrayAdapter<Ateriad> {
-
     private Context context;
     private List<Ateriad> ateriadList;
-
     private LruCache<Integer, Bitmap> imageCache;
 
     public AteriadAdapter(Context context, int resource, List<Ateriad> objects) {
         super(context, resource, objects);
         this.context = context;
         this.ateriadList = objects;
-
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         final int cacheSize = maxMemory / 8;
         imageCache = new LruCache<>(cacheSize);
@@ -38,12 +35,9 @@ public class AteriadAdapter extends ArrayAdapter<Ateriad> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        LayoutInflater inflater =
-                (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.item_ateriad, parent, false);
-
-        //Display flower name in the TextView widget
+        //Display informations in the TextView widgets
         Ateriad ateriad = ateriadList.get(position);
         TextView FirstName = (TextView) view.findViewById(R.id.textView1);
         TextView LastName = (TextView) view.findViewById(R.id.textView2);
@@ -53,8 +47,7 @@ public class AteriadAdapter extends ArrayAdapter<Ateriad> {
         LastName.setText(ateriad.getLastName());
         job.setText(ateriad.getjob());
         phone.setText(" - " + ateriad.getphone());
-
-        //Display flower photo in ImageView widget
+        //Display photo in ImageView widget
         Bitmap bitmap = imageCache.get(ateriad.getid());
         if (bitmap != null) {
             ImageView image = (ImageView) view.findViewById(R.id.imageView1);
@@ -63,11 +56,9 @@ public class AteriadAdapter extends ArrayAdapter<Ateriad> {
             AteriadAndView container = new AteriadAndView();
             container.ateriad = ateriad;
             container.view = view;
-
             ImageLoader loader = new ImageLoader();
             loader.execute(container);
         }
-
         return view;
     }
 
@@ -78,13 +69,10 @@ public class AteriadAdapter extends ArrayAdapter<Ateriad> {
     }
 
     private class ImageLoader extends AsyncTask<AteriadAndView, Void, AteriadAndView> {
-
         @Override
         protected AteriadAndView doInBackground(AteriadAndView... params) {
-
             AteriadAndView container = params[0];
             Ateriad ateriad = container.ateriad;
-
             try {
                 String imageUrl = MainActivity.PHOTOS_BASE_URL + ateriad.getPhoto();
                 InputStream in = (InputStream) new URL(imageUrl).getContent();
@@ -96,7 +84,6 @@ public class AteriadAdapter extends ArrayAdapter<Ateriad> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -107,7 +94,5 @@ public class AteriadAdapter extends ArrayAdapter<Ateriad> {
 //			result.flower.setBitmap(result.bitmap);
             imageCache.put(result.ateriad.getid(), result.bitmap);
         }
-
     }
-
 }

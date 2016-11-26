@@ -6,39 +6,31 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ir.hatamiarash.Ateriad.model.Ateriad;
-import ir.hatamiarash.Ateriad.parsers.AteriadJSONParser;
 import ir.hatamiarash.Ateriad.parsers.AteriadXMLParser;
 
 public class MainActivity extends ListActivity {
-
-    public static final String PHOTOS_BASE_URL =
-            "http://zimia.arash-hatami.ir/photo/";
-
-    TextView output;
+    public static final String PHOTOS_BASE_URL = "http://zimia.arash-hatami.ir/photo/";
     ProgressBar pb;
     List<MyTask> tasks;
-
     List<Ateriad> ateriadList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         pb = (ProgressBar) findViewById(R.id.progressBar1);
         pb.setVisibility(View.INVISIBLE);
-
         tasks = new ArrayList<>();
     }
 
@@ -52,7 +44,14 @@ public class MainActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_get_data) {
             if (isOnline()) {
-                requestData("http://zimia.arash-hatami.ir/secure/ateriad.xml");
+                // for fix the connection to refuse use of cache we can send a random number to url
+                // and webclient think that is a new url. we can use time ( random int )
+                // maaaaaaaaaaaaaaaaaaaadaresh ro gaeidam nim saat dahan mano asfalt kard
+                Time now = new Time();
+                now.setToNow();
+                String time = "" + now.hour + now.minute + now.second;
+                int time_int = Integer.parseInt(time);
+                requestData("http://zimia.arash-hatami.ir/secure/ateriad.xml" + "?unused=" + time_int);
             } else {
                 Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
             }
@@ -82,7 +81,6 @@ public class MainActivity extends ListActivity {
     }
 
     private class MyTask extends AsyncTask<String, String, List<Ateriad>> {
-
         @Override
         protected void onPreExecute() {
             if (tasks.size() == 0) {
@@ -93,7 +91,6 @@ public class MainActivity extends ListActivity {
 
         @Override
         protected List<Ateriad> doInBackground(String... params) {
-
             String content = HttpManager.getData(params[0], "hatamiarash7", "3920512197");
             //ateriadList = AteriadJSONParser.parseFeed(content);
             ateriadList = AteriadXMLParser.parseFeed(content);
@@ -102,22 +99,16 @@ public class MainActivity extends ListActivity {
 
         @Override
         protected void onPostExecute(List<Ateriad> result) {
-
             tasks.remove(this);
             if (tasks.size() == 0) {
                 pb.setVisibility(View.INVISIBLE);
             }
-
             if (result == null) {
                 Toast.makeText(MainActivity.this, "Web service not available", Toast.LENGTH_LONG).show();
                 return;
             }
-
             ateriadList = result;
             updateDisplay();
-
         }
-
     }
-
 }

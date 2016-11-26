@@ -3,7 +3,6 @@ package ir.hatamiarash.Ateriad.model;
 import android.graphics.Bitmap;
 
 public class Ateriad {
-
     private int id;
     private String FirstName;
     private String LastName;
