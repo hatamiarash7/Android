@@ -1,4 +1,4 @@
-package ir.hatamiarash.Ateriad;
+package ir.hatamiarash.ZiMia;
 
 import android.util.Base64;
 import android.util.Log;

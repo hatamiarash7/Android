@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/fastfood_food_imageView1"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@string/flower_name_placeholder"
+        android:paddingRight="5dp" />
+
+    <TextView
+        android:id="@+id/fastfood_food_textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/flower_name_placeholder"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignTop="@+id/fastfood_food_imageView1"
+        android:layout_toRightOf="@+id/fastfood_food_imageView1"
+        android:layout_toEndOf="@+id/fastfood_food_imageView1"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp" />
+
+    <TextView
+        android:id="@+id/fastfood_food_textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/flower_name_placeholder"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignBaseline="@+id/fastfood_food_textView1"
+        android:layout_alignBottom="@+id/fastfood_food_textView1"
+        android:layout_toRightOf="@+id/fastfood_food_textView1"
+        android:layout_toEndOf="@+id/fastfood_food_textView1"
+        android:paddingLeft="7dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fastfood_food_textView3"
+        android:layout_below="@+id/fastfood_food_textView1"
+        android:layout_toRightOf="@+id/fastfood_food_imageView1"
+        android:layout_toEndOf="@+id/fastfood_food_imageView1"
+        android:paddingLeft="5dp" />
+
+</RelativeLayout>

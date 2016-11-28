@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.1"
 
     defaultConfig {
-        applicationId "ir.hatamiarash.Ateriad"
+        applicationId "ir.hatamiarash.ZiMia"
         minSdkVersion 14
         targetSdkVersion 19
     }
