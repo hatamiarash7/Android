@@ -1,4 +1,4 @@
-package com.example.androidhive;
+package ir.hatamiarash.mysql;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -19,7 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditMarkets extends Activity {
+public class EditFastFoods extends Activity {
 
     EditText txtName;
     EditText txtOpenHour;
@@ -27,8 +27,8 @@ public class EditMarkets extends Activity {
     EditText txtAddress;
     EditText txtPicture;
     EditText txtCreatedAt;
-    Button btnSaveMarket;
-    Button btnDeleteMarket;
+    Button btnSaveFastFood;
+    Button btnDeleteFastFood;
 
     String pid;
 
@@ -39,17 +39,17 @@ public class EditMarkets extends Activity {
     JSONParser jsonParser = new JSONParser();
 
     // single product url
-    private static final String url_market_detials = "http://zimia.ir/get_market_details.php";
+    private static final String url_fastfood_detials = "http://zimia.ir/get_fastfood_details.php";
 
     // url to update product
-    private static final String url_update_market = "http://zimia.ir/update_market.php";
+    private static final String url_update_fastfood = "http://zimia.ir/update_fastfood.php";
 
     // url to delete product
-    private static final String url_delete_market = "http://zimia.ir/delete_market.php";
+    private static final String url_delete_fastfood = "http://zimia.ir/delete_fastfood.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
-    private static final String TAG_MARKET = "market";
+    private static final String TAG_FASTFOOD = "fastfood";
     private static final String TAG_PID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_OPENHOUR = "open_hour";
@@ -60,11 +60,11 @@ public class EditMarkets extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_market);
+        setContentView(R.layout.edit_fastfood);
 
         // save button
-        btnSaveMarket = (Button) findViewById(R.id.btnSaveMarket);
-        btnDeleteMarket = (Button) findViewById(R.id.btnDeleteMarket);
+        btnSaveFastFood = (Button) findViewById(R.id.btnSaveFastFood);
+        btnDeleteFastFood = (Button) findViewById(R.id.btnDeleteFastFood);
 
         // getting product details from intent
         Intent i = getIntent();
@@ -73,25 +73,25 @@ public class EditMarkets extends Activity {
         pid = i.getStringExtra(TAG_PID);
 
         // Getting complete product details in background thread
-        new GetMarketDetails().execute();
+        new GetFastFoodDetails().execute();
 
         // save button click event
-        btnSaveMarket.setOnClickListener(new View.OnClickListener() {
+        btnSaveFastFood.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
                 // starting background task to update product
-                new SaveMarketDetails().execute();
+                new SaveFastFoodDetails().execute();
             }
         });
 
         // Delete button click event
-        btnDeleteMarket.setOnClickListener(new View.OnClickListener() {
+        btnDeleteFastFood.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
                 // deleting product in background thread
-                new DeleteMarket().execute();
+                new DeleteFastFood().execute();
             }
         });
 
@@ -100,7 +100,7 @@ public class EditMarkets extends Activity {
     /**
      * Background Async Task to Get complete product details
      */
-    class GetMarketDetails extends AsyncTask<String, String, String> {
+    class GetFastFoodDetails extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -108,8 +108,8 @@ public class EditMarkets extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(EditMarkets.this);
-            pDialog.setMessage("Loading Market details. Please wait...");
+            pDialog = new ProgressDialog(EditFastFoods.this);
+            pDialog.setMessage("Loading FastFood details. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -133,17 +133,17 @@ public class EditMarkets extends Activity {
                         // getting product details by making HTTP request
                         // Note that product details url will use GET request
                         JSONObject json = jsonParser.makeHttpRequest(
-                                url_market_detials, "GET", params);
+                                url_fastfood_detials, "GET", params);
 
                         // check your log for json response
-                        Log.d("Single Market Details", json.toString());
+                        Log.d("Single FastFood Details", json.toString());
 
                         // json success tag
                         success = json.getInt(TAG_SUCCESS);
                         if (success == 1) {
                             // successfully received product details
                             JSONArray productObj = json
-                                    .getJSONArray(TAG_MARKET); // JSON Array
+                                    .getJSONArray(TAG_FASTFOOD); // JSON Array
 
                             // get first product object from JSON Array
                             JSONObject product = productObj.getJSONObject(0);
@@ -188,7 +188,7 @@ public class EditMarkets extends Activity {
     /**
      * Background Async Task to  Save product Details
      */
-    class SaveMarketDetails extends AsyncTask<String, String, String> {
+    class SaveFastFoodDetails extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -196,8 +196,8 @@ public class EditMarkets extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(EditMarkets.this);
-            pDialog.setMessage("Saving Market ...");
+            pDialog = new ProgressDialog(EditFastFoods.this);
+            pDialog.setMessage("Saving FastFood ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -226,7 +226,7 @@ public class EditMarkets extends Activity {
 
             // sending modified data through http request
             // Notice that update product url accepts POST method
-            JSONObject json = jsonParser.makeHttpRequest(url_update_market,
+            JSONObject json = jsonParser.makeHttpRequest(url_update_fastfood,
                     "POST", params);
 
             // check json success tag
@@ -262,7 +262,7 @@ public class EditMarkets extends Activity {
     /*****************************************************************
      * Background Async Task to Delete Product
      */
-    class DeleteMarket extends AsyncTask<String, String, String> {
+    class DeleteFastFood extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -270,8 +270,8 @@ public class EditMarkets extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(EditMarkets.this);
-            pDialog.setMessage("Deleting Market ...");
+            pDialog = new ProgressDialog(EditFastFoods.this);
+            pDialog.setMessage("Deleting FastFood ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -291,10 +291,10 @@ public class EditMarkets extends Activity {
 
                 // getting product details by making HTTP request
                 JSONObject json = jsonParser.makeHttpRequest(
-                        url_delete_market, "POST", params);
+                        url_delete_fastfood, "POST", params);
 
                 // check your log for json response
-                Log.d("Delete Market", json.toString());
+                Log.d("Delete FastFood", json.toString());
 
                 // json success tag
                 success = json.getInt(TAG_SUCCESS);

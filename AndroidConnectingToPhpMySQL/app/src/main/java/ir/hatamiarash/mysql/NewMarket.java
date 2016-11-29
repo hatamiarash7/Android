@@ -1,10 +1,11 @@
-package com.example.androidhive;
+package ir.hatamiarash.mysql;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewFastFood extends Activity {
+public class NewMarket extends Activity {
 
     // Progress Dialog
     private ProgressDialog pDialog;
@@ -31,7 +32,7 @@ public class NewFastFood extends Activity {
     EditText inputPicture;
 
     // url to create new product
-    private static String url_create_fastfood = "http://zimia.ir/create_fastfood.php";
+    private static String url_create_market = "http://zimia.ir/create_market.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -39,25 +40,26 @@ public class NewFastFood extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_fastfood);
+
+        setContentView(R.layout.add_market);
 
         // Edit Text
-        inputName = (EditText) findViewById(R.id.NewNameFastFood);
-        inputOpenHour = (EditText) findViewById(R.id.NewOpenHourFastFood);
-        inputCloseHour = (EditText) findViewById(R.id.NewCloseHourFastFood);
-        inputAddress = (EditText) findViewById(R.id.NewAddressFastFood);
-        inputPicture = (EditText) findViewById(R.id.NewPictureFastFood);
+        inputName = (EditText) findViewById(R.id.NewNameMarket);
+        inputOpenHour = (EditText) findViewById(R.id.NewOpenHourMarket);
+        inputCloseHour = (EditText) findViewById(R.id.NewCloseHourMarket);
+        inputAddress = (EditText) findViewById(R.id.NewAddressMarket);
+        inputPicture = (EditText) findViewById(R.id.NewPictureMarket);
 
         // Create button
-        Button btnCreateFastFood = (Button) findViewById(R.id.btnCreateProductFastFood);
+        Button btnCreateMarket = (Button) findViewById(R.id.btnCreateMarket);
 
         // button click event
-        btnCreateFastFood.setOnClickListener(new View.OnClickListener() {
+        btnCreateMarket.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 // creating new product in background thread
-                new CreateNewFastFood().execute();
+                new CreateNewMarket().execute();
             }
         });
     }
@@ -65,7 +67,7 @@ public class NewFastFood extends Activity {
     /**
      * Background Async Task to Create new product
      */
-    class CreateNewFastFood extends AsyncTask<String, String, String> {
+    class CreateNewMarket extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -73,8 +75,8 @@ public class NewFastFood extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(NewFastFood.this);
-            pDialog.setMessage("Creating FastFood ..");
+            pDialog = new ProgressDialog(NewMarket.this);
+            pDialog.setMessage("Creating Market ..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -100,7 +102,7 @@ public class NewFastFood extends Activity {
 
             // getting JSON Object
             // Note that create product url accepts POST method
-            JSONObject json = jsonParser.makeHttpRequest(url_create_fastfood,
+            JSONObject json = jsonParser.makeHttpRequest(url_create_market,
                     "POST", params);
 
             // check log cat fro response
@@ -112,7 +114,7 @@ public class NewFastFood extends Activity {
 
                 if (success == 1) {
                     // successfully created product
-                    Intent i = new Intent(getApplicationContext(), AllFastFoods.class);
+                    Intent i = new Intent(getApplicationContext(), AllMarkets.class);
                     startActivity(i);
 
                     // closing this screen
