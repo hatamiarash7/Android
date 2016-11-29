@@ -4,7 +4,9 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="8" />
+
+    <!--  Internet Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:configChanges="keyboardHidden|orientation"
@@ -22,11 +24,6 @@
             </intent-filter>
         </activity>
 
-        <!-- All Product Activity -->
-        <activity
-            android:name=".AllProductsActivity"
-            android:label="All Products" >
-        </activity>
 
         <activity
             android:name=".AllResturans"
@@ -45,18 +42,34 @@
 
         <!-- Add Product Activity -->
         <activity
-            android:name=".NewProductActivity"
-            android:label="Add New Product" >
+            android:name=".NewFastFood"
+            android:label="Add New FastFood" >
+        </activity>
+        <activity
+            android:name=".NewMarket"
+            android:label="Add New Market" >
+        </activity>
+        <activity
+            android:name=".NewResturan"
+            android:label="Add New Resturan" >
         </activity>
 
         <!-- Edit Product Activity -->
         <activity
-            android:name=".EditProductActivity"
-            android:label="Edit Product" >
+            android:name=".EditFastFoods"
+            android:label="Edit FastFood" >
+        </activity>
+
+        <activity
+            android:name=".EditMarkets"
+            android:label="Edit Market" >
+        </activity>
+
+        <activity
+            android:name=".EditResturans"
+            android:label="Edit Resturan" >
         </activity>
     </application>
 
-    <!--  Internet Permissions -->
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

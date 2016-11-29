@@ -34,7 +34,7 @@ public class AllResturans extends ListActivity {
     ArrayList<HashMap<String, String>> resturanList;
 
     // url to get all products list
-    private static String url_all_resturans = "http://zimia.ir/get_all_resturans.php";
+    static String url_all_resturans = "http://zimia.ir/get_all_resturans.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -186,15 +186,17 @@ public class AllResturans extends ListActivity {
                      * */
                     ListAdapter adapter = new SimpleAdapter(
                             AllResturans.this, resturanList,
-                            R.layout.list_item, new String[]{TAG_PID,
-                            TAG_NAME},
-                            new int[]{R.id.pid, R.id.name});
+                            R.layout.list_item, new String[]{
+                            TAG_PID,
+                            TAG_NAME
+                    },
+                            new int[]{
+                                    R.id.pid, R.id.name
+                            });
                     // updating listview
                     setListAdapter(adapter);
                 }
             });
-
         }
-
     }
 }

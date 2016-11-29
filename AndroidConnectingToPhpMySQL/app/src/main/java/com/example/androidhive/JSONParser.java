@@ -41,7 +41,7 @@ public class JSONParser {
         try {
 
             // check for request method
-            if (method == "POST") {
+            if (method.equals("POST")) {
                 // request method is POST
                 // defaultHttpClient
                 DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -52,7 +52,7 @@ public class JSONParser {
                 HttpEntity httpEntity = httpResponse.getEntity();
                 is = httpEntity.getContent();
 
-            } else if (method == "GET") {
+            } else if (method.equals("GET")) {
                 // request method is GET
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 String paramString = URLEncodedUtils.format(params, "utf-8");
@@ -74,8 +74,8 @@ public class JSONParser {
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    is, "iso-8859-1"), 8);
+            //BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
             StringBuilder sb = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null) {

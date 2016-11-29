@@ -186,9 +186,13 @@ public class AllFastFoods extends ListActivity {
                      * */
                     ListAdapter adapter = new SimpleAdapter(
                             AllFastFoods.this, fastfoodsList,
-                            R.layout.list_item, new String[]{TAG_PID,
-                            TAG_NAME},
-                            new int[]{R.id.pid, R.id.name});
+                            R.layout.list_item, new String[]{
+                            TAG_PID,
+                            TAG_NAME
+                    },
+                            new int[]{
+                                    R.id.pid, R.id.name
+                            });
                     // updating listview
                     setListAdapter(adapter);
                 }

@@ -4,19 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal">
-	
-    <!--  Sample Dashboard screen with Two buttons -->
-    <Button android:id="@+id/btnViewProducts"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="View Products"
-        android:layout_marginTop="25dip"/>
-    
-    <Button android:id="@+id/btnCreateProduct"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Add New Products"
-        android:layout_marginTop="25dip"/>
+
 
     <Button android:id="@+id/btnViewResturans"
         android:layout_width="fill_parent"
@@ -34,6 +22,24 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Markets"
+        android:layout_marginTop="25dip"/>
+
+    <Button android:id="@+id/btnCreateResturan"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Products"
+        android:layout_marginTop="25dip"/>
+
+    <Button android:id="@+id/btnCreateFastFood"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Products"
+        android:layout_marginTop="25dip"/>
+
+    <Button android:id="@+id/btnCreateMarket"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Products"
         android:layout_marginTop="25dip"/>
 
 </LinearLayout>

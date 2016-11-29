@@ -7,14 +7,14 @@
     <!-- Name Label -->
     <TextView android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Product Name"
+        android:text="Resturan Name"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:paddingTop="10dip"
-        android:textSize="17dip"/>
+        android:textSize="17sp"/>
     
     <!-- Input Name -->
-	<EditText android:id="@+id/inputName"
+	<EditText android:id="@+id/inputNameResturan"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_margin="5dip"
@@ -24,51 +24,85 @@
 	<!-- Price Label -->
     <TextView android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Price"
+        android:text="Open Hour"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:paddingTop="10dip"
-        android:textSize="17dip"/>
+        android:textSize="17sp"/>
     
     <!-- Input Price -->
-	<EditText android:id="@+id/inputPrice" 
+	<EditText android:id="@+id/inputOpenHourResturan"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_margin="5dip"
 	    android:layout_marginBottom="15dip"
 	    android:singleLine="true"
 	    android:inputType="numberDecimal"/>
+
+	<!-- Price Label -->
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Close Hour"
+		android:paddingLeft="10dip"
+		android:paddingRight="10dip"
+		android:paddingTop="10dip"
+		android:textSize="17sp"/>
+
+	<!-- Input Price -->
+	<EditText android:id="@+id/inputCloseHourResturan"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="5dip"
+		android:layout_marginBottom="15dip"
+		android:singleLine="true"
+		android:inputType="numberDecimal"/>
 	
 	<!-- Description Label -->
     <TextView android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Description"
+        android:text="Address"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:paddingTop="10dip"
-        android:textSize="17dip"/>
+        android:textSize="17sp"/>
     
     <!-- Input description -->
-	<EditText android:id="@+id/inputDesc" 
+	<EditText android:id="@+id/inputAddressResturan"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_margin="5dip"
 	    android:layout_marginBottom="15dip"
-	    android:lines="4"
 	    android:gravity="top"/>
+
+    <!-- Description Label -->
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Picture"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip"
+        android:textSize="17sp"/>
+
+    <!-- Input description -->
+    <EditText android:id="@+id/inputPictureResturan"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:gravity="top"/>
 	
 	<LinearLayout android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
 	    <!-- Button Create Product -->
-	<Button android:id="@+id/btnSave" 
+	<Button android:id="@+id/btnSaveResturan"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:text="Save Changes"
 	    android:layout_weight="1"/>
 	
 	<!-- Button Create Product -->
-	<Button android:id="@+id/btnDelete" 
+	<Button android:id="@+id/btnDeleteResturan"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:text="Delete"
