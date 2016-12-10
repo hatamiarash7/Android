@@ -1,112 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
 
-	<!-- Name Label -->
-	<TextView android:layout_width="fill_parent"
+
+	<TextView
+		android:id="@+id/FastFoodName"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:text="Resturan Name"
 		android:paddingLeft="10dip"
 		android:paddingRight="10dip"
 		android:paddingTop="10dip"
-		android:textSize="17sp"/>
+		android:text="FastFood Name"
+		android:textSize="26sp"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentStart="true"
+		android:textAlignment="center" />
 
-	<!-- Input Name -->
-	<EditText android:id="@+id/inputNameFastFood"
+
+	<TextView
+		android:id="@+id/FastFoodAddress"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="5dip"
-		android:layout_marginBottom="15dip"
-		android:singleLine="true"/>
-
-	<!-- Price Label -->
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:text="Open Hour"
 		android:paddingLeft="10dip"
 		android:paddingRight="10dip"
 		android:paddingTop="10dip"
-		android:textSize="17sp"/>
-
-	<!-- Input Price -->
-	<EditText android:id="@+id/inputOpenHourFastFood"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="5dip"
-		android:layout_marginBottom="15dip"
-		android:singleLine="true"
-		android:inputType="numberDecimal"/>
-
-	<!-- Price Label -->
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:text="Close Hour"
-		android:paddingLeft="10dip"
-		android:paddingRight="10dip"
-		android:paddingTop="10dip"
-		android:textSize="17sp"/>
-
-	<!-- Input Price -->
-	<EditText android:id="@+id/inputCloseHourFastFood"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="5dip"
-		android:layout_marginBottom="15dip"
-		android:singleLine="true"
-		android:inputType="numberDecimal"/>
-
-	<!-- Description Label -->
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
 		android:text="Address"
+		android:textSize="17sp"
+		android:layout_below="@+id/L1"
+		android:layout_alignParentStart="true"
+		android:textAlignment="center"
+		android:paddingBottom="10dp" />
+
+	<TextView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
 		android:paddingLeft="10dip"
 		android:paddingRight="10dip"
 		android:paddingTop="10dip"
-		android:textSize="17sp"/>
-
-	<!-- Input description -->
-	<EditText android:id="@+id/inputAddressFastFood"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="5dip"
-		android:layout_marginBottom="15dip"
-		android:gravity="top"/>
-
-	<!-- Description Label -->
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
 		android:text="Picture"
-		android:paddingLeft="10dip"
-		android:paddingRight="10dip"
-		android:paddingTop="10dip"
-		android:textSize="17sp"/>
+		android:textSize="17sp"
+		android:layout_marginStart="11dp"
+		android:layout_below="@+id/FastFoodAddress"
+		android:layout_alignParentStart="true"
+		android:layout_marginTop="49dp"
+		android:visibility="gone" />
 
-	<!-- Input description -->
-	<EditText android:id="@+id/inputPictureFastFood"
+	<LinearLayout
+		android:id="@+id/L1"
+		android:orientation="horizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/FastFoodName"
+		android:layout_centerHorizontal="true">
+
+		<TextView
+			android:id="@+id/FastFoodCloseHour"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dip"
+			android:paddingRight="10dip"
+			android:paddingTop="10dip"
+			android:text="66"
+			android:textSize="17sp" />
+
+		<TextView
+			android:text="الی"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/textView2"
+			android:textSize="17sp"
+			android:layout_marginEnd="20dp"
+			android:layout_marginStart="20dp"
+			android:textStyle="normal|bold" />
+
+		<TextView
+			android:id="@+id/FastFoodOpenHour"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dip"
+			android:paddingRight="10dip"
+			android:paddingTop="10dip"
+			android:text="55"
+			android:textSize="17sp"
+			android:textAlignment="center"
+			android:layout_marginEnd="10dp" />
+
+		<TextView
+			android:text="ساعت کاری :"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/textView3"
+			android:textSize="17sp"
+			android:layout_marginEnd="15dp"
+			android:textStyle="normal|bold" />
+
+	</LinearLayout>
+
+	<ListView
+		android:id="@android:id/list"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="5dip"
-		android:layout_marginBottom="15dip"
-		android:gravity="top"/>
-	
-	<LinearLayout android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
-	    <!-- Button Create Product -->
-	<Button android:id="@+id/btnSaveFastFood"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:text="Save Changes"
-	    android:layout_weight="1"/>
-	
-	<!-- Button Create Product -->
-	<Button android:id="@+id/btnDeleteFastFood"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:text="Delete"
-	    android:layout_weight="1"/>	    
-	</LinearLayout>
-	
-</LinearLayout>
+		android:layout_below="@+id/FastFoodAddress"/>
+
+
+</RelativeLayout>

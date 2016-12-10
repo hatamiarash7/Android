@@ -17,14 +17,21 @@
         android:theme="@style/AppTheme"
         android:label="@string/app_name" >
 
-
         <activity
-            android:name=".MainScreenActivity"
+            android:name=".SplashScreen"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainScreenActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -44,33 +51,20 @@
             android:label="All Markets" >
         </activity>
 
-        <!-- Add Product Activity -->
-        <activity
-            android:name=".NewFastFood"
-            android:label="Add New FastFood" >
-        </activity>
-        <activity
-            android:name=".NewMarket"
-            android:label="Add New Market" >
-        </activity>
-        <activity
-            android:name=".NewResturan"
-            android:label="Add New Resturan" >
-        </activity>
 
         <!-- Edit Product Activity -->
         <activity
-            android:name=".EditFastFoods"
+            android:name=".FastFoodDetail"
             android:label="Edit FastFood" >
         </activity>
 
         <activity
-            android:name=".EditMarkets"
+            android:name=".MarketDetail"
             android:label="Edit Market" >
         </activity>
 
         <activity
-            android:name=".EditResturans"
+            android:name=".ResturanDetail"
             android:label="Edit Resturan" >
         </activity>
     </application>

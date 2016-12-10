@@ -9,37 +9,19 @@
     <Button android:id="@+id/btnViewResturans"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Resturans"
+        android:text="رستوران ها"
         android:layout_marginTop="25dip"/>
 
     <Button android:id="@+id/btnViewFastFoods"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="FastFoods"
+        android:text="فست فود ها"
         android:layout_marginTop="25dip"/>
 
     <Button android:id="@+id/btnViewMarkets"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Markets"
-        android:layout_marginTop="25dip"/>
-
-    <Button android:id="@+id/btnCreateResturan"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Add New Products"
-        android:layout_marginTop="25dip"/>
-
-    <Button android:id="@+id/btnCreateFastFood"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Add New Products"
-        android:layout_marginTop="25dip"/>
-
-    <Button android:id="@+id/btnCreateMarket"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Add New Products"
+        android:text="مارکت ها"
         android:layout_marginTop="25dip"/>
 
 </LinearLayout>

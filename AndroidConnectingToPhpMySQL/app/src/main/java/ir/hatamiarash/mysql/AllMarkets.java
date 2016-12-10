@@ -71,8 +71,7 @@ public class AllMarkets extends ListActivity {
                         .toString();
 
                 // Starting new intent
-                Intent in = new Intent(getApplicationContext(),
-                        EditMarkets.class);
+                Intent in = new Intent(getApplicationContext(), MarketDetail.class);
                 // sending pid to next activity
                 in.putExtra(TAG_PID, pid);
 
@@ -158,12 +157,7 @@ public class AllMarkets extends ListActivity {
                     }
                 } else {
                     // no products found
-                    // Launch Add New product Activity
-                    Intent i = new Intent(getApplicationContext(),
-                            NewMarket.class);
-                    // Closing all previous activities
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

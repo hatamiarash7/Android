@@ -3,6 +3,7 @@ package ir.hatamiarash.mysql;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,25 +24,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AllResturans extends ListActivity {
+import static android.R.id.custom;
+import static android.R.id.list;
 
+public class AllResturans extends ListActivity {
     // Progress Dialog
     private ProgressDialog pDialog;
-
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
-
     ArrayList<HashMap<String, String>> resturanList;
-
     // url to get all products list
     static String url_all_resturans = "http://zimia.ir/get_all_resturans.php";
-
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_RESTURANS = "resturans";
     private static final String TAG_PID = "id";
     private static final String TAG_NAME = "name";
-
     // products JSONArray
     JSONArray resturans = null;
 
@@ -49,38 +47,29 @@ public class AllResturans extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_resturans);
-
+        String font_path = "fonts/yekan.ttf";
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), font_path);
         // Hashmap for ListView
         resturanList = new ArrayList<HashMap<String, String>>();
-
         // Loading products in Background Thread
         new LoadAllProducts().execute();
-
         // Get listview
         ListView lv = getListView();
-
         // on seleting single product
         // launching Edit Product Screen
         lv.setOnItemClickListener(new OnItemClickListener() {
-
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // getting values from selected ListItem
-                String pid = ((TextView) view.findViewById(R.id.pid)).getText()
-                        .toString();
-
+                String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
                 // Starting new intent
-                Intent in = new Intent(getApplicationContext(),
-                        EditResturans.class);
+                Intent in = new Intent(getApplicationContext(), ResturanDetail.class);
                 // sending pid to next activity
                 in.putExtra(TAG_PID, pid);
-
                 // starting new activity and expecting some response back
                 startActivityForResult(in, 100);
             }
         });
-
     }
 
     // Response from Edit Product Activity
@@ -125,50 +114,36 @@ public class AllResturans extends ListActivity {
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             // getting JSON string from URL
             JSONObject json = jParser.makeHttpRequest(url_all_resturans, "GET", params);
-
             // Check your log cat for JSON reponse
             Log.d("All Resturans: ", json.toString());
-
             try {
                 // Checking for SUCCESS TAG
                 int success = json.getInt(TAG_SUCCESS);
-
                 if (success == 1) {
                     // products found
                     // Getting Array of Products
                     resturans = json.getJSONArray(TAG_RESTURANS);
-
                     // looping through All Products
                     for (int i = 0; i < resturans.length(); i++) {
                         JSONObject c = resturans.getJSONObject(i);
-
                         // Storing each json item in variable
                         String id = c.getString(TAG_PID);
                         String name = c.getString(TAG_NAME);
-
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
-
                         // adding each child node to HashMap key => value
                         map.put(TAG_PID, id);
                         map.put(TAG_NAME, name);
-
                         // adding HashList to ArrayList
                         resturanList.add(map);
                     }
                 } else {
                     // no products found
-                    // Launch Add New product Activity
-                    Intent i = new Intent(getApplicationContext(),
-                            NewResturan.class);
-                    // Closing all previous activities
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
