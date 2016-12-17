@@ -41,6 +41,7 @@ public class AllFastFoods extends ListActivity {
     private static final String TAG_FASTFOODS = "fastfoods";
     private static final String TAG_PID = "id";
     private static final String TAG_NAME = "name";
+    private static final String TAG_PICTURE = "picture";
 
     // products JSONArray
     JSONArray fastfoods = null;
@@ -144,14 +145,16 @@ public class AllFastFoods extends ListActivity {
                         // Storing each json item in variable
                         String id = c.getString(TAG_PID);
                         String name = c.getString(TAG_NAME);
-
+                        int picture = c.getInt(TAG_PICTURE);
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
 
                         // adding each child node to HashMap key => value
                         map.put(TAG_PID, id);
                         map.put(TAG_NAME, name);
-
+                        String add = "i"+String.valueOf(picture);
+                        int pic = getResources().getIdentifier(add, "drawable", getPackageName());
+                        map.put(TAG_PICTURE, String.valueOf(pic));
                         // adding HashList to ArrayList
                         fastfoodsList.add(map);
                     }
@@ -182,10 +185,13 @@ public class AllFastFoods extends ListActivity {
                             AllFastFoods.this, fastfoodsList,
                             R.layout.list_item, new String[]{
                             TAG_PID,
-                            TAG_NAME
+                            TAG_NAME,
+                            TAG_PICTURE
                     },
                             new int[]{
-                                    R.id.pid, R.id.name
+                                    R.id.pid,
+                                    R.id.name,
+                                    R.id.img
                             });
                     // updating listview
                     setListAdapter(adapter);

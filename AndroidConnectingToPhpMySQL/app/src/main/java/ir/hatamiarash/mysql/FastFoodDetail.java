@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -31,7 +29,6 @@ public class FastFoodDetail extends ListActivity {
     private static final String url_fastfood_detials = "http://zimia.ir/get_fastfood_details.php";
     // JSON Node names
     private static final String url_all_fastfood_foods = "http://zimia.ir/get_all_fastfood_foods.php";
-
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_FASTFOOD = "fastfoods";
     private static final String TAG_PID = "id";
@@ -43,12 +40,16 @@ public class FastFoodDetail extends ListActivity {
     private static final String TAG_FOODS = "foods";
     private static final String TAG_FOOD_PID = "id";
     private static final String TAG_FOOD_NAME = "name";
+    private static final String TAG_FOOD_PRICE = "price";
+    private static final String TAG_FOOD_PICTURE = "picture";
 
     TextView fastfoodname;
     TextView fastfoodopenhour;
     TextView fastfoodclosehour;
     TextView fastfoodaddress;
     String pid;
+    int picture;
+
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
     JSONParser jParser = new JSONParser();
@@ -226,12 +227,17 @@ public class FastFoodDetail extends ListActivity {
                         // Storing each json item in variable
                         String id = c.getString(TAG_FOOD_PID);
                         String name = c.getString(TAG_FOOD_NAME);
+                        String price = c.getString(TAG_FOOD_PRICE);
+                        picture = c.getInt(TAG_FOOD_PICTURE);
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
                         // adding each child node to HashMap key => value
                         map.put(TAG_FOOD_PID, id);
                         map.put(TAG_FOOD_NAME, name);
-                        // adding HashList to ArrayList
+                        map.put(TAG_FOOD_PRICE, price);
+                        String add = "i"+String.valueOf(picture);
+                        int pic = getResources().getIdentifier(add, "drawable", getPackageName());
+                        map.put(TAG_FOOD_PICTURE, String.valueOf(pic));
                         foodList.add(map);
                     }
                 } else {
@@ -244,6 +250,7 @@ public class FastFoodDetail extends ListActivity {
             }
             return null;
         }
+
 
         /**
          * After completing background task Dismiss the progress dialog
@@ -261,16 +268,21 @@ public class FastFoodDetail extends ListActivity {
                             FastFoodDetail.this, foodList,
                             R.layout.list_item, new String[]{
                             TAG_FOOD_PID,
-                            TAG_FOOD_NAME
+                            TAG_FOOD_NAME,
+                            TAG_FOOD_PRICE,
+                            TAG_FOOD_PICTURE
                     },
                             new int[]{
-                                    R.id.pid, R.id.name
+                                    R.id.pid,
+                                    R.id.name,
+                                    R.id.price,
+                                    R.id.img
                             });
                     // updating listview
                     setListAdapter(adapter);
+
                 }
             });
         }
     }
-
 }

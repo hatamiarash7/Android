@@ -43,6 +43,8 @@ public class MarketDetail extends ListActivity {
     private static final String TAG_PRODUCTS = "products";
     private static final String TAG_PRODUCT_PID = "id";
     private static final String TAG_PRODUCT_NAME = "name";
+    private static final String TAG_PRODUCT_PRICE = "price";
+    private static final String TAG_PRODUCT_PICTURE = "picture";
 
     TextView marketname;
     TextView marketopenhour;
@@ -225,11 +227,17 @@ public class MarketDetail extends ListActivity {
                         // Storing each json item in variable
                         String id = c.getString(TAG_PRODUCT_PID);
                         String name = c.getString(TAG_PRODUCT_NAME);
+                        String price = c.getString(TAG_PRODUCT_PRICE);
+                        int picture = c.getInt(TAG_PRODUCT_PICTURE);
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
                         // adding each child node to HashMap key => value
                         map.put(TAG_PRODUCT_PID, id);
                         map.put(TAG_PRODUCT_NAME, name);
+                        map.put(TAG_PRODUCT_PRICE, price);
+                        String add = "i"+String.valueOf(picture);
+                        int pic = getResources().getIdentifier(add, "drawable", getPackageName());
+                        map.put(TAG_PRODUCT_PICTURE, String.valueOf(pic));
                         // adding HashList to ArrayList
                         productList.add(map);
                     }
@@ -260,10 +268,15 @@ public class MarketDetail extends ListActivity {
                             MarketDetail.this, productList,
                             R.layout.list_item, new String[]{
                             TAG_PRODUCT_PID,
-                            TAG_PRODUCT_NAME
+                            TAG_PRODUCT_NAME,
+                            TAG_PRODUCT_PRICE,
+                            TAG_PRODUCT_PICTURE
                     },
                             new int[]{
-                                    R.id.pid, R.id.name
+                                    R.id.pid,
+                                    R.id.name,
+                                    R.id.price,
+                                    R.id.img
                             });
                     // updating listview
                     setListAdapter(adapter);
