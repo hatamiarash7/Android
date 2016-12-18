@@ -20,7 +20,7 @@
         android:paddingEnd="5dp"
         android:paddingStart="5dp" />
 
-    <ir.hatamiarash.mysql.PersianTextView
+    <ir.hatamiarash.zimia.PersianTextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,6 +28,8 @@
         android:layout_gravity="start"
         android:layout_marginTop="7dp"
         android:layout_toLeftOf="@+id/img"
+        android:layout_toRightOf="@+id/img2"
+        android:layout_toEndOf="@+id/img2"
         android:layout_toStartOf="@+id/img"
         android:paddingEnd="5dp"
         android:paddingStart="5dp"
@@ -36,7 +38,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textDirection="rtl" />
 
-    <ir.hatamiarash.mysql.PersianTextView
+    <ir.hatamiarash.zimia.PersianTextView
         android:id="@+id/price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,6 +47,8 @@
         android:layout_marginTop="7dp"
         android:layout_toLeftOf="@+id/img"
         android:layout_toStartOf="@+id/img"
+        android:layout_toRightOf="@+id/img2"
+        android:layout_toEndOf="@+id/img2"
         android:paddingEnd="5dp"
         android:paddingStart="5dp"
         android:text="Price"
@@ -52,5 +56,16 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textDirection="rtl"
         android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/img2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/name"
+        android:contentDescription="Image"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp" />
 
 </RelativeLayout>

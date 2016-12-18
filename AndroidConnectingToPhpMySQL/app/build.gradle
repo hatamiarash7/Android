@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.1"
 
     defaultConfig {
-        applicationId "ir.hatamiarash.mysql"
+        applicationId "ir.hatamiarash.zimia"
         minSdkVersion 15
         targetSdkVersion 24
     }
@@ -23,5 +23,6 @@ android {
 
     dependencies {
         compile "com.android.support:appcompat-v7:24.0.0"
+        compile 'com.google.android.gms:play-services:8.3.0'
     }
 }
