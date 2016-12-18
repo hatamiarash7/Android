@@ -228,6 +228,7 @@ public class MarketDetail extends ListActivity {
                         String id = c.getString(TAG_PRODUCT_PID);
                         String name = c.getString(TAG_PRODUCT_NAME);
                         String price = c.getString(TAG_PRODUCT_PRICE);
+                        price += " تومان";
                         int picture = c.getInt(TAG_PRODUCT_PICTURE);
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();

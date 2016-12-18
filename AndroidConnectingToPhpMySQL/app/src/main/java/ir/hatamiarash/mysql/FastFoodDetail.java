@@ -228,6 +228,7 @@ public class FastFoodDetail extends ListActivity {
                         String id = c.getString(TAG_FOOD_PID);
                         String name = c.getString(TAG_FOOD_NAME);
                         String price = c.getString(TAG_FOOD_PRICE);
+                        price += " تومان";
                         picture = c.getInt(TAG_FOOD_PICTURE);
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();

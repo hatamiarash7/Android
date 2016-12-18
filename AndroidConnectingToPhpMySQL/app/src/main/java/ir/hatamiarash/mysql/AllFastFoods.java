@@ -186,12 +186,14 @@ public class AllFastFoods extends ListActivity {
                             R.layout.list_item, new String[]{
                             TAG_PID,
                             TAG_NAME,
-                            TAG_PICTURE
+                            TAG_PICTURE,
+                            ""
                     },
                             new int[]{
                                     R.id.pid,
                                     R.id.name,
-                                    R.id.img
+                                    R.id.img,
+                                    R.id.price
                             });
                     // updating listview
                     setListAdapter(adapter);
