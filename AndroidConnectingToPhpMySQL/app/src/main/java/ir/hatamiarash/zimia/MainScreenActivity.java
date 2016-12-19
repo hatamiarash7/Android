@@ -6,20 +6,33 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
+
 public class MainScreenActivity extends AppCompatActivity {
-    Button btnViewResturans;
-    Button btnViewFastFoods;
-    Button btnViewMarkets;
-    Button btnViewMap;
+    ImageView btnViewResturans;
+    ImageView btnViewFastFoods;
+    ImageView btnViewMarkets;
+    ImageView btnViewMap;
 
     Button btnClosePopup;
     private PopupWindow pwindo;
@@ -28,18 +41,20 @@ public class MainScreenActivity extends AppCompatActivity {
             pwindo.dismiss();
         }
     };
+    private AccountHeader headerResult = null;
+    private Drawer result = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        setContentView(R.layout.main_screen);
+        setContentView(R.layout.drawer);
 
-        btnViewResturans = (Button) findViewById(R.id.btnViewResturans);
-        btnViewFastFoods = (Button) findViewById(R.id.btnViewFastFoods);
-        btnViewMarkets = (Button) findViewById(R.id.btnViewMarkets);
-        btnViewMap = (Button) findViewById(R.id.btnViewMap);
+        btnViewResturans = (ImageView) findViewById(R.id.btnViewResturans);
+        btnViewFastFoods = (ImageView) findViewById(R.id.btnViewFastFoods);
+        btnViewMarkets = (ImageView) findViewById(R.id.btnViewMarkets);
+        btnViewMap = (ImageView) findViewById(R.id.btnViewMap);
 
         btnViewResturans.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,31 +84,73 @@ public class MainScreenActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_sign_in).withIdentifier(1),
+                        new PrimaryDrawerItem().withName("ثبت نام").withIcon(FontAwesome.Icon.faw_user_plus).withIdentifier(2),
+                        new PrimaryDrawerItem().withName("حساب کاربری").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(3),
+                        new SectionDrawerItem().withName("جزئیات"),
+                        new SecondaryDrawerItem().withName("راهنما").withIcon(FontAwesome.Icon.faw_question).withIdentifier(4),
+                        new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(5),
+                        new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(6)
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        if (drawerItem != null && drawerItem.getIdentifier() == 1) {
+                        }
+                        if (drawerItem != null && drawerItem.getIdentifier() == 2) {
+                        }
+                        if (drawerItem != null && drawerItem.getIdentifier() == 3) {
+                        }
+                        if (drawerItem != null && drawerItem.getIdentifier() == 4) {
+                            initiatePopupWindow(R.id.popup_help);
+                            return true;
+                        }
+                        if (drawerItem != null && drawerItem.getIdentifier() == 5) {
+                            initiatePopupWindow(R.id.popup_about);
+                            return true;
+                        }
+                        if (drawerItem != null && drawerItem.getIdentifier() == 6) {
+                        }
+
+                        if (drawerItem instanceof Nameable) {
+                            //toolbar.setTitle(((Nameable) drawerItem).getName().getText(MainScreenActivity.this));
+                        }
+
+                        return false;
+                    }
+                })
+                .withSavedInstance(savedInstanceState)
+                .withDrawerGravity(Gravity.END)
+                .build();
     }
 
-/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.my_menu, menu);
         return true;
-    }*/
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_about) {
-            initiatePopupWindow(id);
-            return true;
-        }
-        if (id == R.id.action_help) {
-            initiatePopupWindow(id);
+        if (id == R.id.drawershow) {
+            result.openDrawer();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+
     private void initiatePopupWindow(int id) {
+        result.closeDrawer();
         try {
             Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
@@ -103,10 +160,12 @@ public class MainScreenActivity extends AppCompatActivity {
             // We need to get the instance of the LayoutInflater
             LayoutInflater inflater = (LayoutInflater) MainScreenActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
-            if (id == R.id.action_about)
+            if (id == R.id.popup_about)
                 layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
-            if (id == R.id.action_help)
+            if (id == R.id.popup_help)
                 layout = inflater.inflate(R.layout.help, (ViewGroup) findViewById(R.id.popup_help));
+            if (id == R.id.drawershow)
+                result.openDrawer();
             pwindo = new PopupWindow(layout, width - 300, height - 300, true);
             pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
             btnClosePopup = (Button) layout.findViewById(R.id.btn_close_popup);
@@ -115,5 +174,4 @@ public class MainScreenActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 }

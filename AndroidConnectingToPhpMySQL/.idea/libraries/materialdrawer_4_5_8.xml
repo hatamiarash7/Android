@@ -5,6 +5,8 @@
       <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.mikepenz/materialdrawer/4.5.8/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/materialdrawer/4.5.8/ac8d3bd2ce016a29bc33e9db1e93e1f215c671a4/materialdrawer-4.5.8-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
