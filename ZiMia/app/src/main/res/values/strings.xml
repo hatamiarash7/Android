@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">ZiMia</string>
-    <string name="get_data">اتصال</string>
-    <string name="flower_name_placeholder">Name</string>
-
-</resources>
