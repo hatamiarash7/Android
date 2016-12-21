@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_marginTop="75dp"
         app:srcCompat="@drawable/res"
-        android:contentDescription="Resturans"
+        android:contentDescription="@string/resturans"
         android:layout_height="80dp" />
 
     <ImageView
@@ -27,7 +27,7 @@
         android:id="@+id/btnViewFastFoods"
         android:layout_width="match_parent"
         app:srcCompat="@drawable/fast"
-        android:contentDescription="FastFoods"
+        android:contentDescription="@string/fastfoods"
         android:layout_height="80dp" />
 
     <ImageView
@@ -41,7 +41,7 @@
         android:id="@+id/btnViewMarkets"
         android:layout_width="match_parent"
         app:srcCompat="@drawable/mark"
-        android:contentDescription="Markets"
+        android:contentDescription="@string/markets"
         android:layout_height="80dp" />
 
 
@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
-        android:contentDescription="Map"
+        android:contentDescription="@string/map"
         app:srcCompat="@drawable/map"/>
 
 </LinearLayout>

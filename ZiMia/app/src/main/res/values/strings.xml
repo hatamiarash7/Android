@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World!</string>
     <string name="app_name">ZiMia</string>
     <string name="action_help">راهنما</string>
     <string name="action_about">درباره ما</string>
@@ -10,4 +8,8 @@
     <string name="about_text3">Email : hatamiarash7@gmail.com</string>
     <string name="about_text4">Phone : +98 918 218 0519</string>
     <string name="about_text5">MU Team - 2016</string>
+    <string name="resturans">Restaurants</string>
+    <string name="fastfoods">FastFoods</string>
+    <string name="markets">Markets</string>
+    <string name="map">Map</string>
 </resources>
