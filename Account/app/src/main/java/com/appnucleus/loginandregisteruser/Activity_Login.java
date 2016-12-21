@@ -105,7 +105,7 @@ public class Activity_Login extends Activity {
         showDialog();
 
         StringRequest strReq = new StringRequest(Method.POST,
-                Config_URL.URL_REGISTER, new Response.Listener<String>() {
+                Config_URL.URL_LOGIN, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {

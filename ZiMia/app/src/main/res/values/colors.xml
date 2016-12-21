@@ -4,4 +4,19 @@
     <color name="colorPrimaryDark">#ff0f253d</color>
     <color name="colorAccent">#ea0065</color>
     <color name="myColor">#537dac</color>
+
+    <color name="bg_login">#26ae90</color>
+    <color name="bg_register">#2e3237</color>
+    <color name="bg_main">#428bca</color>
+    <color name="white">#ffffff</color>
+    <color name="gray">#9999</color>
+    <color name="input_login">#000000</color>
+    <color name="input_login_hint">#999999</color>
+    <color name="input_register">#000000</color>
+    <color name="input_register_bg">#3b4148</color>
+    <color name="input_register_hint">#5e6266</color>
+    <color name="btn_login">#26ae90</color>
+    <color name="btn_login_bg">#eceef1</color>
+    <color name="lbl_name">#333333</color>
+    <color name="btn_logut_bg">#ff6861</color>
 </resources>

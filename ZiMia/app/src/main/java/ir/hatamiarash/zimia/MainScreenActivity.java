@@ -28,13 +28,15 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
+import helper.SessionManager;
+
 public class MainScreenActivity extends AppCompatActivity {
     ImageView btnViewResturans;
     ImageView btnViewFastFoods;
     ImageView btnViewMarkets;
     ImageView btnViewMap;
-
     Button btnClosePopup;
+    private SessionManager session;
     private PopupWindow pwindo;
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -85,49 +87,109 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        result = new DrawerBuilder()
-                .withActivity(this)
-                .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
-                .addDrawerItems(
-                        new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_sign_in).withIdentifier(1),
-                        new PrimaryDrawerItem().withName("ثبت نام").withIcon(FontAwesome.Icon.faw_user_plus).withIdentifier(2),
-                        new PrimaryDrawerItem().withName("حساب کاربری").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(3),
-                        new SectionDrawerItem().withName("جزئیات"),
-                        new SecondaryDrawerItem().withName("راهنما").withIcon(FontAwesome.Icon.faw_question).withIdentifier(4),
-                        new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(5),
-                        new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(6)
-                )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        if (drawerItem != null && drawerItem.getIdentifier() == 1) {
-                        }
-                        if (drawerItem != null && drawerItem.getIdentifier() == 2) {
-                        }
-                        if (drawerItem != null && drawerItem.getIdentifier() == 3) {
-                        }
-                        if (drawerItem != null && drawerItem.getIdentifier() == 4) {
-                            initiatePopupWindow(R.id.popup_help);
-                            return true;
-                        }
-                        if (drawerItem != null && drawerItem.getIdentifier() == 5) {
-                            initiatePopupWindow(R.id.popup_about);
-                            return true;
-                        }
-                        if (drawerItem != null && drawerItem.getIdentifier() == 6) {
-                        }
+        // Session manager
+        session = new SessionManager(getApplicationContext());
+        // Check if user is already logged in or not
+        if (!session.isLoggedIn()) {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            result = new DrawerBuilder()
+                    .withActivity(this)
+                    .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
+                    .addDrawerItems(
+                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1),
+                            new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_sign_in).withIdentifier(2),
+                            new PrimaryDrawerItem().withName("ثبت نام").withIcon(FontAwesome.Icon.faw_user_plus).withIdentifier(3),
+                            new SectionDrawerItem().withName("جزئیات"),
+                            new SecondaryDrawerItem().withName("راهنما").withIcon(FontAwesome.Icon.faw_question).withIdentifier(5),
+                            new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(6),
+                            new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(7)
+                    )
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            if (drawerItem != null && drawerItem.getIdentifier() == 1) {
+                                Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+                                startActivity(i);
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 2) {
+                                Intent i = new Intent(getApplicationContext(), Login.class);
+                                startActivity(i);
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 3) {
+                                Intent i = new Intent(getApplicationContext(), Register.class);
+                                startActivity(i);
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 5) {
+                                initiatePopupWindow(R.id.popup_help);
+                                return true;
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 6) {
+                                initiatePopupWindow(R.id.popup_about);
+                                return true;
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 7) {
+                            }
 
-                        if (drawerItem instanceof Nameable) {
-                            //toolbar.setTitle(((Nameable) drawerItem).getName().getText(MainScreenActivity.this));
+                            if (drawerItem instanceof Nameable) {
+                                //toolbar.setTitle(((Nameable) drawerItem).getName().getText(MainScreenActivity.this));
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                })
-                .withSavedInstance(savedInstanceState)
-                .withDrawerGravity(Gravity.END)
-                .build();
+                    })
+                    .withSelectedItem(1)
+                    .withSavedInstance(savedInstanceState)
+                    .withDrawerGravity(Gravity.END)
+                    .build();
+            //result.setSelection(1);
+        } else {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            result = new DrawerBuilder()
+                    .withActivity(this)
+                    .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
+                    .addDrawerItems(
+                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1),
+                            new PrimaryDrawerItem().withName("حساب کاربری").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(4),
+                            new SectionDrawerItem().withName("جزئیات"),
+                            new SecondaryDrawerItem().withName("راهنما").withIcon(FontAwesome.Icon.faw_question).withIdentifier(5),
+                            new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(6),
+                            new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(7)
+                    )
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            if (drawerItem != null && drawerItem.getIdentifier() == 1) {
+                                Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+                                startActivity(i);
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 4) {
+                                Intent i = new Intent(getApplicationContext(), Profile.class);
+                                startActivity(i);
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 5) {
+                                initiatePopupWindow(R.id.popup_help);
+                                return true;
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 6) {
+                                initiatePopupWindow(R.id.popup_about);
+                                return true;
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 7) {
+                            }
+
+                            if (drawerItem instanceof Nameable) {
+                                //toolbar.setTitle(((Nameable) drawerItem).getName().getText(MainScreenActivity.this));
+                            }
+                            return false;
+                        }
+                    })
+                    .withSelectedItem(1)
+                    .withSavedInstance(savedInstanceState)
+                    .withDrawerGravity(Gravity.END)
+                    .build();
+            //result.setSelection(1);
+        }
     }
 
     @Override

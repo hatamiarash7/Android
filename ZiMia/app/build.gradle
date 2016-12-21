@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 def minSdk = hasProperty('minSdk') ? minSdk : 15
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -25,10 +23,10 @@ android {
     }
 
     dependencies {
-        compile "com.android.support:appcompat-v7:25.0.0"
+        compile "com.android.support:appcompat-v7:25.0.1"
         compile 'com.google.android.gms:play-services:10.0.0'
         //Sliding Menu
-        compile 'com.android.support:design:25.0.0'
+        compile 'com.android.support:design:25.0.1'
         compile('com.mikepenz:materialdrawer:4.5.8@aar') {
             transitive = true
         }
@@ -38,4 +36,10 @@ android {
         compile 'com.squareup.retrofit2:converter-gson:2.0.0'
         compile 'com.android.support:multidex:1.0.1'
     }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile files('libs/volley.jar')
 }

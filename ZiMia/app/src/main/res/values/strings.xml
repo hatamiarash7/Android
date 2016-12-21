@@ -12,4 +12,18 @@
     <string name="fastfoods">FastFoods</string>
     <string name="markets">Markets</string>
     <string name="map">Map</string>
+
+    <string name="hint_email">ایمیل</string>
+    <string name="hint_password">کلمه عبور</string>
+    <string name="hint_password2">تکرار کلمه عبور</string>
+    <string name="hint_name">نام کامل</string>
+    <string name="hint_address">آدرس</string>
+    <string name="hint_phone">شماره تلفن</string>
+    <string name="btn_login">ورود</string>
+    <string name="btn_register">ثبت نام</string>
+    <string name="btn_link_to_register">عضو نیستید ؟ حساب کاربری ایجاد کنید</string>
+    <string name="btn_link_to_login">ثبت نام کرده اید ؟ وارد شوید</string>
+    <string name="welcome">خوش آمدید</string>
+    <string name="btn_logout">خروج</string>
+    <string name="name">نام کامل</string>
 </resources>
