@@ -24,6 +24,15 @@ import helper.SQLiteHandler;
 import helper.SessionManager;
 
 public class Profile extends Activity {
+    private static final String url_person_detials = "http://zimia.ir/users/include/Get_User_Detail.php";
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_PERSON = "persons";
+    private static final String TAG_EMAIL = "email";
+    private static final String TAG_NAME = "name";
+    private static final String TAG_ADDRESS = "address";
+    private static final String TAG_PHONE = "phone";
+    String pid, email;
+    JSONParser jsonParser = new JSONParser();
     private TextView txtName;
     private TextView txtEmail;
     private TextView txtAddress;
@@ -31,17 +40,7 @@ public class Profile extends Activity {
     private Button btnLogout;
     private SQLiteHandler db;
     private SessionManager session;
-    private static final String url_person_detials = "http://zimia.ir/users/include/Get_User_Detail.php";
-
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_PERSON = "persons";
-    private static final String TAG_EMAIL = "email";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_ADDRESS = "address";
-    private static final String TAG_PHONE = "phone";
-    String pid,email;
     private ProgressDialog pDialog;
-    JSONParser jsonParser = new JSONParser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,7 @@ public class Profile extends Activity {
         }
         HashMap<String, String> user = db.getUserDetails();
         email = user.get("email");
-        Log.d(email,"db : " + email);
+        Log.d(email, "db : " + email);
         //Intent i = getIntent();
         //pid = i.getStringExtra(TAG_EMAIL);
         new GetPersonDetails().execute();
@@ -98,10 +97,6 @@ public class Profile extends Activity {
     }
 
     class GetPersonDetails extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -111,39 +106,23 @@ public class Profile extends Activity {
             pDialog.setCancelable(true);
             pDialog.show();
         }
-        /**
-         * Getting product details in background thread
-         */
+
         protected String doInBackground(String... params) {
-            // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
-                    // Check for success tag
-                    int success;
                     try {
-                        // Building Parameters
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
                         params.add(new BasicNameValuePair("email", email));
-                        // getting product details by making HTTP request
-                        // Note that product details url will use GET request
                         JSONObject json = jsonParser.makeHttpRequest(url_person_detials, "GET", params);
-                        // check your log for json response
                         Log.d("Single Person Details", json.toString());
-                        // json success tag
-                        success = json.getInt(TAG_SUCCESS);
-                        if (success == 1) {
-                            // successfully received product details
-                            JSONArray productObj = json.getJSONArray(TAG_PERSON); // JSON Array
-                            // get first product object from JSON Array
+                        if (json.getInt(TAG_SUCCESS) == 1) {
+                            JSONArray productObj = json.getJSONArray(TAG_PERSON);
                             JSONObject person = productObj.getJSONObject(0);
-                            // product with this pid found
-                            // Edit Text
                             txtName.setText(person.getString(TAG_NAME));
                             txtEmail.setText(person.getString(TAG_EMAIL));
                             txtAddress.setText(person.getString(TAG_ADDRESS));
                             txtPhone.setText(person.getString(TAG_PHONE));
                         } else {
-                            // product with pid not found
                             //Log.d("pid not found", null);
                         }
                     } catch (JSONException e) {
@@ -153,11 +132,8 @@ public class Profile extends Activity {
             });
             return null;
         }
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
+
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog once got all details
             pDialog.dismiss();
         }
     }

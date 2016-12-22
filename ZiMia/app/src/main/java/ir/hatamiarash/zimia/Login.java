@@ -3,6 +3,7 @@ package ir.hatamiarash.zimia;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,10 +16,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import helper.SessionManager;
@@ -34,6 +40,7 @@ public class Login extends Activity {
     private EditText inputPassword;
     private ProgressDialog pDialog;
     private SessionManager session;
+    private String user_email;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,10 +67,12 @@ public class Login extends Activity {
             public void onClick(View view) {
                 String email = inputEmail.getText().toString();
                 String password = inputPassword.getText().toString();
+                user_email = email;
                 // Check for empty data in the form
                 if (email.trim().length() > 0 && password.trim().length() > 0) {
                     // login user
                     checkLogin(email, password);
+                    new SetPersonDetails().execute();
                 } else {
                     // Prompt user to enter credentials
                     Toast.makeText(getApplicationContext(), "Please enter the credentials!", Toast.LENGTH_LONG).show();
@@ -146,5 +155,43 @@ public class Login extends Activity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    class SetPersonDetails extends AsyncTask<String, String, String> {
+        private static final String url_person_detials = "http://zimia.ir/users/include/Set_User_Detail.php";
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            /*pDialog = new ProgressDialog(Login.this);
+            pDialog.setMessage("Loading Profile. Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();*/
+        }
+
+        protected String doInBackground(String... params) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    try {
+                        List<NameValuePair> params = new ArrayList<NameValuePair>();
+                        params.add(new BasicNameValuePair("email", inputEmail.getText().toString()));
+                        JSONParser jsonParser = new JSONParser();
+                        JSONObject json = jsonParser.makeHttpRequest(url_person_detials, "GET", params);
+                        Log.d("GET Person Details", json.toString());
+                        if (json.getInt("success") == 1) {
+                            Log.d(TAG,"user saved");
+                        } else {
+                            Log.d(TAG,"user not saved");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return null;
+        }
+        protected void onPostExecute(String file_url) {
+            //pDialog.dismiss();
+        }
     }
 }
