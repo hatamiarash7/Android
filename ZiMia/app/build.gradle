@@ -23,10 +23,10 @@ android {
     }
 
     dependencies {
-        compile "com.android.support:appcompat-v7:25.0.1"
+        compile "com.android.support:appcompat-v7:25.0.0"
         compile 'com.google.android.gms:play-services:10.0.0'
         //Sliding Menu
-        compile 'com.android.support:design:25.0.1'
+        compile 'com.android.support:design:25.0.0'
         compile('com.mikepenz:materialdrawer:4.5.8@aar') {
             transitive = true
         }
@@ -40,6 +40,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.0.0'
     compile files('libs/volley.jar')
 }

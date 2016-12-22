@@ -60,6 +60,7 @@ public class Profile extends Activity {
         }
         HashMap<String, String> user = db.getUserDetails();
         email = user.get("email");
+        email = "hatamiarash7@gmail.com";
         Log.d(email, "db : " + email);
         //Intent i = getIntent();
         //pid = i.getStringExtra(TAG_EMAIL);

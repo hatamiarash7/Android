@@ -18,7 +18,6 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,7 +39,8 @@ public class Login extends Activity {
     private EditText inputPassword;
     private ProgressDialog pDialog;
     private SessionManager session;
-    private String user_email;
+    private static final String url_person_detials = "http://zimia.ir/users/include/Set_User_Detail.php";
+    JSONParser jsonParser = new JSONParser();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,6 @@ public class Login extends Activity {
             public void onClick(View view) {
                 String email = inputEmail.getText().toString();
                 String password = inputPassword.getText().toString();
-                user_email = email;
                 // Check for empty data in the form
                 if (email.trim().length() > 0 && password.trim().length() > 0) {
                     // login user
@@ -158,7 +157,6 @@ public class Login extends Activity {
     }
 
     class SetPersonDetails extends AsyncTask<String, String, String> {
-        private static final String url_person_detials = "http://zimia.ir/users/include/Set_User_Detail.php";
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -174,14 +172,14 @@ public class Login extends Activity {
                 public void run() {
                     try {
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
-                        params.add(new BasicNameValuePair("email", inputEmail.getText().toString()));
-                        JSONParser jsonParser = new JSONParser();
+                        String e = inputEmail.getText().toString();
+                        params.add(new BasicNameValuePair("email", "hatamiarash7@gmail.com"));
                         JSONObject json = jsonParser.makeHttpRequest(url_person_detials, "GET", params);
                         Log.d("GET Person Details", json.toString());
                         if (json.getInt("success") == 1) {
-                            Log.d(TAG,"user saved");
+                            Log.d(TAG, "Done!");
                         } else {
-                            Log.d(TAG,"user not saved");
+                            Log.d(TAG, "Error!");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -190,6 +188,7 @@ public class Login extends Activity {
             });
             return null;
         }
+
         protected void onPostExecute(String file_url) {
             //pDialog.dismiss();
         }
