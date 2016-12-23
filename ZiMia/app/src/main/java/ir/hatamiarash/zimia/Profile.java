@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -33,16 +34,15 @@ public class Profile extends Activity {
     private static final String TAG_NAME = "name";
     private static final String TAG_ADDRESS = "address";
     private static final String TAG_PHONE = "phone";
-    String pid, email;
+    String email;
     JSONParser jsonParser = new JSONParser();
+    Button btnLogout;
     private TextView txtName;
     private TextView txtEmail;
     private TextView txtAddress;
     private TextView txtPhone;
-    private Button btnLogout;
     private SQLiteHandler db;
     private SessionManager session;
-    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,19 +61,7 @@ public class Profile extends Activity {
         HashMap<String, String> user = db.getUserDetails();
         email = user.get("email");
         Log.d(email, "db : " + email);
-        //Intent i = getIntent();
-        //pid = i.getStringExtra(TAG_EMAIL);
         new GetPersonDetails().execute();
-        /*
-        // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
-        String name = user.get("name");
-        String email = user.get("email");
-        Log.d(name,"Name : "+ name);
-        // Displaying the user details on the screen
-        txtName.setText(name);
-        txtEmail.setText(email);*/
-
         // Logout button click event
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,8 +76,9 @@ public class Profile extends Activity {
         db.deleteUsers();
         new DelPersonDetails().execute();
         // Launching the login activity
-        Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
-        startActivity(i);
+        Toast.makeText(getApplicationContext(), "خروج موفقیت آمیز بود", Toast.LENGTH_LONG).show();
+        //Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+        //startActivity(i);
         finish();
     }
 

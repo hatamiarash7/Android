@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,15 +29,16 @@ import volley.Config_URL;
 
 public class Register extends Activity {
     private static final String TAG = Register.class.getSimpleName();
-    private Button btnRegister;
-    private Button btnLinkToLogin;
+    Button btnRegister;
+    Button btnLinkToLogin;
+    SessionManager session;
     private EditText inputFullName;
     private EditText inputEmail;
     private EditText inputPassword;
+    private EditText inputPassword2;
     private EditText inputAddress;
     private EditText inputPhone;
     private ProgressDialog pDialog;
-    private SessionManager session;
     private SQLiteHandler db;
 
     @Override
@@ -46,6 +48,7 @@ public class Register extends Activity {
         inputFullName = (EditText) findViewById(R.id.name);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
+        inputPassword2 = (EditText) findViewById(R.id.password2);
         inputAddress = (EditText) findViewById(R.id.address);
         inputPhone = (EditText) findViewById(R.id.phone);
         btnRegister = (Button) findViewById(R.id.btnRegister);
@@ -70,13 +73,19 @@ public class Register extends Activity {
                 String name = inputFullName.getText().toString();
                 String email = inputEmail.getText().toString();
                 String password = inputPassword.getText().toString();
+                String password2 = inputPassword2.getText().toString();
                 String address = inputAddress.getText().toString();
                 String phone = inputPhone.getText().toString();
-                if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !address.isEmpty() && !phone.isEmpty()) {
-                    registerUser(name, email, password, address, phone);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please Enter Your Details !!", Toast.LENGTH_LONG).show();
-                }
+                if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
+                    if (checkEmailValidity(email))
+                        if (password.equals(password2))
+                            registerUser(name, email, password, address, phone);
+                        else
+                            Toast.makeText(getApplicationContext(), "کلمه عبور تطابق ندارد", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getApplicationContext(), "آدرس ایمیل را بررسی نمایید", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), "تمامی کادر ها را پر نمایید", Toast.LENGTH_LONG).show();
             }
         });
         // Link to Login Screen
@@ -89,19 +98,15 @@ public class Register extends Activity {
         });
     }
 
-    /**
-     * Function to store user in MySQL database will post params(tag, name,
-     * email, password) to register url
-     */
     private void registerUser(final String name, final String email, final String password, final String address, final String phone) {
         // Tag used to cancel the request
         String tag_string_req = "req_register";
-        pDialog.setMessage("Registering ...");
+        pDialog.setMessage("در حال ثبت ...");
         showDialog();
         StringRequest strReq = new StringRequest(Method.POST, Config_URL.URL_REGISTER, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Register Response: " + response.toString());
+                Log.d(TAG, "Register Response: " + response);
                 hideDialog();
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -119,6 +124,7 @@ public class Register extends Activity {
                         // Inserting row in users table
                         db.addUser(name, email, address, phone, uid, created_at);
                         // Launch login activity
+                        Toast.makeText(getApplicationContext(), "ثبت نام انجام شد", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Register.this, Login.class);
                         startActivity(intent);
                         finish();
@@ -165,5 +171,16 @@ public class Register extends Activity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    public boolean checkEmailValidity(String email) {
+        boolean check1 = email.endsWith("@gmail.com") || email.endsWith("@yahoo.com")
+                || email.endsWith("@outlook.com") || email.endsWith("@live.com")
+                || email.endsWith("@hotmail.com") || email.endsWith("@arash-hatami.ir");
+        boolean check2 = email.endsWith(".com") || email.endsWith(".ir")
+                || email.endsWith(".net") || email.endsWith(".in")
+                || email.endsWith(".org");
+        boolean check3 = !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        return (check1 && check2 && check3);
     }
 }

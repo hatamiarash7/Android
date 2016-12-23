@@ -31,12 +31,14 @@ import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import helper.SessionManager;
 
 public class MainScreenActivity extends AppCompatActivity {
+    public static MainScreenActivity pointer;
+    public Drawer result = null;
     ImageView btnViewResturans;
     ImageView btnViewFastFoods;
     ImageView btnViewMarkets;
     ImageView btnViewMap;
     Button btnClosePopup;
-    private SessionManager session;
+    SessionManager session;
     private PopupWindow pwindo;
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -44,7 +46,6 @@ public class MainScreenActivity extends AppCompatActivity {
         }
     };
     private AccountHeader headerResult = null;
-    private Drawer result = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class MainScreenActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.drawer);
-
+        pointer = this;
         btnViewResturans = (ImageView) findViewById(R.id.btnViewResturans);
         btnViewFastFoods = (ImageView) findViewById(R.id.btnViewFastFoods);
         btnViewMarkets = (ImageView) findViewById(R.id.btnViewMarkets);
@@ -111,6 +112,7 @@ public class MainScreenActivity extends AppCompatActivity {
                             if (drawerItem != null && drawerItem.getIdentifier() == 1) {
                                 Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
                                 startActivity(i);
+                                finish();
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 2) {
                                 Intent i = new Intent(getApplicationContext(), Login.class);
@@ -137,11 +139,9 @@ public class MainScreenActivity extends AppCompatActivity {
                             return false;
                         }
                     })
-                    .withSelectedItem(1)
                     .withSavedInstance(savedInstanceState)
                     .withDrawerGravity(Gravity.END)
                     .build();
-            //result.setSelection(1);
         } else {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
@@ -149,7 +149,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     .withActivity(this)
                     .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                     .addDrawerItems(
-                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1),
+                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withSetSelected(true),
                             new PrimaryDrawerItem().withName("حساب کاربری").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(4),
                             new SectionDrawerItem().withName("جزئیات"),
                             new SecondaryDrawerItem().withName("راهنما").withIcon(FontAwesome.Icon.faw_question).withIdentifier(5),
@@ -162,6 +162,7 @@ public class MainScreenActivity extends AppCompatActivity {
                             if (drawerItem != null && drawerItem.getIdentifier() == 1) {
                                 Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
                                 startActivity(i);
+                                finish();
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 4) {
                                 Intent i = new Intent(getApplicationContext(), Profile.class);
@@ -188,7 +189,6 @@ public class MainScreenActivity extends AppCompatActivity {
                     .withSavedInstance(savedInstanceState)
                     .withDrawerGravity(Gravity.END)
                     .build();
-            //result.setSelection(1);
         }
     }
 

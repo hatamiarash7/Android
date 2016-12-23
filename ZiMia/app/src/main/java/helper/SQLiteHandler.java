@@ -1,6 +1,5 @@
 package helper;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,7 +30,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
@@ -43,7 +41,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.d(TAG, "Database tables created");
     }
 
-    // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
@@ -52,27 +49,22 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /**
-     * Storing user details in database
-     */
     public void addUser(String name, String email, String address, String phone, String uid, String created_at) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_NAME, name); // Name
-        values.put(KEY_ADDRESS, address); // Address
-        values.put(KEY_PHONE, phone); // Phone
-        values.put(KEY_EMAIL, email); // Email
-        values.put(KEY_UID, uid); // Email
-        values.put(KEY_CREATED_AT, created_at); // Created At
-        // Inserting Row
-        long id = db.insert(TABLE_LOGIN, null, values);
+        name = "'" + name + "'";
+        email = "'" + email + "'";
+        address = "'" + address + "'";
+        phone = "'" + phone + "'";
+        created_at = "'" + created_at + "'";
+        String query = "INSERT OR REPLACE INTO " + TABLE_LOGIN + "(" + KEY_NAME + ", " + KEY_ADDRESS + ", "
+                + KEY_PHONE + ", " + KEY_EMAIL + ", " + KEY_UID + ", "
+                + KEY_CREATED_AT + ") VALUES(" + name + ", " + address
+                + ", " + phone + ", " + email + ", " + uid + ", " + created_at + ")";
+        db.execSQL(query);
         db.close(); // Closing database connection
-        Log.d(TAG, "New user inserted into sqlite: " + id);
+        Log.d(TAG, "New user inserted into sqlite");
     }
 
-    /**
-     * Getting user data from database
-     */
     public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
         String selectQuery = "SELECT * FROM " + TABLE_LOGIN;
@@ -97,9 +89,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return user;
     }
 
-    /**
-     * Getting user login status return true if rows are there in table
-     */
     public int getRowCount() {
         String countQuery = "SELECT  * FROM " + TABLE_LOGIN;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -111,9 +100,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return rowCount;
     }
 
-    /**
-     * Re crate database Delete all tables and create them again
-     */
     public void deleteUsers() {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows

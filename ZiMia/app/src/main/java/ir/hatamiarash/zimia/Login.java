@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,21 +27,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import helper.SQLiteHandler;
 import helper.SessionManager;
 import volley.AppController;
 import volley.Config_URL;
 
 public class Login extends Activity {
-    // LogCat tag
     private static final String TAG = Login.class.getSimpleName();
-    private Button btnLogin;
-    private Button btnLinkToRegister;
+    private static final String url_person_detials = "http://zimia.ir/users/include/Set_User_Detail.php";
+    Button btnLogin;
+    Button btnLinkToRegister;
+    JSONParser jsonParser = new JSONParser();
     private EditText inputEmail;
     private EditText inputPassword;
     private ProgressDialog pDialog;
     private SessionManager session;
-    private static final String url_person_detials = "http://zimia.ir/users/include/Set_User_Detail.php";
-    JSONParser jsonParser = new JSONParser();
+    private SQLiteHandler db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,14 +52,12 @@ public class Login extends Activity {
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
-        // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
-        // Session manager
+        db = new SQLiteHandler(getApplicationContext());
         session = new SessionManager(getApplicationContext());
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
             Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
             startActivity(i);
             finish();
@@ -69,15 +69,14 @@ public class Login extends Activity {
                 String password = inputPassword.getText().toString();
                 // Check for empty data in the form
                 if (email.trim().length() > 0 && password.trim().length() > 0) {
-                    // login user
+                    pDialog.setMessage("در حال ورود ...");
+                    showDialog();
                     checkLogin(email, password);
                     new SetPersonDetails().execute();
-                } else {
-                    // Prompt user to enter credentials
-                    Toast.makeText(getApplicationContext(), "Please enter the credentials!", Toast.LENGTH_LONG).show();
-                }
+                    hideDialog();
+                } else
+                    Toast.makeText(getApplicationContext(), "مشخصات را وارد نمایید", Toast.LENGTH_LONG).show();
             }
-
         });
         // Link to Register Screen
         btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
@@ -89,18 +88,13 @@ public class Login extends Activity {
         });
     }
 
-    /**
-     * function to verify login details in mysql db
-     */
     private void checkLogin(final String email, final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
-        pDialog.setMessage("Logging in ...");
-        showDialog();
         StringRequest strReq = new StringRequest(Method.POST, Config_URL.URL_LOGIN, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Login Response: " + response.toString());
+                Log.d(TAG, "Login Response: " + response);
                 hideDialog();
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -108,10 +102,10 @@ public class Login extends Activity {
                     // Check for error node in json
                     if (!error) {
                         // user successfully logged in
-                        // Create login session
                         session.setLogin(true);
                         // Launch main activity
                         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+                        MainScreenActivity.pointer.finish();
                         startActivity(i);
                         finish();
                     } else {
@@ -129,7 +123,6 @@ public class Login extends Activity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
             }
         }) {
             @Override
@@ -157,16 +150,6 @@ public class Login extends Activity {
     }
 
     class SetPersonDetails extends AsyncTask<String, String, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            /*pDialog = new ProgressDialog(Login.this);
-            pDialog.setMessage("Loading Profile. Please wait...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();*/
-        }
-
         protected String doInBackground(String... params) {
             runOnUiThread(new Runnable() {
                 public void run() {
@@ -178,6 +161,18 @@ public class Login extends Activity {
                         Log.d("GET Person Details", json.toString());
                         if (json.getInt("success") == 1) {
                             Log.d(TAG, "Done !");
+                            JSONArray persons = json.getJSONArray("persons");
+                            JSONObject person = persons.getJSONObject(0);
+                            String uid = person.getString("id");
+                            String name = person.getString("name");
+                            String email = person.getString("email");
+                            String address = person.getString("address");
+                            String phone = person.getString("phone");
+                            String created_at = person.getString("created_at");
+                            String msg = "سلام " + name;
+                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                            // Inserting row in users table
+                            db.addUser(name, email, address, phone, uid, created_at);
                         } else {
                             Log.d(TAG, "Error !");
                         }
@@ -187,10 +182,6 @@ public class Login extends Activity {
                 }
             });
             return null;
-        }
-
-        protected void onPostExecute(String file_url) {
-            //pDialog.dismiss();
         }
     }
 }
