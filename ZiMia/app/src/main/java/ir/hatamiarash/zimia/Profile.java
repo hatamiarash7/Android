@@ -24,7 +24,9 @@ import helper.SQLiteHandler;
 import helper.SessionManager;
 
 public class Profile extends Activity {
+    private static final String TAG = Profile.class.getSimpleName();
     private static final String url_person_detials = "http://zimia.ir/users/include/Get_User_Detail.php";
+    private static final String url_delete_person = "http://zimia.ir/users/include/Del_User_Detail.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PERSON = "persons";
     private static final String TAG_EMAIL = "email";
@@ -51,16 +53,13 @@ public class Profile extends Activity {
         txtAddress = (TextView) findViewById(R.id.profile_address);
         txtPhone = (TextView) findViewById(R.id.profile_phone);
         btnLogout = (Button) findViewById(R.id.btnLogout);
-        // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
-        // session manager
         session = new SessionManager(getApplicationContext());
         if (!session.isLoggedIn()) {
             logoutUser();
         }
         HashMap<String, String> user = db.getUserDetails();
         email = user.get("email");
-        email = "hatamiarash7@gmail.com";
         Log.d(email, "db : " + email);
         //Intent i = getIntent();
         //pid = i.getStringExtra(TAG_EMAIL);
@@ -84,13 +83,10 @@ public class Profile extends Activity {
         });
     }
 
-    /**
-     * Logging out the user. Will set isLoggedIn flag to false in shared
-     * preferences Clears the user data from sqlite users table
-     */
     private void logoutUser() {
         session.setLogin(false);
         db.deleteUsers();
+        new DelPersonDetails().execute();
         // Launching the login activity
         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
         startActivity(i);
@@ -98,16 +94,6 @@ public class Profile extends Activity {
     }
 
     class GetPersonDetails extends AsyncTask<String, String, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(Profile.this);
-            pDialog.setMessage("Loading Profile. Please wait...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
-
         protected String doInBackground(String... params) {
             runOnUiThread(new Runnable() {
                 public void run() {
@@ -124,7 +110,7 @@ public class Profile extends Activity {
                             txtAddress.setText(person.getString(TAG_ADDRESS));
                             txtPhone.setText(person.getString(TAG_PHONE));
                         } else {
-                            //Log.d("pid not found", null);
+                            Log.d(TAG, "Error !");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -133,9 +119,27 @@ public class Profile extends Activity {
             });
             return null;
         }
+    }
 
-        protected void onPostExecute(String file_url) {
-            pDialog.dismiss();
+    class DelPersonDetails extends AsyncTask<String, String, String> {
+        protected String doInBackground(String... params) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    try {
+                        List<NameValuePair> params = new ArrayList<NameValuePair>();
+                        params.add(new BasicNameValuePair("email", email));
+                        JSONObject json = jsonParser.makeHttpRequest(url_delete_person, "GET", params);
+                        if (json.getInt(TAG_SUCCESS) == 1) {
+                            Log.d(TAG, "Done !");
+                        } else {
+                            Log.d(TAG, "Error !");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return null;
         }
     }
 }

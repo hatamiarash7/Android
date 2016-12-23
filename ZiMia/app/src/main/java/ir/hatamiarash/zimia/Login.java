@@ -32,7 +32,7 @@ import volley.Config_URL;
 
 public class Login extends Activity {
     // LogCat tag
-    private static final String TAG = Register.class.getSimpleName();
+    private static final String TAG = Login.class.getSimpleName();
     private Button btnLogin;
     private Button btnLinkToRegister;
     private EditText inputEmail;
@@ -173,13 +173,13 @@ public class Login extends Activity {
                     try {
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
                         String e = inputEmail.getText().toString();
-                        params.add(new BasicNameValuePair("email", "hatamiarash7@gmail.com"));
+                        params.add(new BasicNameValuePair("email", e));
                         JSONObject json = jsonParser.makeHttpRequest(url_person_detials, "GET", params);
                         Log.d("GET Person Details", json.toString());
                         if (json.getInt("success") == 1) {
-                            Log.d(TAG, "Done!");
+                            Log.d(TAG, "Done !");
                         } else {
-                            Log.d(TAG, "Error!");
+                            Log.d(TAG, "Error !");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
