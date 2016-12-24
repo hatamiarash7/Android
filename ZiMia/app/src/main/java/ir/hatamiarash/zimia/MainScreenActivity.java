@@ -3,6 +3,8 @@ package ir.hatamiarash.zimia;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -26,7 +29,6 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
 import helper.SessionManager;
 
@@ -126,10 +128,8 @@ public class MainScreenActivity extends AppCompatActivity {
                                 return true;
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 7) {
-                            }
-
-                            if (drawerItem instanceof Nameable) {
-                                //toolbar.setTitle(((Nameable) drawerItem).getName().getText(MainScreenActivity.this));
+                                initiatePopupWindow(R.id.popup_contact);
+                                return true;
                             }
                             return false;
                         }
@@ -160,8 +160,13 @@ public class MainScreenActivity extends AppCompatActivity {
                                 finish();
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 4) {
-                                Intent i = new Intent(getApplicationContext(), Profile.class);
-                                startActivity(i);
+                                if (CheckInternet()) {
+                                    Intent i = new Intent(getApplicationContext(), Profile.class);
+                                    startActivity(i);
+                                } else {
+                                    result.closeDrawer();
+                                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
+                                }
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 5) {
                                 initiatePopupWindow(R.id.popup_help);
@@ -221,10 +226,16 @@ public class MainScreenActivity extends AppCompatActivity {
                 layout = inflater.inflate(R.layout.contact, (ViewGroup) findViewById(R.id.popup_contact));
             if (id == R.id.drawershow)
                 result.openDrawer();
-            pwindo = new PopupWindow(layout, width - (width/5), height - (height/4), true);
+            pwindo = new PopupWindow(layout, width - (width / 5), height - (height / 4), true);
             pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean CheckInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 }

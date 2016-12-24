@@ -31,7 +31,6 @@ android {
 
     dependencies {
         compile 'com.google.android.gms:play-services:10.0.0'
-        //Sliding Menu
         compile 'com.android.support:design:25.0.0'
         compile('com.mikepenz:materialdrawer:4.5.8@aar') {
             transitive = true
@@ -44,6 +43,8 @@ android {
     }
     return void
 }
+
+apply plugin: 'com.google.gms.google-services'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

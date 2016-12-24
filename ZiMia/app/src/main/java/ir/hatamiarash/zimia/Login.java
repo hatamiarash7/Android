@@ -2,7 +2,10 @@ package ir.hatamiarash.zimia;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,16 +72,19 @@ public class Login extends Activity {
                 String email = inputEmail.getText().toString();
                 String password = inputPassword.getText().toString();
                 // Check for empty data in the form
-                if (email.trim().length() > 0 && password.trim().length() > 0) {
-                    pDialog.setMessage("در حال ورود ...");
-                    showDialog();
-                    checkLogin(email, password);
-                    new SetPersonDetails().execute();
-                    hideDialog();
-                    String msg = "سلام " + name;
-                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-                } else
-                    Toast.makeText(getApplicationContext(), "مشخصات را وارد نمایید", Toast.LENGTH_LONG).show();
+                if (CheckInternet())
+                    if (email.trim().length() > 0 && password.trim().length() > 0) {
+                        pDialog.setMessage("در حال ورود ...");
+                        showDialog();
+                        checkLogin(email, password);
+                        new SetPersonDetails().execute();
+                        hideDialog();
+                        String msg = "سلام " + name;
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                    } else
+                        Toast.makeText(getApplicationContext(), "مشخصات را وارد نمایید", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
             }
         });
         // Link to Register Screen
@@ -184,5 +190,11 @@ public class Login extends Activity {
             });
             return null;
         }
+    }
+
+    public boolean CheckInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 }

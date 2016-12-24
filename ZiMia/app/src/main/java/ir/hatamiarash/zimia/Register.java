@@ -2,7 +2,10 @@ package ir.hatamiarash.zimia;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -76,16 +79,19 @@ public class Register extends Activity {
                 String password2 = inputPassword2.getText().toString();
                 String address = inputAddress.getText().toString();
                 String phone = inputPhone.getText().toString();
-                if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
-                    if (checkEmailValidity(email))
-                        if (password.equals(password2))
-                            registerUser(name, email, password, address, phone);
+                if (CheckInternet())
+                    if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
+                        if (checkEmailValidity(email))
+                            if (password.equals(password2))
+                                registerUser(name, email, password, address, phone);
+                            else
+                                Toast.makeText(getApplicationContext(), "کلمه عبور تطابق ندارد", Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(getApplicationContext(), "کلمه عبور تطابق ندارد", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "آدرس ایمیل را بررسی نمایید", Toast.LENGTH_LONG).show();
                     else
-                        Toast.makeText(getApplicationContext(), "آدرس ایمیل را بررسی نمایید", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "تمامی کادر ها را پر نمایید", Toast.LENGTH_LONG).show();
                 else
-                    Toast.makeText(getApplicationContext(), "تمامی کادر ها را پر نمایید", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
             }
         });
         // Link to Login Screen
@@ -182,5 +188,11 @@ public class Register extends Activity {
                 || email.endsWith(".org");
         boolean check3 = !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
         return (check1 && check2 && check3);
+    }
+
+    public boolean CheckInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 }
