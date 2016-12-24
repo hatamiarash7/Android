@@ -8,13 +8,20 @@ android {
         applicationId "ir.hatamiarash.zimia"
         minSdkVersion minSdk
         targetSdkVersion 25
+        versionCode 1
+        versionName "1"
         multiDexEnabled true
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -23,7 +30,6 @@ android {
     }
 
     dependencies {
-        compile "com.android.support:appcompat-v7:25.0.0"
         compile 'com.google.android.gms:play-services:10.0.0'
         //Sliding Menu
         compile 'com.android.support:design:25.0.0'
@@ -36,6 +42,7 @@ android {
         compile 'com.squareup.retrofit2:converter-gson:2.0.0'
         compile 'com.android.support:multidex:1.0.1'
     }
+    return void
 }
 
 dependencies {

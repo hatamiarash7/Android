@@ -43,6 +43,7 @@ public class Login extends Activity {
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
+    String name;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,8 @@ public class Login extends Activity {
                     checkLogin(email, password);
                     new SetPersonDetails().execute();
                     hideDialog();
+                    String msg = "سلام " + name;
+                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                 } else
                     Toast.makeText(getApplicationContext(), "مشخصات را وارد نمایید", Toast.LENGTH_LONG).show();
             }
@@ -164,13 +167,11 @@ public class Login extends Activity {
                             JSONArray persons = json.getJSONArray("persons");
                             JSONObject person = persons.getJSONObject(0);
                             String uid = person.getString("id");
-                            String name = person.getString("name");
+                            name = person.getString("name");
                             String email = person.getString("email");
                             String address = person.getString("address");
                             String phone = person.getString("phone");
                             String created_at = person.getString("created_at");
-                            String msg = "سلام " + name;
-                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                             // Inserting row in users table
                             db.addUser(name, email, address, phone, uid, created_at);
                         } else {

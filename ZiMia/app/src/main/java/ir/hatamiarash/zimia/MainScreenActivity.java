@@ -40,11 +40,6 @@ public class MainScreenActivity extends AppCompatActivity {
     Button btnClosePopup;
     SessionManager session;
     private PopupWindow pwindo;
-    private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            pwindo.dismiss();
-        }
-    };
     private AccountHeader headerResult = null;
 
     @Override
@@ -177,10 +172,8 @@ public class MainScreenActivity extends AppCompatActivity {
                                 return true;
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 7) {
-                            }
-
-                            if (drawerItem instanceof Nameable) {
-                                //toolbar.setTitle(((Nameable) drawerItem).getName().getText(MainScreenActivity.this));
+                                initiatePopupWindow(R.id.popup_contact);
+                                return true;
                             }
                             return false;
                         }
@@ -224,12 +217,12 @@ public class MainScreenActivity extends AppCompatActivity {
                 layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
             if (id == R.id.popup_help)
                 layout = inflater.inflate(R.layout.help, (ViewGroup) findViewById(R.id.popup_help));
+            if (id == R.id.popup_contact)
+                layout = inflater.inflate(R.layout.contact, (ViewGroup) findViewById(R.id.popup_contact));
             if (id == R.id.drawershow)
                 result.openDrawer();
-            pwindo = new PopupWindow(layout, width - 300, height - 300, true);
+            pwindo = new PopupWindow(layout, width - (width/5), height - (height/4), true);
             pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
-            btnClosePopup = (Button) layout.findViewById(R.id.btn_close_popup);
-            btnClosePopup.setOnClickListener(cancel_button_click_listener);
         } catch (Exception e) {
             e.printStackTrace();
         }
