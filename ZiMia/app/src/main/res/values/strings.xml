@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ZiMia</string>
+    <string name="app_website">http://zimia.ir</string>
+    <string name="app_email">info@zimia.ir</string>
+    <string name="app_telegram">http://telegram.me/zimia_ir</string>
 
-    <string name="help">راهنما</string>
-    <string name="about">درباره ما</string>
-    <string name="contact">تماس با ما</string>
+    <string name="help_title">راهنما</string>
+    <string name="about_title">درباره ما</string>
+    <string name="contact_title">تماس با ما</string>
+    <string name="help_text">متن راهنما</string>
+    <string name="about_text">متن درباره ما</string>
+    <string name="contact_text">متن تماس با ما</string>
 
     <string name="resturans">Restaurants</string>
     <string name="fastfoods">FastFoods</string>
@@ -26,4 +32,5 @@
 
     <string name="welcome">خوش آمدید</string>
     <string name="name">نام کامل</string>
+    <string name="close">بستن</string>
 </resources>

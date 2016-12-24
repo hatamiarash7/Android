@@ -44,7 +44,7 @@ android {
     return void
 }
 
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

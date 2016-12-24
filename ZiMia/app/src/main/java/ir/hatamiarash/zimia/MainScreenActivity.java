@@ -43,6 +43,11 @@ public class MainScreenActivity extends AppCompatActivity {
     SessionManager session;
     private PopupWindow pwindo;
     private AccountHeader headerResult = null;
+    private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
+        public void onClick(View v) {
+            pwindo.dismiss();
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,6 @@ public class MainScreenActivity extends AppCompatActivity {
         btnViewFastFoods = (ImageView) findViewById(R.id.btnViewFastFoods);
         btnViewMarkets = (ImageView) findViewById(R.id.btnViewMarkets);
         btnViewMap = (ImageView) findViewById(R.id.btnViewMap);
-
         btnViewResturans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -228,6 +232,8 @@ public class MainScreenActivity extends AppCompatActivity {
                 result.openDrawer();
             pwindo = new PopupWindow(layout, width - (width / 5), height - (height / 4), true);
             pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
+            btnClosePopup = (Button) layout.findViewById(R.id.btn_close_popup);
+            btnClosePopup.setOnClickListener(cancel_button_click_listener);
         } catch (Exception e) {
             e.printStackTrace();
         }
