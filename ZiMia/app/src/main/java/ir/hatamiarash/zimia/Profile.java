@@ -21,11 +21,11 @@ import java.util.List;
 
 import helper.SQLiteHandler;
 import helper.SessionManager;
+import volley.Config_URL;
 
 public class Profile extends Activity {
+    public static Profile pointer;
     private static final String TAG = Profile.class.getSimpleName();
-    private static final String url_person_detials = "http://zimia.ir/users/include/Get_User_Detail.php";
-    private static final String url_delete_person = "http://zimia.ir/users/include/Del_User_Detail.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PERSON = "persons";
     private static final String TAG_EMAIL = "email";
@@ -69,7 +69,7 @@ public class Profile extends Activity {
         });
     }
 
-    private void logoutUser() {
+    public void logoutUser() {
         session.setLogin(false);
         db.deleteUsers();
         new DelPersonDetails().execute();
@@ -87,7 +87,7 @@ public class Profile extends Activity {
                     try {
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
                         params.add(new BasicNameValuePair("email", email));
-                        JSONObject json = jsonParser.makeHttpRequest(url_person_detials, "GET", params);
+                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_get_person_detials, "GET", params);
                         Log.d("Single Person Details", json.toString());
                         if (json.getInt(TAG_SUCCESS) == 1) {
                             JSONArray productObj = json.getJSONArray(TAG_PERSON);
@@ -115,7 +115,7 @@ public class Profile extends Activity {
                     try {
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
                         params.add(new BasicNameValuePair("email", email));
-                        JSONObject json = jsonParser.makeHttpRequest(url_delete_person, "GET", params);
+                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_delete_person, "GET", params);
                         if (json.getInt(TAG_SUCCESS) == 1) {
                             Log.d(TAG, "Done !");
                         } else {

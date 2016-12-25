@@ -25,6 +25,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import volley.Config_URL;
+
 import static android.R.id.custom;
 import static android.R.id.list;
 
@@ -35,7 +37,6 @@ public class AllResturans extends ListActivity {
     JSONParser jParser = new JSONParser();
     ArrayList<HashMap<String, String>> resturanList;
     // url to get all products list
-    static String url_all_resturans = "http://zimia.ir/get_all_resturans.php";
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_RESTURANS = "resturans";
@@ -105,7 +106,7 @@ public class AllResturans extends ListActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(AllResturans.this);
-            pDialog.setMessage("Loading Resturans. Please wait...");
+            pDialog.setMessage("لطفا منتظر بمانید ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
@@ -118,7 +119,7 @@ public class AllResturans extends ListActivity {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(url_all_resturans, "GET", params);
+            JSONObject json = jParser.makeHttpRequest(Config_URL.url_all_resturans, "GET", params);
             // Check your log cat for JSON reponse
             Log.d("All Resturans: ", json.toString());
             try {

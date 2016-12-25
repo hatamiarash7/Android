@@ -24,6 +24,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import volley.Config_URL;
+
 public class AllFastFoods extends ListActivity {
 
     // JSON Node names
@@ -36,7 +38,6 @@ public class AllFastFoods extends ListActivity {
     private static final String TAG_OPENHOUR = "open_hour";
     private static final String TAG_CLOSEHOUR = "close_hour";
     // url to get all products list
-    static String url_all_fastfoods = "http://zimia.ir/get_all_fastfoods.php";
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
     ArrayList<HashMap<String, String>> fastfoodsList;
@@ -87,9 +88,6 @@ public class AllFastFoods extends ListActivity {
         }
     }
 
-    /**
-     * Background Async Task to Load all product by making HTTP Request
-     */
     class LoadAllProducts extends AsyncTask<String, String, String> {
         /**
          * Before starting background thread Show Progress Dialog
@@ -98,7 +96,7 @@ public class AllFastFoods extends ListActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(AllFastFoods.this);
-            pDialog.setMessage("Loading FastFoods. Please wait...");
+            pDialog.setMessage("لطفا منتظر بمانید ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
@@ -111,7 +109,7 @@ public class AllFastFoods extends ListActivity {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(url_all_fastfoods, "GET", params);
+            JSONObject json = jParser.makeHttpRequest(Config_URL.url_all_fastfoods, "GET", params);
             // Check your log cat for JSON reponse
             Log.d("All FastFoods: ", json.toString());
             try {

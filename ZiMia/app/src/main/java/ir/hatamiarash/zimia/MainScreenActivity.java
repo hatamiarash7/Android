@@ -49,9 +49,11 @@ public class MainScreenActivity extends AppCompatActivity {
         }
     };
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Realm.init(this); //initialize other plugins
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.drawer);
@@ -63,29 +65,41 @@ public class MainScreenActivity extends AppCompatActivity {
         btnViewResturans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), AllResturans.class);
-                startActivity(i);
+                if (CheckInternet()) {
+                    Intent i = new Intent(getApplicationContext(), AllResturans.class);
+                    startActivity(i);
+                } else
+                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
             }
         });
         btnViewFastFoods.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), AllFastFoods.class);
-                startActivity(i);
+                if (CheckInternet()) {
+                    Intent i = new Intent(getApplicationContext(), AllFastFoods.class);
+                    startActivity(i);
+                } else
+                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
             }
         });
         btnViewMarkets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), AllMarkets.class);
-                startActivity(i);
+                if (CheckInternet()) {
+                    Intent i = new Intent(getApplicationContext(), AllMarkets.class);
+                    startActivity(i);
+                } else
+                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
             }
         });
         btnViewMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), Map.class);
-                startActivity(i);
+                if (CheckInternet()) {
+                    Intent i = new Intent(getApplicationContext(), Map.class);
+                    startActivity(i);
+                } else
+                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -150,6 +164,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     .addDrawerItems(
                             new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withSetSelected(true),
                             new PrimaryDrawerItem().withName("حساب کاربری").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(4),
+                            new PrimaryDrawerItem().withName("خروج از حساب").withIcon(FontAwesome.Icon.faw_sign_out).withIdentifier(8),
                             new SectionDrawerItem().withName("جزئیات"),
                             new SecondaryDrawerItem().withName("راهنما").withIcon(FontAwesome.Icon.faw_question).withIdentifier(5),
                             new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(6),
@@ -183,6 +198,14 @@ public class MainScreenActivity extends AppCompatActivity {
                             if (drawerItem != null && drawerItem.getIdentifier() == 7) {
                                 initiatePopupWindow(R.id.popup_contact);
                                 return true;
+                            }
+                            if (drawerItem != null && drawerItem.getIdentifier() == 8) {
+                                if (CheckInternet()) {
+                                    Profile.pointer.logoutUser();
+                                } else {
+                                    result.closeDrawer();
+                                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
+                                }
                             }
                             return false;
                         }

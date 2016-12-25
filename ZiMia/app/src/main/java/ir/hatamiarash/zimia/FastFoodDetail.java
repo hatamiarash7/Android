@@ -23,12 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class FastFoodDetail extends ListActivity {
+import volley.Config_URL;
 
-    // single product url
-    private static final String url_fastfood_detials = "http://zimia.ir/get_fastfood_details.php";
-    // JSON Node names
-    private static final String url_all_fastfood_foods = "http://zimia.ir/get_all_fastfood_foods.php";
+public class FastFoodDetail extends ListActivity {
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_FASTFOOD = "fastfoods";
     private static final String TAG_PID = "id";
@@ -76,7 +73,7 @@ public class FastFoodDetail extends ListActivity {
         // Hashmap for ListView
         foodList = new ArrayList<HashMap<String, String>>();
         // Loading products in Background Thread
-        new FastFoodDetail.LoadAllFoods().execute();
+        new LoadAllFoods().execute();
         // Get listview
         ListView lv = getListView();
         // on seleting single product
@@ -94,7 +91,6 @@ public class FastFoodDetail extends ListActivity {
                 //startActivityForResult(in, 100);
             }
         });
-
     }
 
     // Response from Edit Product Activity
@@ -110,33 +106,20 @@ public class FastFoodDetail extends ListActivity {
             finish();
             startActivity(intent);
         }
-
     }
 
-    /**
-     * Background Async Task to Get complete product details
-     */
     class GetFastFoodDetails extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(FastFoodDetail.this);
-            pDialog.setMessage("Loading FastFood details. Please wait...");
+            pDialog.setMessage("لطفا منتظر بمانید ...");
             pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
+            pDialog.setCancelable(false);
             pDialog.show();
         }
 
-        /**
-         * Getting product details in background thread
-         */
         protected String doInBackground(String... params) {
-
-            // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
                     // Check for success tag
@@ -147,7 +130,7 @@ public class FastFoodDetail extends ListActivity {
                         params.add(new BasicNameValuePair("id", pid));
                         // getting product details by making HTTP request
                         // Note that product details url will use GET request
-                        JSONObject json = jsonParser.makeHttpRequest(url_fastfood_detials, "GET", params);
+                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_fastfood_detials, "GET", params);
                         // check your log for json response
                         Log.d("Single FastFood Details", json.toString());
                         // json success tag
@@ -174,45 +157,16 @@ public class FastFoodDetail extends ListActivity {
             });
             return null;
         }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once got all details
-            pDialog.dismiss();
-        }
     }
 
-    /**
-     * Background Async Task to Load all product by making HTTP Request
-     */
     class LoadAllFoods extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //pDialog = new ProgressDialog(EditFastFoods.this);
-            //pDialog.setMessage("Loading Foods. Please wait...");
-            //pDialog.setIndeterminate(false);
-            //pDialog.setCancelable(false);
-            //pDialog.show();
-        }
-
-        /**
-         * getting All products from url
-         */
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("id", pid));
             // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(url_all_fastfood_foods, "GET", params);
+            JSONObject json = jParser.makeHttpRequest(Config_URL.url_all_fastfood_foods, "GET", params);
             // Check your log cat for JSON reponse
-
             Log.d("All Foods: ", json.toString());
             try {
                 // Checking for SUCCESS TAG
@@ -236,7 +190,7 @@ public class FastFoodDetail extends ListActivity {
                         map.put(TAG_FOOD_PID, id);
                         map.put(TAG_FOOD_NAME, name);
                         map.put(TAG_FOOD_PRICE, price);
-                        String add = "i"+String.valueOf(picture);
+                        String add = "i" + String.valueOf(picture);
                         int pic = getResources().getIdentifier(add, "drawable", getPackageName());
                         map.put(TAG_FOOD_PICTURE, String.valueOf(pic));
                         foodList.add(map);
@@ -252,19 +206,9 @@ public class FastFoodDetail extends ListActivity {
             return null;
         }
 
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog after getting all products
-            pDialog.dismiss();
-            // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
                     ListAdapter adapter = new SimpleAdapter(
                             FastFoodDetail.this, foodList,
                             R.layout.list_item, new String[]{
@@ -281,9 +225,9 @@ public class FastFoodDetail extends ListActivity {
                             });
                     // updating listview
                     setListAdapter(adapter);
-
                 }
             });
+            pDialog.dismiss();
         }
     }
 }

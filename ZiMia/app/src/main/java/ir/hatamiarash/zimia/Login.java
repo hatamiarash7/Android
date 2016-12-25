@@ -37,16 +37,15 @@ import volley.Config_URL;
 
 public class Login extends Activity {
     private static final String TAG = Login.class.getSimpleName();
-    private static final String url_person_detials = "http://zimia.ir/users/include/Set_User_Detail.php";
     Button btnLogin;
     Button btnLinkToRegister;
     JSONParser jsonParser = new JSONParser();
+    String name;
     private EditText inputEmail;
     private EditText inputPassword;
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
-    String name;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +99,7 @@ public class Login extends Activity {
     private void checkLogin(final String email, final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
-        StringRequest strReq = new StringRequest(Method.POST, Config_URL.URL_LOGIN, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST, Config_URL.url_login, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response);
@@ -158,6 +157,12 @@ public class Login extends Activity {
             pDialog.dismiss();
     }
 
+    public boolean CheckInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+    }
+
     class SetPersonDetails extends AsyncTask<String, String, String> {
         protected String doInBackground(String... params) {
             runOnUiThread(new Runnable() {
@@ -166,7 +171,7 @@ public class Login extends Activity {
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
                         String e = inputEmail.getText().toString();
                         params.add(new BasicNameValuePair("email", e));
-                        JSONObject json = jsonParser.makeHttpRequest(url_person_detials, "GET", params);
+                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_set_person_detials, "GET", params);
                         Log.d("GET Person Details", json.toString());
                         if (json.getInt("success") == 1) {
                             Log.d(TAG, "Done !");
@@ -190,11 +195,5 @@ public class Login extends Activity {
             });
             return null;
         }
-    }
-
-    public boolean CheckInternet() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 }

@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -25,13 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import volley.Config_URL;
+
 public class MarketDetail extends ListActivity {
-
-    // single product url
-    private static final String url_market_detials = "http://zimia.ir/get_market_details.php";
-    // JSON Node names
-    private static final String url_all_market_products = "http://zimia.ir/get_all_market_products.php";
-
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MARKET = "markets";
     private static final String TAG_PID = "id";
@@ -114,29 +108,18 @@ public class MarketDetail extends ListActivity {
 
     }
 
-    /**
-     * Background Async Task to Get complete product details
-     */
     class GetMarketDetails extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(MarketDetail.this);
-            pDialog.setMessage("Loading Market details. Please wait...");
+            pDialog.setMessage("لطفا منتظر بمانید ...");
             pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
+            pDialog.setCancelable(false);
             pDialog.show();
         }
 
-        /**
-         * Getting product details in background thread
-         */
         protected String doInBackground(String... params) {
-
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
@@ -148,7 +131,7 @@ public class MarketDetail extends ListActivity {
                         params.add(new BasicNameValuePair("id", pid));
                         // getting product details by making HTTP request
                         // Note that product details url will use GET request
-                        JSONObject json = jsonParser.makeHttpRequest(url_market_detials, "GET", params);
+                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_market_detials, "GET", params);
                         // check your log for json response
                         Log.d("Single Market Details", json.toString());
                         // json success tag
@@ -175,43 +158,15 @@ public class MarketDetail extends ListActivity {
             });
             return null;
         }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once got all details
-            pDialog.dismiss();
-        }
     }
 
-    /**
-     * Background Async Task to Load all product by making HTTP Request
-     */
     class LoadAllProducts extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //pDialog = new ProgressDialog(EditMarkets.this);
-            //pDialog.setMessage("Loading Products. Please wait...");
-            //pDialog.setIndeterminate(false);
-            //pDialog.setCancelable(false);
-            //pDialog.show();
-        }
-
-        /**
-         * getting All products from url
-         */
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("id", pid));
             // getting JSON string from URL
-            JSONObject jso = jParser.makeHttpRequest(url_all_market_products, "GET", params);
+            JSONObject jso = jParser.makeHttpRequest(Config_URL.url_all_market_products, "GET", params);
             // Check your log cat for JSON reponse
             Log.d("All Products: ", jso.toString());
             try {
@@ -236,7 +191,7 @@ public class MarketDetail extends ListActivity {
                         map.put(TAG_PRODUCT_PID, id);
                         map.put(TAG_PRODUCT_NAME, name);
                         map.put(TAG_PRODUCT_PRICE, price);
-                        String add = "i"+String.valueOf(picture);
+                        String add = "i" + String.valueOf(picture);
                         int pic = getResources().getIdentifier(add, "drawable", getPackageName());
                         map.put(TAG_PRODUCT_PICTURE, String.valueOf(pic));
                         // adding HashList to ArrayList
@@ -253,18 +208,9 @@ public class MarketDetail extends ListActivity {
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog after getting all products
-            pDialog.dismiss();
-            // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
                     ListAdapter adapter = new SimpleAdapter(
                             MarketDetail.this, productList,
                             R.layout.list_item, new String[]{
@@ -283,7 +229,7 @@ public class MarketDetail extends ListActivity {
                     setListAdapter(adapter);
                 }
             });
+            pDialog.dismiss();
         }
     }
-
 }

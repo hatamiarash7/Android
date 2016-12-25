@@ -24,19 +24,14 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class AllMarkets extends ListActivity {
+import volley.Config_URL;
 
+public class AllMarkets extends ListActivity {
     // Progress Dialog
     private ProgressDialog pDialog;
-
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
-
     ArrayList<HashMap<String, String>> marketsList;
-
-    // url to get all products list
-    private static String url_all_markets = "http://zimia.ir/get_all_markets.php";
-
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MARKETS = "markets";
@@ -115,7 +110,7 @@ public class AllMarkets extends ListActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(AllMarkets.this);
-            pDialog.setMessage("Loading Markets. Please wait...");
+            pDialog.setMessage("لطفا منتظر بمانید ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
@@ -128,7 +123,7 @@ public class AllMarkets extends ListActivity {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(url_all_markets, "GET", params);
+            JSONObject json = jParser.makeHttpRequest(Config_URL.url_all_markets, "GET", params);
 
             // Check your log cat for JSON reponse
             Log.d("All Markets: ", json.toString());

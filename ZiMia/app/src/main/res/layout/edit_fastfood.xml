@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <ir.hatamiarash.zimia.PersianTextView
         android:id="@+id/FastFoodName"
         android:layout_width="fill_parent"
@@ -12,13 +11,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:paddingTop="10dip"
         android:text="FastFood Name"
         android:textAlignment="center"
         android:textSize="26sp" />
-
 
     <ir.hatamiarash.zimia.PersianTextView
         android:id="@+id/FastFoodAddress"
@@ -27,6 +26,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/L1"
+        android:gravity="center_horizontal"
         android:paddingBottom="10dp"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
@@ -101,7 +101,6 @@
             android:text="ساعت کاری :"
             android:textSize="17sp"
             android:textStyle="normal|bold" />
-
     </LinearLayout>
 
     <ListView
@@ -109,6 +108,4 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/FastFoodAddress" />
-
-
 </RelativeLayout>
