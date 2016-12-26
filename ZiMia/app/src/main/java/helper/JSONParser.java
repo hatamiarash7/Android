@@ -1,4 +1,4 @@
-package ir.hatamiarash.zimia;
+package helper;
 
 import android.util.Log;
 

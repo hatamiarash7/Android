@@ -14,7 +14,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
 
-        <ir.hatamiarash.zimia.PersianEditText
+        <helper.PersianEditText
             android:id="@+id/email"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint" />
 
-        <ir.hatamiarash.zimia.PersianEditText
+        <helper.PersianEditText
             android:id="@+id/password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
 
         <!-- Login Button -->
 
-        <ir.hatamiarash.zimia.PersianButton
+        <helper.PersianButton
             android:id="@+id/btnLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
 
         <!-- Link to Login Screen -->
 
-        <ir.hatamiarash.zimia.PersianButton
+        <helper.PersianButton
             android:id="@+id/btnLinkToRegisterScreen"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

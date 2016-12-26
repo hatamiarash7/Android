@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -29,6 +29,7 @@ import java.util.Map;
 
 import helper.SQLiteHandler;
 import helper.SessionManager;
+import helper.TypefaceSpan;
 import volley.AppController;
 import volley.Config_URL;
 
@@ -45,8 +46,6 @@ public class Register extends Activity {
     private EditText inputPhone;
     private ProgressDialog pDialog;
     private SQLiteHandler db;
-    ProgressBar pb;
-    static int i = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,30 +59,7 @@ public class Register extends Activity {
         inputPhone = (EditText) findViewById(R.id.phone);
         btnRegister = (Button) findViewById(R.id.btnRegister);
         btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
-        pb = (ProgressBar) findViewById(R.id.progressBar);
-        inputPassword.setError("Enter your password..!");
-        inputPassword.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if (inputPassword.getText().toString().length() == 0) {
-                    inputPassword.setError("کلمه عبور حداقل 6 حرف");
-                } else {
-                    password_caculation();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // TODO Auto-generated method stub
-            }
-        });
+        inputPassword.setError("حداقل 8 حرف");
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -113,13 +89,11 @@ public class Register extends Activity {
                             if (password.equals(password2))
                                 registerUser(name, email, password, address, phone);
                             else
-                                Toast.makeText(getApplicationContext(), "کلمه عبور تطابق ندارد", Toast.LENGTH_LONG).show();
+                                MakeToast("کلمه عبور تطابق ندارد");
                         else
-                            Toast.makeText(getApplicationContext(), "کلمه عبور کوتاه است", Toast.LENGTH_LONG).show();
+                            MakeToast("کلمه عبور کوتاه است");
                     else
-                        Toast.makeText(getApplicationContext(), "تمامی کادر ها را پر نمایید", Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
+                        MakeToast("تمامی کادر ها را پر نمایید");
             }
         });
         // Link to Login Screen
@@ -146,8 +120,7 @@ public class Register extends Activity {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
-                        // User successfully stored in MySQL
-                        // Now store the user in sqlite
+                        // User successfully stored in MySQL , Now store the user in sqlite
                         String uid = jObj.getString("uid");
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
@@ -157,15 +130,14 @@ public class Register extends Activity {
                         String created_at = user.getString("created_at");
                         // Inserting row in users table
                         db.addUser(name, email, address, phone, uid, created_at);
-                        // Launch login activity
-                        Toast.makeText(getApplicationContext(), "ثبت نام انجام شد", Toast.LENGTH_LONG).show();
+                        MakeToast("ثبت نام انجام شد");
                         Intent intent = new Intent(Register.this, Login.class);
                         startActivity(intent);
                         finish();
                     } else {
                         // Error occurred in registration. Get the error message
                         String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                        MakeToast(errorMsg);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -175,7 +147,7 @@ public class Register extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Registration Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                MakeToast(error.getMessage());
                 hideDialog();
             }
         }) {
@@ -208,139 +180,19 @@ public class Register extends Activity {
 
     public boolean CheckInternet() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+            return true;
+        else {
+            MakeToast("اتصال به اینترنت را بررسی نمایید");
+        }
+        return false;
     }
 
-    protected void password_caculation() {
-        // TODO Auto-generated method stub
-        String temp = inputPassword.getText().toString();
-        System.out.println(i + " current password is : " + temp);
-        i = i + 1;
-
-        int length = 0, uppercase = 0, lowercase = 0, digits = 0, symbols = 0, bonus = 0, requirements = 0;
-
-        int lettersonly = 0, numbersonly = 0, cuc = 0, clc = 0;
-
-        length = temp.length();
-        for (int i = 0; i < temp.length(); i++) {
-            if (Character.isUpperCase(temp.charAt(i)))
-                uppercase++;
-            else if (Character.isLowerCase(temp.charAt(i)))
-                lowercase++;
-            else if (Character.isDigit(temp.charAt(i)))
-                digits++;
-
-            symbols = length - uppercase - lowercase - digits;
-
-        }
-
-        for (int j = 1; j < temp.length() - 1; j++) {
-
-            if (Character.isDigit(temp.charAt(j)))
-                bonus++;
-
-        }
-
-        for (int k = 0; k < temp.length(); k++) {
-
-            if (Character.isUpperCase(temp.charAt(k))) {
-                k++;
-
-                if (k < temp.length()) {
-
-                    if (Character.isUpperCase(temp.charAt(k))) {
-
-                        cuc++;
-                        k--;
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        for (int l = 0; l < temp.length(); l++) {
-
-            if (Character.isLowerCase(temp.charAt(l))) {
-                l++;
-
-                if (l < temp.length()) {
-
-                    if (Character.isLowerCase(temp.charAt(l))) {
-
-                        clc++;
-                        l--;
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        System.out.println("length" + length);
-        System.out.println("uppercase" + uppercase);
-        System.out.println("lowercase" + lowercase);
-        System.out.println("digits" + digits);
-        System.out.println("symbols" + symbols);
-        System.out.println("bonus" + bonus);
-        System.out.println("cuc" + cuc);
-        System.out.println("clc" + clc);
-
-        if (length > 7) {
-            requirements++;
-        }
-
-        if (uppercase > 0) {
-            requirements++;
-        }
-
-        if (lowercase > 0) {
-            requirements++;
-        }
-
-        if (digits > 0) {
-            requirements++;
-        }
-
-        if (symbols > 0) {
-            requirements++;
-        }
-
-        if (bonus > 0) {
-            requirements++;
-        }
-
-        if (digits == 0 && symbols == 0) {
-            lettersonly = 1;
-        }
-
-        if (lowercase == 0 && uppercase == 0 && symbols == 0) {
-            numbersonly = 1;
-        }
-
-        int Total = (length * 4) + ((length - uppercase) * 2)
-                + ((length - lowercase) * 2) + (digits * 4) + (symbols * 6)
-                + (bonus * 2) + (requirements * 2) - (lettersonly * length * 2)
-                - (numbersonly * length * 3) - (cuc * 2) - (clc * 2);
-
-        System.out.println("Total" + Total);
-
-        if (Total < 30) {
-            pb.setProgress(Total - 15);
-        } else if (Total >= 40 && Total < 50) {
-            pb.setProgress(Total - 20);
-        } else if (Total >= 56 && Total < 70) {
-            pb.setProgress(Total - 25);
-        } else if (Total >= 76) {
-            pb.setProgress(Total - 30);
-        } else {
-            pb.setProgress(Total - 20);
-        }
-
+    public void MakeToast(String Message) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_LONG).show();
     }
 }

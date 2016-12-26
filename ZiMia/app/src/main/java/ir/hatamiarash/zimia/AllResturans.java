@@ -25,17 +25,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import helper.JSONParser;
 import volley.Config_URL;
 
-import static android.R.id.custom;
-import static android.R.id.list;
-
 public class AllResturans extends ListActivity {
-    // Progress Dialog
-    private ProgressDialog pDialog;
-    // Creating JSON Parser object
-    JSONParser jParser = new JSONParser();
-    ArrayList<HashMap<String, String>> resturanList;
     // url to get all products list
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -46,8 +39,13 @@ public class AllResturans extends ListActivity {
     private static final String TAG_STATUS_PICTURE = "status";
     private static final String TAG_OPENHOUR = "open_hour";
     private static final String TAG_CLOSEHOUR = "close_hour";
+    // Creating JSON Parser object
+    JSONParser jParser = new JSONParser();
+    ArrayList<HashMap<String, String>> resturanList;
     // products JSONArray
     JSONArray resturans = null;
+    // Progress Dialog
+    private ProgressDialog pDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,7 +141,7 @@ public class AllResturans extends ListActivity {
                         // adding each child node to HashMap key => value
                         map.put(TAG_PID, id);
                         map.put(TAG_NAME, name);
-                        String add = "i"+String.valueOf(picture);
+                        String add = "i" + String.valueOf(picture);
                         int pic = getResources().getIdentifier(add, "drawable", getPackageName());
                         map.put(TAG_PICTURE, String.valueOf(pic));
                         Calendar time = Calendar.getInstance();
@@ -152,8 +150,7 @@ public class AllResturans extends ListActivity {
                         if (current_hour > open_hour && current_hour < close_hour) {
                             pic = getResources().getIdentifier("open", "drawable", getPackageName());
                             map.put(TAG_STATUS_PICTURE, String.valueOf(pic));
-                        }
-                        else {
+                        } else {
                             pic = getResources().getIdentifier("close", "drawable", getPackageName());
                             map.put(TAG_STATUS_PICTURE, String.valueOf(pic));
                         }

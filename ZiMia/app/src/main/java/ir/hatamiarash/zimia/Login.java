@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,8 +33,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import helper.JSONParser;
 import helper.SQLiteHandler;
 import helper.SessionManager;
+import helper.TypefaceSpan;
 import volley.AppController;
 import volley.Config_URL;
 
@@ -78,12 +83,8 @@ public class Login extends Activity {
                         checkLogin(email, password);
                         new SetPersonDetails().execute();
                         hideDialog();
-                        String msg = "سلام " + name;
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                     } else
-                        Toast.makeText(getApplicationContext(), "مشخصات را وارد نمایید", Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
+                        MakeToast("مشخصات را وارد نمایید");
             }
         });
         // Link to Register Screen
@@ -112,6 +113,8 @@ public class Login extends Activity {
                         // user successfully logged in
                         session.setLogin(true);
                         // Launch main activity
+                        String msg = "سلام " + name;
+                        MakeToast(msg);
                         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
                         MainScreenActivity.pointer.finish();
                         startActivity(i);
@@ -119,7 +122,7 @@ public class Login extends Activity {
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                        MakeToast(errorMsg);
                     }
                 } catch (JSONException e) {
                     // JSON error
@@ -130,7 +133,7 @@ public class Login extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                MakeToast(error.getMessage());
             }
         }) {
             @Override
@@ -159,8 +162,20 @@ public class Login extends Activity {
 
     public boolean CheckInternet() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+            return true;
+        else {
+            MakeToast("اتصال به اینترنت را بررسی نمایید");
+        }
+        return false;
+    }
+
+    public void MakeToast(String Message) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_LONG).show();
     }
 
     class SetPersonDetails extends AsyncTask<String, String, String> {

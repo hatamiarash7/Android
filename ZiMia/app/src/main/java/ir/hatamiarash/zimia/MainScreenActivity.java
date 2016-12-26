@@ -3,12 +3,15 @@ package ir.hatamiarash.zimia;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,9 +34,11 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import helper.SessionManager;
+import helper.TypefaceSpan;
 
 public class MainScreenActivity extends AppCompatActivity {
     public static MainScreenActivity pointer;
+    private static Typeface persianTypeface;
     public Drawer result = null;
     ImageView btnViewResturans;
     ImageView btnViewFastFoods;
@@ -49,7 +54,6 @@ public class MainScreenActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,7 @@ public class MainScreenActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.drawer);
         pointer = this;
+        persianTypeface = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
         btnViewResturans = (ImageView) findViewById(R.id.btnViewResturans);
         btnViewFastFoods = (ImageView) findViewById(R.id.btnViewFastFoods);
         btnViewMarkets = (ImageView) findViewById(R.id.btnViewMarkets);
@@ -67,8 +72,7 @@ public class MainScreenActivity extends AppCompatActivity {
                 if (CheckInternet()) {
                     Intent i = new Intent(getApplicationContext(), AllResturans.class);
                     startActivity(i);
-                } else
-                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
+                }
             }
         });
         btnViewFastFoods.setOnClickListener(new View.OnClickListener() {
@@ -77,8 +81,7 @@ public class MainScreenActivity extends AppCompatActivity {
                 if (CheckInternet()) {
                     Intent i = new Intent(getApplicationContext(), AllFastFoods.class);
                     startActivity(i);
-                } else
-                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
+                }
             }
         });
         btnViewMarkets.setOnClickListener(new View.OnClickListener() {
@@ -87,8 +90,7 @@ public class MainScreenActivity extends AppCompatActivity {
                 if (CheckInternet()) {
                     Intent i = new Intent(getApplicationContext(), AllMarkets.class);
                     startActivity(i);
-                } else
-                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
+                }
             }
         });
         btnViewMap.setOnClickListener(new View.OnClickListener() {
@@ -97,11 +99,9 @@ public class MainScreenActivity extends AppCompatActivity {
                 if (CheckInternet()) {
                     Intent i = new Intent(getApplicationContext(), Map.class);
                     startActivity(i);
-                } else
-                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
+                }
             }
         });
-
         // Session manager
         session = new SessionManager(getApplicationContext());
         // Check if user is already logged in or not
@@ -112,13 +112,12 @@ public class MainScreenActivity extends AppCompatActivity {
                     .withActivity(this)
                     .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                     .addDrawerItems(
-                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1),
-                            new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_sign_in).withIdentifier(2),
-                            new PrimaryDrawerItem().withName("ثبت نام").withIcon(FontAwesome.Icon.faw_user_plus).withIdentifier(3),
-                            new SectionDrawerItem().withName("جزئیات"),
-                            new SecondaryDrawerItem().withName("راهنما").withIcon(FontAwesome.Icon.faw_question).withIdentifier(5),
-                            new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(6),
-                            new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(7)
+                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withTypeface(persianTypeface),
+                            new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_sign_in).withIdentifier(2).withTypeface(persianTypeface),
+                            new PrimaryDrawerItem().withName("ثبت نام").withIcon(FontAwesome.Icon.faw_user_plus).withIdentifier(3).withTypeface(persianTypeface),
+                            new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
+                            new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(4).withTypeface(persianTypeface),
+                            new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(5).withTypeface(persianTypeface)
                     )
                     .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                         @Override
@@ -136,15 +135,11 @@ public class MainScreenActivity extends AppCompatActivity {
                                 Intent i = new Intent(getApplicationContext(), Register.class);
                                 startActivity(i);
                             }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 5) {
-                                initiatePopupWindow(R.id.popup_help);
-                                return true;
-                            }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 6) {
+                            if (drawerItem != null && drawerItem.getIdentifier() == 4) {
                                 initiatePopupWindow(R.id.popup_about);
                                 return true;
                             }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 7) {
+                            if (drawerItem != null && drawerItem.getIdentifier() == 5) {
                                 initiatePopupWindow(R.id.popup_contact);
                                 return true;
                             }
@@ -161,13 +156,11 @@ public class MainScreenActivity extends AppCompatActivity {
                     .withActivity(this)
                     .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                     .addDrawerItems(
-                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withSetSelected(true),
-                            new PrimaryDrawerItem().withName("حساب کاربری").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(4),
-                            new PrimaryDrawerItem().withName("خروج از حساب").withIcon(FontAwesome.Icon.faw_sign_out).withIdentifier(8),
-                            new SectionDrawerItem().withName("جزئیات"),
-                            new SecondaryDrawerItem().withName("راهنما").withIcon(FontAwesome.Icon.faw_question).withIdentifier(5),
-                            new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(6),
-                            new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(7)
+                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withSetSelected(true).withTypeface(persianTypeface),
+                            new PrimaryDrawerItem().withName("حساب کاربری").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(2).withTypeface(persianTypeface),
+                            new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
+                            new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(3).withTypeface(persianTypeface),
+                            new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(4).withTypeface(persianTypeface)
                     )
                     .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                         @Override
@@ -177,7 +170,7 @@ public class MainScreenActivity extends AppCompatActivity {
                                 startActivity(i);
                                 finish();
                             }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 4) {
+                            if (drawerItem != null && drawerItem.getIdentifier() == 2) {
                                 if (CheckInternet()) {
                                     Intent i = new Intent(getApplicationContext(), Profile.class);
                                     startActivity(i);
@@ -186,25 +179,13 @@ public class MainScreenActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
                                 }
                             }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 5) {
-                                initiatePopupWindow(R.id.popup_help);
-                                return true;
-                            }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 6) {
+                            if (drawerItem != null && drawerItem.getIdentifier() == 3) {
                                 initiatePopupWindow(R.id.popup_about);
                                 return true;
                             }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 7) {
+                            if (drawerItem != null && drawerItem.getIdentifier() == 4) {
                                 initiatePopupWindow(R.id.popup_contact);
                                 return true;
-                            }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 8) {
-                                if (CheckInternet()) {
-                                    Profile.pointer.logoutUser();
-                                } else {
-                                    result.closeDrawer();
-                                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
-                                }
                             }
                             return false;
                         }
@@ -246,8 +227,6 @@ public class MainScreenActivity extends AppCompatActivity {
             View layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
             if (id == R.id.popup_about)
                 layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
-            if (id == R.id.popup_help)
-                layout = inflater.inflate(R.layout.help, (ViewGroup) findViewById(R.id.popup_help));
             if (id == R.id.popup_contact)
                 layout = inflater.inflate(R.layout.contact, (ViewGroup) findViewById(R.id.popup_contact));
             if (id == R.id.drawershow)
@@ -263,7 +242,19 @@ public class MainScreenActivity extends AppCompatActivity {
 
     public boolean CheckInternet() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+            return true;
+        else {
+            MakeToast("اتصال به اینترنت را بررسی نمایید");
+        }
+        return false;
+    }
+
+    public void MakeToast(String Message) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_LONG).show();
     }
 }

@@ -15,7 +15,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
 
-        <ir.hatamiarash.zimia.PersianEditText
+        <helper.PersianEditText
             android:id="@+id/name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
 
-        <ir.hatamiarash.zimia.PersianEditText
+        <helper.PersianEditText
             android:id="@+id/email"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
 
-        <ir.hatamiarash.zimia.PersianEditText
+        <helper.PersianEditText
             android:id="@+id/password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -60,36 +60,7 @@
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/linear"
-            android:orientation="vertical">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:max="100"
-                android:maxHeight="5dp"
-                android:minHeight="5dp"
-                android:progress="0"
-                android:progressDrawable="@drawable/progressbar"
-                android:secondaryProgress="100"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-
-        </LinearLayout>
-
-        <ir.hatamiarash.zimia.PersianEditText
+        <helper.PersianEditText
             android:id="@+id/password2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -104,7 +75,7 @@
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
 
-        <ir.hatamiarash.zimia.PersianEditText
+        <helper.PersianEditText
             android:id="@+id/address"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -119,7 +90,7 @@
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
 
-        <ir.hatamiarash.zimia.PersianEditText
+        <helper.PersianEditText
             android:id="@+id/phone"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -136,7 +107,7 @@
 
         <!-- Login Button -->
 
-        <ir.hatamiarash.zimia.PersianButton
+        <helper.PersianButton
             android:id="@+id/btnRegister"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -148,7 +119,7 @@
 
         <!-- Link to Login Screen -->
 
-        <ir.hatamiarash.zimia.PersianButton
+        <helper.PersianButton
             android:id="@+id/btnLinkToLoginScreen"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

@@ -14,7 +14,7 @@
         android:orientation="vertical"
         android:weightSum="1">
 
-        <ir.hatamiarash.zimia.PersianTextView
+        <helper.PersianTextView
             android:id="@+id/about_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ir.hatamiarash.zimia.PersianTextView
+                <helper.PersianTextView
                     android:id="@+id/about_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                     android:textAlignment="center"
                     android:textSize="20sp" />
 
-                <ir.hatamiarash.zimia.PersianButton
+                <helper.PersianButton
                     android:id="@+id/btn_close_popup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package ir.hatamiarash.zimia;
+package helper;
 
 import android.content.Context;
 import android.graphics.Typeface;

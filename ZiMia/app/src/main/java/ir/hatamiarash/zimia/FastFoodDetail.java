@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import helper.JSONParser;
 import volley.Config_URL;
 
 public class FastFoodDetail extends ListActivity {

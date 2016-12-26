@@ -23,7 +23,7 @@
         android:paddingEnd="5dp"
         android:paddingStart="5dp" />
 
-    <ir.hatamiarash.zimia.PersianTextView
+    <helper.PersianTextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textDirection="rtl" />
 
-    <ir.hatamiarash.zimia.PersianTextView
+    <helper.PersianTextView
         android:id="@+id/price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
