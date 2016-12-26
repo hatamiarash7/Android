@@ -1,6 +1,7 @@
 package ir.hatamiarash.zimia;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,10 +74,10 @@ public class Profile extends Activity {
         session.setLogin(false);
         db.deleteUsers();
         new DelPersonDetails().execute();
-        // Launching the login activity
         Toast.makeText(getApplicationContext(), "خروج موفقیت آمیز بود", Toast.LENGTH_LONG).show();
-        //Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
-        //startActivity(i);
+        Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+        MainScreenActivity.pointer.finish();
+        startActivity(i);
         finish();
     }
 
