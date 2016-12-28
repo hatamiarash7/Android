@@ -42,57 +42,51 @@
 
         <activity
             android:name=".AllResturans"
-            android:label="All Resturans">
-        </activity>
+            android:label="All Resturans" />
 
         <activity
             android:name=".AllFastFoods"
-            android:label="All FastFoods">
-        </activity>
+            android:label="All FastFoods" />
 
         <activity
             android:name=".AllMarkets"
-            android:label="All Markets">
-        </activity>
+            android:label="All Markets" />
 
         <!-- Edit Product Activity -->
         <activity
             android:name=".FastFoodDetail"
-            android:label="Edit FastFood">
-        </activity>
+            android:label="Edit FastFood" />
 
         <activity
             android:name=".MarketDetail"
-            android:label="Edit Market">
-        </activity>
+            android:label="Edit Market" />
 
         <activity
             android:name=".ResturanDetail"
-            android:label="Edit Resturan">
-        </activity>
+            android:label="Edit Resturan" />
+
+        <activity
+            android:name=".ItemDetail"
+            android:label="Item Detail" />
 
         <activity
             android:name=".Map"
-            android:label="Show Map">
-        </activity>
+            android:label="Show Map" />
 
         <activity
             android:name=".Login"
             android:label="Login"
-            android:noHistory="true">
-        </activity>
+            android:noHistory="true" />
 
         <activity
             android:name=".Register"
             android:label="Register"
-            android:noHistory="true">
-        </activity>
+            android:noHistory="true" />
 
         <activity
             android:name=".Profile"
             android:label="Profile"
-            android:noHistory="true">
-        </activity>
+            android:noHistory="true" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

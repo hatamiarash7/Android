@@ -59,7 +59,7 @@ public class FastFoodDetail extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_fastfood);
+        setContentView(R.layout.fastfood_detail);
 
         fastfoodname = (TextView) findViewById(R.id.FastFoodName);
         fastfoodopenhour = (TextView) findViewById(R.id.FastFoodOpenHour);
@@ -147,9 +147,6 @@ public class FastFoodDetail extends ListActivity {
                             fastfoodopenhour.setText(product.getString(TAG_OPENHOUR));
                             fastfoodclosehour.setText(product.getString(TAG_CLOSEHOUR));
                             fastfoodaddress.setText("آدرس : " + product.getString(TAG_ADDRESS));
-                        } else {
-                            // product with pid not found
-                            //Log.d("pid not found", null);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -196,10 +193,6 @@ public class FastFoodDetail extends ListActivity {
                         map.put(TAG_FOOD_PICTURE, String.valueOf(pic));
                         foodList.add(map);
                     }
-                } else {
-                    // no products found
-                    //Log.d("no food", null);
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

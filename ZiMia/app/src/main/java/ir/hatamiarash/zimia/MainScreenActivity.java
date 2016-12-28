@@ -38,7 +38,7 @@ import helper.TypefaceSpan;
 
 public class MainScreenActivity extends AppCompatActivity {
     public static MainScreenActivity pointer;
-    private static Typeface persianTypeface;
+    static Typeface persianTypeface;
     public Drawer result = null;
     ImageView btnViewResturans;
     ImageView btnViewFastFoods;
@@ -97,7 +97,8 @@ public class MainScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (CheckInternet()) {
-                    Intent i = new Intent(getApplicationContext(), Map.class);
+                    //Intent i = new Intent(getApplicationContext(), Map.class);
+                    Intent i = new Intent(getApplicationContext(), ItemDetail.class);
                     startActivity(i);
                 }
             }
@@ -222,7 +223,7 @@ public class MainScreenActivity extends AppCompatActivity {
             display.getSize(size);
             int width = size.x;
             int height = size.y;
-            // We need to get the instance of the LayoutInflater
+            // get the instance of the LayoutInflater
             LayoutInflater inflater = (LayoutInflater) MainScreenActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
             if (id == R.id.popup_about)

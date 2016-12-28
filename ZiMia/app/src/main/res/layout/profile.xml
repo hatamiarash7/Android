@@ -49,10 +49,10 @@
 
         <Button
             android:id="@+id/btnLogout"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dip"
-            android:background="@color/btn_logut_bg"
+            android:background="@color/accent"
             android:text="@string/btn_logout"
             android:textAllCaps="false"
             android:textColor="@color/white"

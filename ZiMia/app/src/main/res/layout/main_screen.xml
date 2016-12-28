@@ -11,46 +11,32 @@
     <ImageView
         android:id="@+id/btnViewResturans"
         android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:layout_marginTop="75dp"
-        app:srcCompat="@drawable/res"
         android:contentDescription="@string/resturans"
-        android:layout_height="80dp" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        app:srcCompat="@drawable/dev"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:layout_height="2dp" />
+        app:srcCompat="@drawable/res" />
 
     <ImageView
         android:id="@+id/btnViewFastFoods"
         android:layout_width="match_parent"
-        app:srcCompat="@drawable/fast"
+        android:layout_height="80dp"
         android:contentDescription="@string/fastfoods"
-        android:layout_height="80dp" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        app:srcCompat="@drawable/dev"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:layout_height="2dp" />
+        app:srcCompat="@drawable/fast" />
 
     <ImageView
         android:id="@+id/btnViewMarkets"
         android:layout_width="match_parent"
-        app:srcCompat="@drawable/mark"
+        android:layout_height="80dp"
         android:contentDescription="@string/markets"
-        android:layout_height="80dp" />
+        app:srcCompat="@drawable/mark" />
 
 
     <ImageView
         android:id="@+id/btnViewMap"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_marginTop="75dp"
         android:contentDescription="@string/map"
-        app:srcCompat="@drawable/map"/>
+        app:srcCompat="@drawable/map" />
 
 </LinearLayout>

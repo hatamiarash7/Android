@@ -57,7 +57,7 @@ public class ResturanDetail extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_resturan);
+        setContentView(R.layout.resturan_detail);
 
         resturanname = (TextView) findViewById(R.id.ResturanName);
         resturanopenhour = (TextView) findViewById(R.id.ResturanOpenHour);
@@ -148,9 +148,6 @@ public class ResturanDetail extends ListActivity {
                             resturanopenhour.setText(product.getString(TAG_OPENHOUR));
                             resturanclosehour.setText(product.getString(TAG_CLOSEHOUR));
                             resturanaddress.setText("آدرس : " + product.getString(TAG_ADDRESS));
-                        } else {
-                            // product with pid not found
-                            //Log.d("pid not found", null);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -199,10 +196,6 @@ public class ResturanDetail extends ListActivity {
                         // adding HashList to ArrayList
                         foodList.add(map);
                     }
-                } else {
-                    // no products found
-                    //Log.d("no food", null);
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

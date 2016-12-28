@@ -40,7 +40,6 @@ public class MarketDetail extends ListActivity {
     private static final String TAG_PRODUCT_NAME = "name";
     private static final String TAG_PRODUCT_PRICE = "price";
     private static final String TAG_PRODUCT_PICTURE = "picture";
-
     TextView marketname;
     TextView marketopenhour;
     TextView marketclosehour;
@@ -57,8 +56,7 @@ public class MarketDetail extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_market);
-
+        setContentView(R.layout.market_detail);
         marketname = (TextView) findViewById(R.id.MarketName);
         marketopenhour = (TextView) findViewById(R.id.MarketOpenHour);
         marketclosehour = (TextView) findViewById(R.id.MarketCloseHour);
@@ -81,13 +79,13 @@ public class MarketDetail extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // getting values from selected ListItem
-                //String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
+                String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
                 // Starting new intent
-                //Intent in = new Intent(getApplicationContext(), EditMarkets.class);
+                Intent in = new Intent(getApplicationContext(), ItemDetail.class);
                 // sending pid to next activity
-                //in.putExtra(TAG_PID, pid);
+                in.putExtra(TAG_PID, pid);
                 // starting new activity and expecting some response back
-                //startActivityForResult(in, 100);
+                startActivityForResult(in, 100);
             }
         });
 
@@ -131,7 +129,6 @@ public class MarketDetail extends ListActivity {
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
                         params.add(new BasicNameValuePair("id", pid));
                         // getting product details by making HTTP request
-                        // Note that product details url will use GET request
                         JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_market_detials, "GET", params);
                         // check your log for json response
                         Log.d("Single Market Details", json.toString());
@@ -142,15 +139,13 @@ public class MarketDetail extends ListActivity {
                             JSONArray productObj = json.getJSONArray(TAG_MARKET); // JSON Array
                             // get first product object from JSON Array
                             JSONObject product = productObj.getJSONObject(0);
-                            // product with this pid found
-                            // Edit Text
-                            marketname.setText("فروشگاه " + product.getString(TAG_NAME));
+                            // product with this pid found , Edit Text
+                            String text = "فروشگاه " + product.getString(TAG_NAME);
+                            marketname.setText(text);
                             marketopenhour.setText(product.getString(TAG_OPENHOUR));
                             marketclosehour.setText(product.getString(TAG_CLOSEHOUR));
-                            marketaddress.setText("آدرس : " + product.getString(TAG_ADDRESS));
-                        } else {
-                            // product with pid not found
-                            //Log.d("pid not found", null);
+                            text = "آدرس : " + product.getString(TAG_ADDRESS);
+                            marketaddress.setText(text);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -198,10 +193,6 @@ public class MarketDetail extends ListActivity {
                         // adding HashList to ArrayList
                         productList.add(map);
                     }
-                } else {
-                    // no products found
-                    //Log.d("no food", null);
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

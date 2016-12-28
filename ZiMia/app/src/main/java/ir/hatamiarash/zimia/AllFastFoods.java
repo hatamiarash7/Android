@@ -3,8 +3,11 @@ package ir.hatamiarash.zimia;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +16,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -25,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import helper.JSONParser;
+import helper.TypefaceSpan;
 import volley.Config_URL;
 
 public class AllFastFoods extends ListActivity {
@@ -89,10 +94,14 @@ public class AllFastFoods extends ListActivity {
         }
     }
 
+    public void MakeToast(String Message) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_LONG).show();
+    }
+
     class LoadAllProducts extends AsyncTask<String, String, String> {
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -103,9 +112,6 @@ public class AllFastFoods extends ListActivity {
             pDialog.show();
         }
 
-        /**
-         * getting All products from url
-         */
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -151,6 +157,7 @@ public class AllFastFoods extends ListActivity {
                     }
                 } else {
                     // no products found
+                    MakeToast("فروشنده ای وجود ندارد");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -158,9 +165,6 @@ public class AllFastFoods extends ListActivity {
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
             pDialog.dismiss();
@@ -183,11 +187,6 @@ public class AllFastFoods extends ListActivity {
                                     R.id.price,
                                     R.id.img2
                             });
-
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
-                    // updating listview
                     setListAdapter(adapter);
                 }
             });

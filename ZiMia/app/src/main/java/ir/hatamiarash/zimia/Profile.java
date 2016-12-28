@@ -26,7 +26,6 @@ import helper.SessionManager;
 import volley.Config_URL;
 
 public class Profile extends Activity {
-    public static Profile pointer;
     private static final String TAG = Profile.class.getSimpleName();
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PERSON = "persons";

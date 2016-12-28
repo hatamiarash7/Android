@@ -3,8 +3,11 @@ package ir.hatamiarash.zimia;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +16,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -25,14 +29,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import helper.JSONParser;
+import helper.TypefaceSpan;
 import volley.Config_URL;
 
 public class AllMarkets extends ListActivity {
-    // Progress Dialog
-    private ProgressDialog pDialog;
-    // Creating JSON Parser object
-    JSONParser jParser = new JSONParser();
-    ArrayList<HashMap<String, String>> marketsList;
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MARKETS = "markets";
@@ -42,9 +42,13 @@ public class AllMarkets extends ListActivity {
     private static final String TAG_STATUS_PICTURE = "status";
     private static final String TAG_OPENHOUR = "open_hour";
     private static final String TAG_CLOSEHOUR = "close_hour";
-
+    // Creating JSON Parser object
+    JSONParser jParser = new JSONParser();
+    ArrayList<HashMap<String, String>> marketsList;
     // products JSONArray
     JSONArray markets = null;
+    // Progress Dialog
+    private ProgressDialog pDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,14 +103,14 @@ public class AllMarkets extends ListActivity {
 
     }
 
-    /**
-     * Background Async Task to Load all product by making HTTP Request
-     */
-    class LoadAllProducts extends AsyncTask<String, String, String> {
+    public void MakeToast(String Message) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_LONG).show();
+    }
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
+    class LoadAllProducts extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -117,42 +121,33 @@ public class AllMarkets extends ListActivity {
             pDialog.show();
         }
 
-        /**
-         * getting All products from url
-         */
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             // getting JSON string from URL
             JSONObject json = jParser.makeHttpRequest(Config_URL.url_all_markets, "GET", params);
-
             // Check your log cat for JSON reponse
             Log.d("All Markets: ", json.toString());
-
             try {
                 // Checking for SUCCESS TAG
                 int success = json.getInt(TAG_SUCCESS);
-
                 if (success == 1) {
                     // products found
                     // Getting Array of Products
                     markets = json.getJSONArray(TAG_MARKETS);
-
                     // looping through All Products
                     for (int i = 0; i < markets.length(); i++) {
                         JSONObject c = markets.getJSONObject(i);
-
                         // Storing each json item in variable
                         String id = c.getString(TAG_PID);
                         String name = c.getString(TAG_NAME);
                         int picture = c.getInt(TAG_PICTURE);
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
-
                         // adding each child node to HashMap key => value
                         map.put(TAG_PID, id);
                         map.put(TAG_NAME, name);
-                        String add = "i"+String.valueOf(picture);
+                        String add = "i" + String.valueOf(picture);
                         int pic = getResources().getIdentifier(add, "drawable", getPackageName());
                         int open_hour = c.getInt(TAG_OPENHOUR);
                         int close_hour = c.getInt(TAG_CLOSEHOUR);
@@ -162,8 +157,7 @@ public class AllMarkets extends ListActivity {
                         if (current_hour > open_hour && current_hour < close_hour) {
                             pic = getResources().getIdentifier("open", "drawable", getPackageName());
                             map.put(TAG_STATUS_PICTURE, String.valueOf(pic));
-                        }
-                        else {
+                        } else {
                             pic = getResources().getIdentifier("close", "drawable", getPackageName());
                             map.put(TAG_STATUS_PICTURE, String.valueOf(pic));
                         }
@@ -172,27 +166,20 @@ public class AllMarkets extends ListActivity {
                     }
                 } else {
                     // no products found
-
+                    MakeToast("فروشنده ای وجود ندارد");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
             pDialog.dismiss();
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
                     ListAdapter adapter = new SimpleAdapter(
                             AllMarkets.this, marketsList,
                             R.layout.list_item, new String[]{
