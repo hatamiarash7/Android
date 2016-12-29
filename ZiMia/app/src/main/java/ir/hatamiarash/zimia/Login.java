@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import helper.FontHelper;
 import helper.JSONParser;
 import helper.SQLiteHandler;
 import helper.SessionManager;
@@ -172,7 +173,7 @@ public class Login extends Activity {
     }
 
     public void MakeToast(String Message) {
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_LONG).show();

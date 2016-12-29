@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import helper.FontHelper;
 import helper.SQLiteHandler;
 import helper.SessionManager;
 import helper.TypefaceSpan;
@@ -190,7 +191,7 @@ public class Register extends Activity {
     }
 
     public void MakeToast(String Message) {
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_LONG).show();

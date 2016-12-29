@@ -33,6 +33,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import helper.FontHelper;
 import helper.SessionManager;
 import helper.TypefaceSpan;
 
@@ -61,7 +62,7 @@ public class MainScreenActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.drawer);
         pointer = this;
-        persianTypeface = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        persianTypeface = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         btnViewResturans = (ImageView) findViewById(R.id.btnViewResturans);
         btnViewFastFoods = (ImageView) findViewById(R.id.btnViewFastFoods);
         btnViewMarkets = (ImageView) findViewById(R.id.btnViewMarkets);
@@ -96,11 +97,11 @@ public class MainScreenActivity extends AppCompatActivity {
         btnViewMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (CheckInternet()) {
-                    //Intent i = new Intent(getApplicationContext(), Map.class);
-                    Intent i = new Intent(getApplicationContext(), ItemDetail.class);
-                    startActivity(i);
-                }
+                //if (CheckInternet()) {
+                //Intent i = new Intent(getApplicationContext(), Map.class);
+                Intent i = new Intent(getApplicationContext(), ItemDetail.class);
+                startActivity(i);
+                //}
             }
         });
         // Session manager
@@ -253,7 +254,7 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
     public void MakeToast(String Message) {
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_LONG).show();

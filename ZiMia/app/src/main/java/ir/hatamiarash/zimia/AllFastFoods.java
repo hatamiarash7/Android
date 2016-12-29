@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import helper.FontHelper;
 import helper.JSONParser;
 import helper.TypefaceSpan;
 import volley.Config_URL;
@@ -95,7 +96,7 @@ public class AllFastFoods extends ListActivity {
     }
 
     public void MakeToast(String Message) {
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/yekan.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_LONG).show();

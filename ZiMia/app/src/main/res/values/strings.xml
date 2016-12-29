@@ -40,4 +40,6 @@
     <string name="item_pic">عکس محصول</string>
     <string name="item_name">نام محصول</string>
     <string name="item_desc">توضیح محصول</string>
+    <string name="item_price">قیمت محصول</string>
+    <string name="item_type">دسته بندی</string>
 </resources>
