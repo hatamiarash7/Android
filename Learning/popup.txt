@@ -1,0 +1,25 @@
+private void initiatePopupWindow(int id) {
+        result.closeDrawer();
+        try {
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            int height = size.y;
+            // get the instance of the LayoutInflater
+            LayoutInflater inflater = (LayoutInflater) MainScreenActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
+            if (id == R.id.popup_about)
+                layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
+            if (id == R.id.popup_contact)
+                layout = inflater.inflate(R.layout.contact, (ViewGroup) findViewById(R.id.popup_contact));
+            if (id == R.id.drawershow)
+                result.openDrawer();
+            pwindo = new PopupWindow(layout, width - (width / 5), height - (height / 4), true);
+            pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
+            btnClosePopup = (Button) layout.findViewById(R.id.btn_close_popup);
+            btnClosePopup.setOnClickListener(cancel_button_click_listener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }

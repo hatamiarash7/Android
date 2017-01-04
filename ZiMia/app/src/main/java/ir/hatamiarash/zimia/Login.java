@@ -42,88 +42,86 @@ import volley.AppController;
 import volley.Config_URL;
 
 public class Login extends Activity {
-    private static final String TAG = Login.class.getSimpleName();
-    Button btnLogin;
-    Button btnLinkToRegister;
-    JSONParser jsonParser = new JSONParser();
+    private static final String TAG = Login.class.getSimpleName(); // class's tag for log
+    Button btnLogin;                                               // login button
+    Button btnLinkToRegister;                                      // register activity button
+    JSONParser jsonParser = new JSONParser();                      // json parser
     String name;
-    private EditText inputEmail;
-    private EditText inputPassword;
-    private ProgressDialog pDialog;
-    private SessionManager session;
-    private SQLiteHandler db;
+    private EditText inputEmail;                                   // email input
+    private EditText inputPassword;                                // password input
+    private ProgressDialog pDialog;                                // dialog window
+    private SessionManager session;                                // session for check user logged status
+    private SQLiteHandler db;                                      // users database
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
-        pDialog = new ProgressDialog(this);
-        pDialog.setCancelable(false);
-        db = new SQLiteHandler(getApplicationContext());
+        inputEmail = (EditText) findViewById(R.id.email);                        // email text input
+        inputPassword = (EditText) findViewById(R.id.password);                  // password text input
+        btnLogin = (Button) findViewById(R.id.btnLogin);                         // login button
+        btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen); // register activity button
+        pDialog = new ProgressDialog(this);                                      // new dialog
+        pDialog.setCancelable(false);                                            // set unacceptable dialog
+        db = new SQLiteHandler(getApplicationContext());                         // users database
+        db.CreateTable();                                                        // create users table
         session = new SessionManager(getApplicationContext());
-        // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
+        if (session.isLoggedIn()) {                                              // Check if user is already logged in or not
             Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
-            startActivity(i);
-            finish();
+            startActivity(i);                                                    // start main activity
+            finish();                                                            // close this activity
         }
-        // Login button Click Event
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {                     // login button's event
             public void onClick(View view) {
-                String email = inputEmail.getText().toString();
-                String password = inputPassword.getText().toString();
-                // Check for empty data in the form
-                if (CheckInternet())
-                    if (email.trim().length() > 0 && password.trim().length() > 0) {
+                String email = inputEmail.getText().toString();                      // get email from text input
+                String password = inputPassword.getText().toString();                // get password from text input
+                if (CheckInternet())                                                 // check network connection status
+                    if (email.trim().length() > 0 && password.trim().length() > 0) { // check empty fields
                         pDialog.setMessage("در حال ورود ...");
-                        showDialog();
-                        checkLogin(email, password);
-                        new SetPersonDetails().execute();
-                        hideDialog();
+                        showDialog();                                                // show dialog
+                        checkLogin(email, password);                                 // check user login request from server
+                        new SetPersonDetails().execute();                            // set user detail to database
+                        hideDialog();                                                // close dialog
                     } else
                         MakeToast("مشخصات را وارد نمایید");
             }
         });
-        // Link to Register Screen
-        btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
+        btnLinkToRegister.setOnClickListener(new View.OnClickListener() {            // register button's event
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), Register.class);
+                // start register activity
                 startActivity(i);
+                // finish this one
                 finish();
             }
         });
     }
 
-    private void checkLogin(final String email, final String password) {
-        // Tag used to cancel the request
-        String tag_string_req = "req_login";
+    private void checkLogin(final String email, final String password) { // check login request from server
+        String tag_string_req = "req_login";               // Tag used to cancel the request
         StringRequest strReq = new StringRequest(Method.POST, Config_URL.url_login, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Login Response: " + response);
-                hideDialog();
+                Log.d(TAG, "Login Response: " + response); // log server response
+                hideDialog();                              // close dialog
                 try {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
-                    // Check for error node in json
-                    if (!error) {
-                        // user successfully logged in
-                        session.setLogin(true);
-                        // Launch main activity
+                    if (!error) {                         // Check for error node in json
+                        session.setLogin(true);           // set login status true
                         String msg = "سلام " + name;
-                        MakeToast(msg);
+                        MakeToast(msg);                   // show welcome notification
                         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+                        // finish old main activity
                         MainScreenActivity.pointer.finish();
+                        // start new main activity
                         startActivity(i);
+                        // finish this one
                         finish();
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
-                        MakeToast(errorMsg);
+                        MakeToast(errorMsg); // show error message
                     }
                 } catch (JSONException e) {
                     // JSON error
@@ -133,13 +131,12 @@ public class Login extends Activity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage());
-                MakeToast(error.getMessage());
+                Log.e(TAG, "Login Error: " + error.getMessage()); // log login's error
+                MakeToast(error.getMessage());                    // show error in notification
             }
         }) {
             @Override
-            protected Map<String, String> getParams() {
-                // Posting parameters to login url
+            protected Map<String, String> getParams() {           // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("tag", "login");
                 params.put("email", email);
@@ -151,17 +148,17 @@ public class Login extends Activity {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
-    private void showDialog() {
+    private void showDialog() { // show dialog
         if (!pDialog.isShowing())
             pDialog.show();
     }
 
-    private void hideDialog() {
+    private void hideDialog() { // close dialog
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
-    public boolean CheckInternet() {
+    public boolean CheckInternet() { // check network connection status
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
@@ -172,35 +169,33 @@ public class Login extends Activity {
         return false;
     }
 
-    public void MakeToast(String Message) {
+    public void MakeToast(String Message) { // show notification with custom typeface
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Toast.makeText(this, efr, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 
-    class SetPersonDetails extends AsyncTask<String, String, String> {
+    class SetPersonDetails extends AsyncTask<String, String, String> { // save user details to database
         protected String doInBackground(String... params) {
             runOnUiThread(new Runnable() {
                 public void run() {
                     try {
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
-                        String e = inputEmail.getText().toString();
-                        params.add(new BasicNameValuePair("email", e));
-                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_set_person_detials, "GET", params);
-                        Log.d("GET Person Details", json.toString());
-                        if (json.getInt("success") == 1) {
-                            Log.d(TAG, "Done !");
+                        String e = inputEmail.getText().toString();                                                     // get email from text input
+                        params.add(new BasicNameValuePair("email", e));                                                 // make a parameter
+                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_set_person_detials, "GET", params); // request from server
+                        Log.d("GET Person Details", json.toString());                                                   // log json data
+                        if (json.getInt("success") == 1) {                    // if we have successful request
                             JSONArray persons = json.getJSONArray("persons");
-                            JSONObject person = persons.getJSONObject(0);
-                            String uid = person.getString("id");
-                            name = person.getString("name");
-                            String email = person.getString("email");
-                            String address = person.getString("address");
-                            String phone = person.getString("phone");
+                            JSONObject person = persons.getJSONObject(0);     // get person detail
+                            String uid = person.getString("id");              // get id
+                            name = person.getString("name");                  // get name
+                            String email = person.getString("email");         // get email
+                            String address = person.getString("address");     // get address
+                            String phone = person.getString("phone");         // get phone
                             String created_at = person.getString("created_at");
-                            // Inserting row in users table
-                            db.addUser(name, email, address, phone, uid, created_at);
+                            db.addUser(name, email, address, phone, uid, created_at); // save user to local database
                         } else {
                             Log.d(TAG, "Error !");
                         }

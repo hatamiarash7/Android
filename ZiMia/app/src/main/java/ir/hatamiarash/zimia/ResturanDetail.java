@@ -3,8 +3,11 @@ package ir.hatamiarash.zimia;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +15,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -20,10 +24,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import helper.FontHelper;
 import helper.JSONParser;
+import helper.TypefaceSpan;
 import volley.Config_URL;
 
 public class ResturanDetail extends ListActivity {
@@ -42,6 +49,7 @@ public class ResturanDetail extends ListActivity {
     private static final String TAG_FOOD_PICTURE = "picture";
 
     TextView resturanname;
+    Boolean is_open = false;
     TextView resturanopenhour;
     TextView resturanclosehour;
     TextView resturanaddress;
@@ -80,17 +88,27 @@ public class ResturanDetail extends ListActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // getting values from selected ListItem
-                //String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
-                // Starting new intent
-                //Intent in = new Intent(getApplicationContext(), EditResturans.class);
-                // sending pid to next activity
-                //in.putExtra(TAG_PID, pid);
-                // starting new activity and expecting some response back
-                //startActivityForResult(in, 100);
+                if (true) {
+                    // getting values from selected ListItem
+                    String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
+                    // Starting new intent
+                    Intent in = new Intent(getApplicationContext(), ItemDetail.class);
+                    // sending pid to next activity
+                    in.putExtra(TAG_PID, pid);
+                    in.putExtra("item_type", "Resturan_Foods");
+                    // starting new activity and expecting some response back
+                    startActivityForResult(in, 100);
+                } else
+                    MakeToast("این فروشگاه در حال حاضر قادر به خدمت رسانی نمی باشد");
             }
         });
+    }
 
+    public void MakeToast(String Message) {
+        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 
     // Response from Edit Product Activity
@@ -144,10 +162,17 @@ public class ResturanDetail extends ListActivity {
                             JSONObject product = productObj.getJSONObject(0);
                             // product with this pid found
                             // Edit Text
-                            resturanname.setText("رستوران " + product.getString(TAG_NAME));
-                            resturanopenhour.setText(product.getString(TAG_OPENHOUR));
-                            resturanclosehour.setText(product.getString(TAG_CLOSEHOUR));
-                            resturanaddress.setText("آدرس : " + product.getString(TAG_ADDRESS));
+                            String openh = product.getString(TAG_OPENHOUR);
+                            String closeh = product.getString(TAG_CLOSEHOUR);
+                            Calendar time = Calendar.getInstance();
+                            int current_hour = time.get(Calendar.HOUR_OF_DAY);
+                            is_open = current_hour > Integer.parseInt(openh) && current_hour < Integer.parseInt(closeh);
+                            String text = "رستوران " + product.getString(TAG_NAME);
+                            resturanname.setText(text);
+                            resturanopenhour.setText(openh);
+                            resturanclosehour.setText(closeh);
+                            text = "آدرس : " + product.getString(TAG_ADDRESS);
+                            resturanaddress.setText(text);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

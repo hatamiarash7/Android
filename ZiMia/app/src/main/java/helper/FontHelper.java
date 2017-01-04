@@ -1,10 +1,16 @@
+/*
+ * Copyright (c) 2016 - All Rights Reserved - Arash Hatami
+ */
+
 package helper;
 
 import android.content.Context;
 import android.graphics.Typeface;
 
 public class FontHelper {
-    public static final String FontPath = "fonts/yekan.ttf";
+    public static final String FontPath = "fonts/shabnam.ttf";
+    //public static final String FontPath = "fonts/yekan.ttf";
+    //public static final String FontPath = "fonts/calibril.ttf";
     private static FontHelper instance;
     private static Typeface persianTypeface;
 
@@ -18,7 +24,7 @@ public class FontHelper {
         return instance;
     }
 
-    public Typeface getPersianTextTypeface() {
+    Typeface getPersianTextTypeface() {
         return persianTypeface;
     }
 }

@@ -194,6 +194,6 @@ public class Register extends Activity {
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Toast.makeText(this, efr, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 }

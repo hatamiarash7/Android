@@ -56,7 +56,7 @@
             android:paddingTop="10dp">
 
             <ImageView
-                android:id="@+id/telegram"
+                android:id="@+id/contact_telegram"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
@@ -68,7 +68,7 @@
                 android:src="@drawable/telegram" />
 
             <ImageView
-                android:id="@+id/website"
+                android:id="@+id/contact_website"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
@@ -80,7 +80,7 @@
                 android:src="@drawable/website" />
 
             <ImageView
-                android:id="@+id/email"
+                android:id="@+id/contact_email"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"

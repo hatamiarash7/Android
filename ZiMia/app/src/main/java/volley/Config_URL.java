@@ -3,10 +3,11 @@ package volley;
 public class Config_URL {
     // Main Server
     private static final String base_URL = "http://zimia.ir/";
-    // provider's Details
+    // Get Details
     public static final String url_fastfood_detials = base_URL + "get_fastfood_details.php";
     public static final String url_market_detials = base_URL + "get_market_details.php";
     public static final String url_resturan_detials = base_URL + "get_resturan_details.php";
+    public static final String url_item_detials = base_URL + "get_item_details.php";
     // Get ALL Products
     public static final String url_all_fastfood_foods = base_URL + "get_all_fastfood_foods.php";
     public static final String url_all_market_products = base_URL + "get_all_market_products.php";
