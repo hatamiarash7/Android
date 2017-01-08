@@ -52,13 +52,11 @@ public class MarketDetail extends ListActivity {
     TextView marketclosehour;
     TextView marketaddress;
     String pid;
-    // JSON parser class
     JSONParser jsonParser = new JSONParser();
     JSONParser jParser = new JSONParser();
     ArrayList<HashMap<String, String>> productList;
     JSONArray products = null;
     Boolean is_open = false;
-    // Progress Dialog
     private ProgressDialog pDialog;
 
     @Override
@@ -69,32 +67,20 @@ public class MarketDetail extends ListActivity {
         marketopenhour = (TextView) findViewById(R.id.MarketOpenHour);
         marketclosehour = (TextView) findViewById(R.id.MarketCloseHour);
         marketaddress = (TextView) findViewById(R.id.MarketAddress);
-        // getting product details from intent
         Intent i = getIntent();
-        // getting product id (pid) from intent
         pid = i.getStringExtra(TAG_PID);
-        // Getting complete product details in background thread
         new GetMarketDetails().execute();
-        // Hashmap for ListView
         productList = new ArrayList<HashMap<String, String>>();
-        // Loading products in Background Thread
         new MarketDetail.LoadAllProducts().execute();
-        // Get listview
         ListView lv = getListView();
-        // on seleting single product
-        // launching Edit Product Screen
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (is_open) {
-                    // getting values from selected ListItem
                     String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
-                    // Starting new intent
                     Intent in = new Intent(getApplicationContext(), ItemDetail.class);
-                    // sending pid to next activity
                     in.putExtra(TAG_PID, pid);
                     in.putExtra("item_type", "Market_Products");
-                    // starting new activity and expecting some response back
                     startActivityForResult(in, 100);
                 } else
                     MakeToast("این فروشگاه در حال حاضر قادر به خدمت رسانی نمی باشد");
@@ -109,20 +95,14 @@ public class MarketDetail extends ListActivity {
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 
-    // Response from Edit Product Activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // if result code 100
         if (resultCode == 100) {
-            // if result code 100 is received
-            // means user edited/deleted product
-            // reload this screen again
             Intent intent = getIntent();
             finish();
             startActivity(intent);
         }
-
     }
 
     class GetMarketDetails extends AsyncTask<String, String, String> {
@@ -137,27 +117,18 @@ public class MarketDetail extends ListActivity {
         }
 
         protected String doInBackground(String... params) {
-            // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
-                    // Check for success tag
                     int success;
                     try {
-                        // Building Parameters
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
                         params.add(new BasicNameValuePair("id", pid));
-                        // getting product details by making HTTP request
                         JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_market_detials, "GET", params);
-                        // check your log for json response
                         Log.d("Single Market Details", json.toString());
-                        // json success tag
                         success = json.getInt(TAG_SUCCESS);
                         if (success == 1) {
-                            // successfully received product details
-                            JSONArray productObj = json.getJSONArray(TAG_MARKET); // JSON Array
-                            // get first product object from JSON Array
+                            JSONArray productObj = json.getJSONArray(TAG_MARKET);
                             JSONObject product = productObj.getJSONObject(0);
-                            // product with this pid found , Edit Text
                             String openh = product.getString(TAG_OPENHOUR);
                             String closeh = product.getString(TAG_CLOSEHOUR);
                             Calendar time = Calendar.getInstance();
@@ -181,39 +152,28 @@ public class MarketDetail extends ListActivity {
 
     class LoadAllProducts extends AsyncTask<String, String, String> {
         protected String doInBackground(String... args) {
-            // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("id", pid));
-            // getting JSON string from URL
             JSONObject jso = jParser.makeHttpRequest(Config_URL.url_all_market_products, "GET", params);
-            // Check your log cat for JSON reponse
             Log.d("All Products: ", jso.toString());
             try {
-                // Checking for SUCCESS TAG
                 int success = jso.getInt(TAG_SUCCESS);
                 if (success == 1) {
-                    // products found
-                    // Getting Array of Products
                     products = jso.getJSONArray(TAG_PRODUCTS);
-                    // looping through All Products
                     for (int i = 0; i < products.length(); i++) {
                         JSONObject c = products.getJSONObject(i);
-                        // Storing each json item in variable
                         String id = c.getString(TAG_PRODUCT_PID);
                         String name = c.getString(TAG_PRODUCT_NAME);
                         String price = c.getString(TAG_PRODUCT_PRICE);
                         price += " تومان";
                         int picture = c.getInt(TAG_PRODUCT_PICTURE);
-                        // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
-                        // adding each child node to HashMap key => value
                         map.put(TAG_PRODUCT_PID, id);
                         map.put(TAG_PRODUCT_NAME, name);
                         map.put(TAG_PRODUCT_PRICE, price);
                         String add = "i" + String.valueOf(picture);
                         int pic = getResources().getIdentifier(add, "drawable", getPackageName());
                         map.put(TAG_PRODUCT_PICTURE, String.valueOf(pic));
-                        // adding HashList to ArrayList
                         productList.add(map);
                     }
                 }
@@ -240,7 +200,6 @@ public class MarketDetail extends ListActivity {
                                     R.id.price,
                                     R.id.img
                             });
-                    // updating listview
                     setListAdapter(adapter);
                 }
             });

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
+    android:background="@drawable/inner_background"
     android:layout_height="fill_parent"
     android:orientation="vertical">
     <!-- Main ListView
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <helper.PersianButton
             android:id="@+id/btnClear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
 
-        <Button
+        <helper.PersianButton
             android:id="@+id/btnPay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

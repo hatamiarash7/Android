@@ -1,8 +1,10 @@
 package ir.hatamiarash.zimia;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -39,6 +42,8 @@ public class Register extends Activity {
     Button btnRegister;
     Button btnLinkToLogin;
     SessionManager session;
+    RadioGroup RadioGroup;
+    String UserType = "null";
     private EditText inputFullName;
     private EditText inputEmail;
     private EditText inputPassword;
@@ -57,10 +62,11 @@ public class Register extends Activity {
         inputPassword = (EditText) findViewById(R.id.password);
         inputPassword2 = (EditText) findViewById(R.id.password2);
         inputAddress = (EditText) findViewById(R.id.address);
-        inputPhone = (EditText) findViewById(R.id.phone);
+        inputPhone = inputEmail;
         btnRegister = (Button) findViewById(R.id.btnRegister);
         btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
         inputPassword.setError("حداقل 8 حرف");
+        RadioGroup = (RadioGroup) findViewById(R.id.TypeRadioGroup);
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -75,6 +81,17 @@ public class Register extends Activity {
             startActivity(i);
             finish();
         }
+        // User Select Radio Buttons - find by RadioButton id
+        RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.UserRadioButton) {          // user button
+                    UserType = "User";
+                } else if (checkedId == R.id.SellerRadioButton) { // seller button
+                    UserType = "Seller";
+                }
+            }
+        });
         // Register Button Click event
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -87,9 +104,10 @@ public class Register extends Activity {
                 if (CheckInternet())
                     if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
                         if (password.length() < 8)
-                            if (password.equals(password2))
-                                registerUser(name, email, password, address, phone);
-                            else
+                            if (password.equals(password2)) {
+                                registerUser(name, email, password, address, phone, UserType);
+                                MakeQuestion("ثبت نام", "نام کاربری شما تلفن همراهتان می باشد");
+                            } else
                                 MakeToast("کلمه عبور تطابق ندارد");
                         else
                             MakeToast("کلمه عبور کوتاه است");
@@ -107,7 +125,7 @@ public class Register extends Activity {
         });
     }
 
-    private void registerUser(final String name, final String email, final String password, final String address, final String phone) {
+    private void registerUser(final String name, final String email, final String password, final String address, final String phone, final String type) {
         // Tag used to cancel the request
         String tag_string_req = "req_register";
         pDialog.setMessage("در حال ثبت ...");
@@ -130,7 +148,7 @@ public class Register extends Activity {
                         String phone = user.getString("phone");
                         String created_at = user.getString("created_at");
                         // Inserting row in users table
-                        db.addUser(name, email, address, phone, uid, created_at);
+                        db.addUser(name, email, address, phone, uid, created_at, type);
                         MakeToast("ثبت نام انجام شد");
                         Intent intent = new Intent(Register.this, Login.class);
                         startActivity(intent);
@@ -195,5 +213,19 @@ public class Register extends Activity {
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+    }
+
+    public void MakeQuestion(String Title, String Message) {                       // build and show an confirm window
+        AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+        dialog.setTitle(Title);                                                    // set title
+        dialog.setMessage(Message);                                                // set message
+        dialog.setIcon(R.mipmap.ic_launcher);                                      // set icon
+        dialog.setPositiveButton("تایید", new DialogInterface.OnClickListener() {  // positive answer
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();            // close dialog
+            }
+        });
+        AlertDialog alert = dialog.create(); // create dialog
+        alert.show();                        // show dialog
     }
 }

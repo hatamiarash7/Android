@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017 - All Rights Reserved - Arash Hatami
+ */
+
 package helper;
 
 import android.content.Context;
@@ -7,18 +11,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class SQLiteHandlerItem extends SQLiteOpenHelper {
     private static final String TAG = SQLiteHandlerItem.class.getSimpleName();
-    // All Static variables
-    // Database Version
-    private static final int DATABASE_VERSION = 1;
-    // Database Name
-    private static final String DATABASE_NAME = "android_api";
-    // Login table name
-    private static final String TABLE_CARD = "card";
+    private static final int DATABASE_VERSION = 1;             // Database Version
+    private static final String DATABASE_NAME = "android_api"; // Database Name
+    private static final String TABLE_CARD = "card";           // Login table name
     // Login Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
@@ -29,6 +28,7 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // create table on call
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_CARD + "("
@@ -38,14 +38,14 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
         Log.d(TAG, "Database table created-onCreate");
     }
 
+    // drop and recreate table
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD);
-        // Create tables again
         onCreate(db);
     }
 
+    // create table if onCreate can't do that
     public void CreateTable() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD);
@@ -57,6 +57,7 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
         Log.d(TAG, "Database table created-Manual");
     }
 
+    // add item data to database
     public void addItem(String name, String price, String count) {
         SQLiteDatabase db = this.getWritableDatabase();
         name = "'" + name + "'";
@@ -66,10 +67,11 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
                 + KEY_NAME + ", " + KEY_PRICE + ", " + KEY_COUNT
                 + ") VALUES(" + name + ", " + price + ", " + count + ")";
         db.execSQL(query);
-        db.close(); // Closing database connection
+        db.close();
         Log.d(TAG, name + " inserted into database");
     }
 
+    // update item's details
     public void updateItem(String name, String price, String count) {
         SQLiteDatabase db = this.getWritableDatabase();
         name = "'" + name + "'";
@@ -79,16 +81,16 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
                 + KEY_NAME + "=" + name + ", " + KEY_PRICE + "=" + price
                 + ", " + KEY_COUNT + "=" + count + " WHERE " + KEY_NAME + "=" + name;
         db.execSQL(query);
-        db.close(); // Closing database connection
+        db.close();
         Log.d(TAG, name + " updated");
     }
 
+    // get item's detail from database and send them
     public List<String> getItemDetails() {
         List<String> item2 = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_CARD;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        // Move to first row
         cursor.moveToFirst();
         Log.d(TAG, "database : " + String.valueOf(cursor.getCount()));
         if (cursor.getCount() > 0) {
@@ -102,17 +104,16 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
-        // return user
         Log.d(TAG, "Fetching item from Sqlite: " + item2.toString());
         return item2;
     }
 
+    // calculate total price of items from database
     public int TotalPrice() {
         int total = 0;
         String selectQuery = "SELECT * FROM " + TABLE_CARD;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        // Move to first row
         cursor.moveToFirst();
         Log.d(TAG, "Sqlite: " + String.valueOf(cursor.getCount()));
         if (cursor.getCount() > 0) {
@@ -124,11 +125,11 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
-        // return user
         Log.d(TAG, "Total Price : " + String.valueOf(total));
         return total;
     }
 
+    // count all items from database
     public int getRowCount() {
         String countQuery = "SELECT  * FROM " + TABLE_CARD;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -136,22 +137,21 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
         int rowCount = cursor.getCount();
         db.close();
         cursor.close();
-        // return row count
         return rowCount;
     }
 
+    // delete one item from database
     public void deleteItem(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
-        // Delete Item's Row
         name = "'" + name + "'";
         db.delete(TABLE_CARD, KEY_NAME + "=" + name, null);
         db.close();
         Log.d(TAG, "Deleted " + name + " from sqlite");
     }
 
+    // delete all items from database
     public void deleteItems() {
         SQLiteDatabase db = this.getWritableDatabase();
-        // Delete All Rows
         db.delete(TABLE_CARD, null, null);
         db.close();
         CreateTable();

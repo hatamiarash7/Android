@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017 - All Rights Reserved - Arash Hatami
+ */
+
 package helper;
 
 import android.graphics.Paint;

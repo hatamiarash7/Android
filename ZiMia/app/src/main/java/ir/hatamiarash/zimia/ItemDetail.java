@@ -28,6 +28,7 @@ import java.util.List;
 import helper.FontHelper;
 import helper.JSONParser;
 import helper.SQLiteHandler;
+import helper.SessionManager;
 import helper.TypefaceSpan;
 import volley.Config_URL;
 
@@ -49,11 +50,12 @@ public class ItemDetail extends Activity {
     TextView ItemPrice;
     TextView ItemType;
     ImageView ItemImage;
-    String ItemName_Backup, ItemPrice_Backup;
-    int count = 0, user_log;
+    String ItemName_Backup, ItemPrice_Backup; // values for save data in local database
+    int count = 0;                            // item's count
     JSONParser jsonParser = new JSONParser();
-    String final_price;
+    String final_price;                       // for calculating final price after count changed
     SQLiteHandler db;
+    SessionManager session; // session for check user logged
     private ProgressDialog pDialog;
 
     @Override
@@ -68,23 +70,22 @@ public class ItemDetail extends Activity {
         ItemType = (TextView) findViewById(R.id.ItemType);
         ItemImage = (ImageView) findViewById(R.id.ItemImage);
         db = new SQLiteHandler(getApplicationContext());
-        //user_log = db.getRowCount();
-        user_log = 1;
-        // get parameters
+        session = new SessionManager(getApplicationContext()); // session manager for check user logged
+        // get parameters from last activity
         pid = i.getStringExtra(TAG_PID);
         item_type = i.getStringExtra(TAG_TYPE);
         // buttons
         inc = (Button) findViewById(R.id.inc);
         dec = (Button) findViewById(R.id.dec);
         add = (Button) findViewById(R.id.add);
-        inc.setOnClickListener(new View.OnClickListener() {
+        inc.setOnClickListener(new View.OnClickListener() { // increment button
             @Override
             public void onClick(View view) {
                 count++;
                 counter.setText(String.valueOf(count));
             }
         });
-        dec.setOnClickListener(new View.OnClickListener() {
+        dec.setOnClickListener(new View.OnClickListener() { // decrement button
             @Override
             public void onClick(View view) {
                 if (count > 1) {
@@ -94,11 +95,11 @@ public class ItemDetail extends Activity {
                     MakeToast("حداقل انتخاب یک عدد می باشد");
             }
         });
-        add.setOnClickListener(new View.OnClickListener() {
+        add.setOnClickListener(new View.OnClickListener() { // add button
             @Override
             public void onClick(View view) {
                 if (!ItemPrice_Backup.isEmpty() && !ItemName_Backup.isEmpty())
-                    if (user_log > 0)
+                    if (session.isLoggedIn()) // check for logged status
                         if (count >= 1) {
                             final_price = String.valueOf(Integer.parseInt(ItemPrice_Backup) * count);
                             AddToCard(ItemName_Backup, final_price, count);
@@ -108,6 +109,7 @@ public class ItemDetail extends Activity {
                     else {
                         MakeToast("شما وارد نشده اید");
                         Intent i = new Intent(getApplicationContext(), Login.class);
+                        // start login activity for login before add item to card
                         startActivity(i);
                         finish();
                     }
@@ -115,17 +117,17 @@ public class ItemDetail extends Activity {
                     MakeToast("خطا در دریافت اطلاعات از سرور");
             }
         });
-        new GetItemDetails().execute();
+        new GetItemDetails().execute(); // get item's details from server
     }
 
-    public void MakeToast(String Message) {
+    public void MakeToast(String Message) { // build and show toast with custom typeface
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 
-    protected void AddToCard(String name, String price, int count) {
+    protected void AddToCard(String name, String price, int count) { // add or update item
         MainScreenActivity.db.addItem(name, price, String.valueOf(count));
         MakeToast("اضافه شد");
     }
@@ -144,7 +146,6 @@ public class ItemDetail extends Activity {
         protected String doInBackground(String... params) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    // Check for success tag
                     int success;
                     try {
                         // Building Parameters
@@ -153,14 +154,10 @@ public class ItemDetail extends Activity {
                         params.add(new BasicNameValuePair("type", item_type));
                         // getting product details by making HTTP request
                         JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_item_detials, "GET", params);
-                        // check your log for json response
                         Log.d("Single Item Details", json.toString());
-                        // json success tag
                         success = json.getInt(TAG_SUCCESS);
-                        if (success == 1) {
-                            // successfully received product details
-                            JSONArray ItemObj = json.getJSONArray(TAG_ITEM); // JSON Array
-                            // get first product object from JSON Array
+                        if (success == 1) { // successfully received product details
+                            JSONArray ItemObj = json.getJSONArray(TAG_ITEM);
                             JSONObject Item = ItemObj.getJSONObject(0);
                             ItemName_Backup = Item.getString(TAG_NAME);
                             ItemName.setText(ItemName_Backup);
@@ -170,7 +167,7 @@ public class ItemDetail extends Activity {
                             ItemType.setText(Item.getString(TAG_TYPE));
                             int pic_id = Item.getInt(TAG_PICTURE);
                             String pic_name = "i" + String.valueOf(pic_id);
-                            int pic = getResources().getIdentifier(pic_name, "drawable", getPackageName());
+                            int pic = getResources().getIdentifier(pic_name, "drawable", getPackageName()); // get drawable by name
                             ItemImage.setImageResource(pic);
                         }
                     } catch (JSONException e) {

@@ -17,6 +17,7 @@ public class SplashScreen extends Activity {
         web.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         web.getSettings().setLoadsImagesAutomatically(true);
         web.setBackgroundColor(Color.TRANSPARENT);
+        // set loading logo with WebView
         web.loadDataWithBaseURL("file:///android_asset/"
                 , "<html><head><style type='text/css'>body{margin:auto auto;text-align:center;} img{width:100%25;}</style></head><body><img src='loading.gif'/><body><html>"
                 , "text/html"
@@ -24,6 +25,7 @@ public class SplashScreen extends Activity {
                 , "");
         Thread timerThread = new Thread() {
             public void run() {
+                // wait some milliseconds for loading all parts ao app
                 try {
                     sleep(2000);
                 } catch (InterruptedException e) {

@@ -1,9 +1,14 @@
+/*
+ * Copyright (c) 2017 - All Rights Reserved - Arash Hatami
+ */
+
 package helper;
 
-public class FormatHelper {
+class FormatHelper {
+    // define persian numbers for replacing old ones
     private static String[] persianNumbers = new String[]{"۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"};
 
-    public static String toPersianNumber(String text) {
+    static String toPersianNumber(String text) {
         if (text.isEmpty())
             return "";
         String out = "";
@@ -18,7 +23,6 @@ public class FormatHelper {
             } else {
                 out += c;
             }
-
         }
         return out;
     }

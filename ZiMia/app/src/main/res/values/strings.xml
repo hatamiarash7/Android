@@ -18,7 +18,7 @@
     <string name="markets">Markets</string>
     <string name="map">Map</string>
 
-    <string name="hint_email">ایمیل , نام کاربری</string>
+    <string name="hint_email">تلفن همراه</string>
     <string name="hint_password">کلمه عبور</string>
     <string name="hint_password2">تکرار کلمه عبور</string>
     <string name="hint_name">نام کامل</string>

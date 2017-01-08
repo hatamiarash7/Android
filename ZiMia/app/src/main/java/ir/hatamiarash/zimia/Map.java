@@ -17,17 +17,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Map extends AppCompatActivity implements OnMapReadyCallback {
-
-    final static int TAG_CODE_PERMISSION_LOCATION = 1337;
-
+    final static int TAG_CODE_PERMISSION_LOCATION = 1337; // tag code for permission request ( code number is optional )
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); // request permissions
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.map);
-
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
@@ -35,6 +32,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        // main location and settings for map
         CameraPosition googlePlex = CameraPosition.builder()
                 .target(new LatLng(34.301496, 48.8120835))
                 .zoom(14)
@@ -42,11 +40,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                 .tilt(0)
                 .build();
         map.moveCamera(CameraUpdateFactory.newCameraPosition(googlePlex));
-
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
             map.getUiSettings().setMyLocationButtonEnabled(true);
         } else {
@@ -55,7 +50,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                             Manifest.permission.ACCESS_COARSE_LOCATION},
                     TAG_CODE_PERMISSION_LOCATION);
         }
-
         /*
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4219999, -122.0862462))
@@ -71,8 +65,5 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                 .position(new LatLng(34.299635, 48.820467))
                 .title("ترکمان")
                 .snippet("رستوران / پخت غذا")).showInfoWindow();
-
     }
-
-
 }

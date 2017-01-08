@@ -194,8 +194,9 @@ public class Login extends Activity {
                             String email = person.getString("email");         // get email
                             String address = person.getString("address");     // get address
                             String phone = person.getString("phone");         // get phone
+                            String type = person.getString("type");           // get phone
                             String created_at = person.getString("created_at");
-                            db.addUser(name, email, address, phone, uid, created_at); // save user to local database
+                            db.addUser(name, email, address, phone, uid, type, created_at); // save user to local database
                         } else {
                             Log.d(TAG, "Error !");
                         }

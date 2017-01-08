@@ -5,6 +5,7 @@
     android:baselineAligned="false"
     android:gravity="center"
     android:orientation="vertical"
+    android:background="@drawable/inner_background"
     android:padding="10dp">
 
     <LinearLayout
@@ -90,22 +91,51 @@
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
 
-        <helper.PersianEditText
-            android:id="@+id/phone"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@color/gray"
-            android:gravity="center_vertical|center_horizontal"
-            android:hint="@string/hint_phone"
-            android:inputType="phone"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:textAlignment="center"
-            android:textColor="@color/input_register"
-            android:textColorHint="@color/input_register_hint" />
+            android:orientation="horizontal">
 
-        <!-- Login Button -->
+            <RadioGroup
+                android:id="@+id/TypeRadioGroup"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <helper.PersianRadioButton
+                    android:id="@+id/SellerRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:text="فروشنده"
+                    android:textSize="18sp" />
+
+                <helper.PersianRadioButton
+                    android:id="@+id/UserRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:text="کاربر"
+                    android:textSize="18sp" />
+            </RadioGroup>
+
+            <helper.PersianTextView
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="3"
+                android:text="نوع : "
+                android:textSize="18sp"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
 
         <helper.PersianButton
             android:id="@+id/btnRegister"
@@ -116,8 +146,6 @@
             android:text="@string/btn_register"
             android:textColor="@color/white"
             android:textSize="18sp" />
-
-        <!-- Link to Login Screen -->
 
         <helper.PersianButton
             android:id="@+id/btnLinkToLoginScreen"
@@ -130,5 +158,6 @@
             android:textColor="#000000"
             android:textSize="15sp" />
     </LinearLayout>
+
 
 </LinearLayout>

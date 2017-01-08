@@ -181,20 +181,16 @@ public class MainScreenActivity extends AppCompatActivity {
                                     Intent i = new Intent(getApplicationContext(), Login.class);
                                     // start login activity and NOT-FINISH main activity for return
                                     startActivity(i);
-                                } else { // network connected
+                                } else  // network connected
                                     result.closeDrawer(); // close drawer
-                                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
-                                }
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 3) {
                                 if (CheckInternet()) { // there isn't any network connection
                                     Intent i = new Intent(getApplicationContext(), Register.class);
                                     // start register activity and NOT-FINISH main activity for return
                                     startActivity(i);
-                                } else { // network connected
+                                } else  // network connected
                                     result.closeDrawer(); // close drawer
-                                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
-                                }
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 4) {
                                 initiatePopupWindow(R.id.popup_about); // show about popup
@@ -238,10 +234,8 @@ public class MainScreenActivity extends AppCompatActivity {
                                     Intent i = new Intent(getApplicationContext(), Profile.class);
                                     // start profile activity and NOT-FINISH main activity for return
                                     startActivity(i);
-                                } else { // network connected
+                                } else  // network connected
                                     result.closeDrawer(); // close drawer
-                                    Toast.makeText(getApplicationContext(), "اتصال به اینترنت را بررسی نمایید", Toast.LENGTH_LONG).show();
-                                }
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 3) {
                                 initiatePopupWindow(R.id.popup_about); // open about popup

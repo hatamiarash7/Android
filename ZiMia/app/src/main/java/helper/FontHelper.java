@@ -8,13 +8,12 @@ import android.content.Context;
 import android.graphics.Typeface;
 
 public class FontHelper {
-    public static final String FontPath = "fonts/shabnam.ttf";
-    //public static final String FontPath = "fonts/yekan.ttf";
-    //public static final String FontPath = "fonts/calibril.ttf";
+    public static final String FontPath = "fonts/shabnam.ttf"; // font path
     private static FontHelper instance;
-    private static Typeface persianTypeface;
+    private static Typeface persianTypeface;                   // typeface
 
     private FontHelper(Context context) {
+        // set font for typeface
         persianTypeface = Typeface.createFromAsset(context.getAssets(), FontPath);
     }
 

@@ -57,26 +57,26 @@ public class Profile extends Activity {
         if (!session.isLoggedIn()) {
             logoutUser();
         }
-        HashMap<String, String> user = db.getUserDetails();
+        HashMap<String, String> user = db.getUserDetails();       // get user detial from local database
         email = user.get("email");
         Log.d(email, "db : " + email);
-        new GetPersonDetails().execute();
-        // Logout button click event
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        new GetPersonDetails().execute();                         // get person detail from server
+        btnLogout.setOnClickListener(new View.OnClickListener() { // logout button's event
             @Override
             public void onClick(View v) {
-                logoutUser();
+                logoutUser(); // logout user
             }
         });
     }
 
     public void logoutUser() {
         session.setLogin(false);
-        db.deleteUsers();
-        new DelPersonDetails().execute();
+        db.deleteUsers();                 // delete user from local database
+        new DelPersonDetails().execute(); // delete user from server
         Toast.makeText(getApplicationContext(), "خروج موفقیت آمیز بود", Toast.LENGTH_LONG).show();
         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
         MainScreenActivity.pointer.finish();
+        // finish old activity and start again for refresh
         startActivity(i);
         finish();
     }

@@ -34,6 +34,7 @@ import helper.TypefaceSpan;
 import volley.Config_URL;
 
 public class FastFoodDetail extends ListActivity {
+    // shop detail tags
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_FASTFOOD = "fastfoods";
     private static final String TAG_PID = "id";
@@ -41,13 +42,12 @@ public class FastFoodDetail extends ListActivity {
     private static final String TAG_OPENHOUR = "open_hour";
     private static final String TAG_CLOSEHOUR = "close_hour";
     private static final String TAG_ADDRESS = "address";
-
+    // shop products tags
     private static final String TAG_FOODS = "foods";
     private static final String TAG_FOOD_PID = "id";
     private static final String TAG_FOOD_NAME = "name";
     private static final String TAG_FOOD_PRICE = "price";
     private static final String TAG_FOOD_PICTURE = "picture";
-
     TextView fastfoodname;
     TextView fastfoodopenhour;
     TextView fastfoodclosehour;
@@ -55,50 +55,35 @@ public class FastFoodDetail extends ListActivity {
     String pid;
     int picture;
     Boolean is_open = false;
-
-    // JSON parser class
-    JSONParser jsonParser = new JSONParser();
-    JSONParser jParser = new JSONParser();
+    JSONParser jsonParser = new JSONParser(); // JSON parser class
+    JSONParser jParser = new JSONParser();    // JSON parser class
     ArrayList<HashMap<String, String>> foodList;
     JSONArray foods = null;
-    // Progress Dialog
-    private ProgressDialog pDialog;
+    private ProgressDialog pDialog;           // Progress Dialog
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fastfood_detail);
-
         fastfoodname = (TextView) findViewById(R.id.FastFoodName);
         fastfoodopenhour = (TextView) findViewById(R.id.FastFoodOpenHour);
         fastfoodclosehour = (TextView) findViewById(R.id.FastFoodCloseHour);
         fastfoodaddress = (TextView) findViewById(R.id.FastFoodAddress);
-        // getting product details from intent
         Intent i = getIntent();
-        // getting product id (pid) from intent
-        pid = i.getStringExtra(TAG_PID);
-        // Getting complete product details in background thread
-        new GetFastFoodDetails().execute();
-        // Hashmap for ListView
+        pid = i.getStringExtra(TAG_PID);    // getting product id from intent
+        new GetFastFoodDetails().execute(); // Getting shop details
         foodList = new ArrayList<HashMap<String, String>>();
-        // Loading products in Background Thread
-        new LoadAllFoods().execute();
-        // Get listview
+        new LoadAllFoods().execute();       // getting shop products
         ListView lv = getListView();
-        // on seleting single product
-        // launching Edit Product Screen
+        // on selecting single product launching Product Screen
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (is_open) {
-                    // getting values from selected ListItem
+                if (is_open) { // check that shop is open or not
                     String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
-                    // Starting new intent
                     Intent in = new Intent(getApplicationContext(), ItemDetail.class);
-                    // sending pid to next activity
-                    in.putExtra(TAG_PID, pid);
-                    in.putExtra("item_type", "FastFood_Foods");
-                    // starting new activity and expecting some response back
+                    in.putExtra(TAG_PID, pid);                  // sending pid to next activity
+                    in.putExtra("item_type", "FastFood_Foods"); // sending type to next activity
                     startActivityForResult(in, 100);
                 } else
                     MakeToast("این فروشگاه در حال حاضر قادر به خدمت رسانی نمی باشد");
@@ -106,22 +91,17 @@ public class FastFoodDetail extends ListActivity {
         });
     }
 
-    public void MakeToast(String Message) {
+    public void MakeToast(String Message) { // build and show toast with custom typeface
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 
-    // Response from Edit Product Activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // if result code 100
         if (resultCode == 100) {
-            // if result code 100 is received
-            // means user edited/deleted product
-            // reload this screen again
             Intent intent = getIntent();
             finish();
             startActivity(intent);
@@ -142,32 +122,23 @@ public class FastFoodDetail extends ListActivity {
         protected String doInBackground(String... params) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    // Check for success tag
                     int success;
                     try {
                         // Building Parameters
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
                         params.add(new BasicNameValuePair("id", pid));
-                        // getting product details by making HTTP request
-                        // Note that product details url will use GET request
                         JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_fastfood_detials, "GET", params);
-                        // check your log for json response
                         Log.d("Single FastFood Details", json.toString());
-                        // json success tag
-                        success = json.getInt(TAG_SUCCESS);
-                        if (success == 1) {
-                            // successfully received product details
-                            JSONArray productObj = json.getJSONArray(TAG_FASTFOOD); // JSON Array
-                            // get first product object from JSON Array
+                        success = json.getInt(TAG_SUCCESS); // json success tag
+                        if (success == 1) {                 // successfully received product details
+                            JSONArray productObj = json.getJSONArray(TAG_FASTFOOD);
                             JSONObject product = productObj.getJSONObject(0);
-                            // product with this pid found
-                            // Edit Text
                             String openh = product.getString(TAG_OPENHOUR);
                             String closeh = product.getString(TAG_CLOSEHOUR);
                             Calendar time = Calendar.getInstance();
-                            int current_hour = time.get(Calendar.HOUR_OF_DAY);
+                            int current_hour = time.get(Calendar.HOUR_OF_DAY);      // get current device time
                             is_open = current_hour > Integer.parseInt(openh) && current_hour < Integer.parseInt(closeh);
-                            String text = "فست فود " + product.getString(TAG_NAME);
+                            String text = "فست فود " + product.getString(TAG_NAME); // add shop type to first or it's name
                             fastfoodname.setText(text);
                             fastfoodopenhour.setText(openh);
                             fastfoodclosehour.setText(closeh);
@@ -190,32 +161,25 @@ public class FastFoodDetail extends ListActivity {
             params.add(new BasicNameValuePair("id", pid));
             // getting JSON string from URL
             JSONObject json = jParser.makeHttpRequest(Config_URL.url_all_fastfood_foods, "GET", params);
-            // Check your log cat for JSON reponse
             Log.d("All Foods: ", json.toString());
             try {
-                // Checking for SUCCESS TAG
                 int success = json.getInt(TAG_SUCCESS);
                 if (success == 1) {
-                    // products found
-                    // Getting Array of Products
-                    foods = json.getJSONArray(TAG_FOODS);
-                    // looping through All Products
-                    for (int i = 0; i < foods.length(); i++) {
+                    foods = json.getJSONArray(TAG_FOODS);      // Getting Array of Products
+                    for (int i = 0; i < foods.length(); i++) { // looping through All Products
                         JSONObject c = foods.getJSONObject(i);
-                        // Storing each json item in variable
                         String id = c.getString(TAG_FOOD_PID);
                         String name = c.getString(TAG_FOOD_NAME);
                         String price = c.getString(TAG_FOOD_PRICE);
                         price += " تومان";
                         picture = c.getInt(TAG_FOOD_PICTURE);
-                        // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
                         // adding each child node to HashMap key => value
                         map.put(TAG_FOOD_PID, id);
                         map.put(TAG_FOOD_NAME, name);
                         map.put(TAG_FOOD_PRICE, price);
                         String add = "i" + String.valueOf(picture);
-                        int pic = getResources().getIdentifier(add, "drawable", getPackageName());
+                        int pic = getResources().getIdentifier(add, "drawable", getPackageName()); // get drawable by name
                         map.put(TAG_FOOD_PICTURE, String.valueOf(pic));
                         foodList.add(map);
                     }
@@ -243,7 +207,6 @@ public class FastFoodDetail extends ListActivity {
                                     R.id.price,
                                     R.id.img
                             });
-                    // updating listview
                     setListAdapter(adapter);
                 }
             });
