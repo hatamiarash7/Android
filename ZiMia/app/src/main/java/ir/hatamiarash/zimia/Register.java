@@ -1,10 +1,8 @@
 package ir.hatamiarash.zimia;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -104,10 +102,9 @@ public class Register extends Activity {
                 String phone = inputPhone.getText().toString();
                 if (CheckInternet())
                     if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
-                        if (password.length() < 8)
+                        if (password.length() > 8)
                             if (password.equals(password2)) {
                                 registerUser(name, email, password, address, phone, UserType);
-                                MakeQuestion("ثبت نام", "نام کاربری شما تلفن همراهتان می باشد");
                             } else
                                 MakeToast("کلمه عبور تطابق ندارد");
                         else
@@ -181,6 +178,7 @@ public class Register extends Activity {
                 params.put("address", address);
                 params.put("phone", phone);
                 params.put("password", password);
+                params.put("type", type);
                 return params;
             }
         };
@@ -213,19 +211,5 @@ public class Register extends Activity {
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
-    }
-
-    public void MakeQuestion(String Title, String Message) {                       // build and show an confirm window
-        AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
-        dialog.setTitle(Title);                                                    // set title
-        dialog.setMessage(Message);                                                // set message
-        dialog.setIcon(R.mipmap.ic_launcher);                                      // set icon
-        dialog.setPositiveButton("تایید", new DialogInterface.OnClickListener() {  // positive answer
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();            // close dialog
-            }
-        });
-        AlertDialog alert = dialog.create(); // create dialog
-        alert.show();                        // show dialog
     }
 }

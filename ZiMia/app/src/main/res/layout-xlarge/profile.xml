@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="name"
-            android:textColor="@color/lbl_name"
+            android:textColor="@color/black"
             android:textSize="24sp" />
 
         <TextView
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dip"
-            android:background="@color/btn_logut_bg"
+            android:background="@color/accent"
             android:text="@string/btn_logout"
             android:textAllCaps="false"
             android:textColor="@color/white"

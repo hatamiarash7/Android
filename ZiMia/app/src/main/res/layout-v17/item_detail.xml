@@ -102,8 +102,8 @@
             android:inputType="number"
             android:maxLines="1"
             android:textAlignment="center"
-            android:textColor="@color/input_login"
-            android:textColorHint="@color/input_login_hint" />
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray" />
 
         <Button
             android:id="@+id/inc"

@@ -185,7 +185,7 @@ public class Login extends Activity {
                         String e = inputEmail.getText().toString();                                                     // get email from text input
                         params.add(new BasicNameValuePair("email", e));                                                 // make a parameter
                         JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_set_person_detials, "GET", params); // request from server
-                        Log.d("GET Person Details", json.toString());                                                   // log json data
+                        Log.d(TAG, "GET Person Details" + json.toString());                                                   // log json data
                         if (json.getInt("success") == 1) {                    // if we have successful request
                             JSONArray persons = json.getJSONArray("persons");
                             JSONObject person = persons.getJSONObject(0);     // get person detail

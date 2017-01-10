@@ -26,8 +26,8 @@
             android:maxLines="1"
             android:padding="10dp"
             android:textAlignment="center"
-            android:textColor="@color/input_login"
-            android:textColorHint="@color/input_login_hint" />
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray" />
 
         <helper.PersianEditText
             android:id="@+id/password"
@@ -41,8 +41,8 @@
             android:maxLines="1"
             android:padding="10dp"
             android:textAlignment="center"
-            android:textColor="@color/input_login"
-            android:textColorHint="@color/input_login_hint" />
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray" />
 
         <!-- Login Button -->
 

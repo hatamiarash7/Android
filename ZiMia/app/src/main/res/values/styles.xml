@@ -17,11 +17,4 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@android:color/white</item>
     </style>
-
-    <style name="Drawer2" parent="MaterialDrawerTheme.Light.DarkToolbar">
-        <item name="colorPrimaryDark">@color/bg_register</item>
-        <item name="colorPrimary">@color/input_login</item>
-        <item name="colorAccent">@color/input_login</item>
-        <item name="android:colorBackground">@color/bg_register</item>
-    </style>
 </resources>

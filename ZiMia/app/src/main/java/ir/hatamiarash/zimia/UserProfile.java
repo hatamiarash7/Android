@@ -48,7 +48,6 @@ public class UserProfile extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile);
         txtName = (TextView) findViewById(R.id.profile_name);
-        txtEmail = (TextView) findViewById(R.id.profile_email);
         txtAddress = (TextView) findViewById(R.id.profile_address);
         txtPhone = (TextView) findViewById(R.id.profile_phone);
         btnLogout = (Button) findViewById(R.id.btnLogout);
@@ -94,7 +93,6 @@ public class UserProfile extends Activity {
                             JSONArray productObj = json.getJSONArray(TAG_PERSON);
                             JSONObject person = productObj.getJSONObject(0);
                             txtName.setText(person.getString(TAG_NAME));
-                            txtEmail.setText(person.getString(TAG_EMAIL));
                             txtAddress.setText(person.getString(TAG_ADDRESS));
                             txtPhone.setText(person.getString(TAG_PHONE));
                         } else {

@@ -4,6 +4,7 @@
 
 package helper;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -67,17 +68,30 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // add user data to database
     public void addUser(String name, String email, String address, String phone, String uid, String type, String created_at) {
         SQLiteDatabase db = this.getWritableDatabase();
-        name = "'" + name + "'";
-        email = "'" + email + "'";
-        address = "'" + address + "'";
-        phone = "'" + phone + "'";
-        type = "'" + type + "'";
-        created_at = "'" + created_at + "'";
-        String query = "INSERT OR REPLACE INTO " + TABLE_LOGIN + "(" + KEY_NAME + ", " + KEY_ADDRESS + ", "
-                + KEY_PHONE + ", " + KEY_EMAIL + ", " + KEY_UID + ", " + KEY_TYPE + ", "
-                + KEY_CREATED_AT + ") VALUES(" + name + ", " + address
-                + ", " + phone + ", " + email + ", " + uid + ", " + type + ", " + created_at + ")";
-        db.execSQL(query);
+//        name = "'" + name + "'";
+//        email = "'" + email + "'";
+//        address = "'" + address + "'";
+//        phone = "'" + phone + "'";
+//        type = "'" + type + "'";
+//        uid = "'" + uid + "'";
+//        created_at = "'" + created_at + "'";
+//        String query = "INSERT OR REPLACE INTO " + TABLE_LOGIN + "(" + KEY_NAME + ", " + KEY_ADDRESS + ", "
+//                + KEY_PHONE + ", " + KEY_EMAIL + ", " + KEY_UID + ", " + KEY_TYPE + ", "
+//                + KEY_CREATED_AT + ") VALUES(" + name + ", " + address
+//                + ", " + phone + ", " + email + ", " + uid + ", " + type + ", " + created_at + ")";
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, name); // Name
+        values.put(KEY_EMAIL, email); // Email
+        values.put(KEY_UID, uid); // Email
+        values.put(KEY_ADDRESS, address); // Email
+        values.put(KEY_PHONE, phone); // Email
+        values.put(KEY_TYPE, type); // Email
+        values.put(KEY_CREATED_AT, created_at); // Created At
+
+        // Inserting Row
+        long id = db.insert(TABLE_LOGIN, null, values);
+        //db.execSQL(query);
         db.close();
         Log.d(TAG, "New user inserted into sqlite");
     }
