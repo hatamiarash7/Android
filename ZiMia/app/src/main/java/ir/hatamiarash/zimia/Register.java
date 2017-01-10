@@ -59,6 +59,7 @@ public class Register extends Activity {
         setContentView(R.layout.register);
         inputFullName = (EditText) findViewById(R.id.name);
         inputEmail = (EditText) findViewById(R.id.email);
+        inputEmail.setError("همانند نمونه 09123456789");
         inputPassword = (EditText) findViewById(R.id.password);
         inputPassword2 = (EditText) findViewById(R.id.password2);
         inputAddress = (EditText) findViewById(R.id.address);
@@ -77,7 +78,7 @@ public class Register extends Activity {
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent i = new Intent(getApplicationContext(), Profile.class);
+            Intent i = new Intent(getApplicationContext(), UserProfile.class);
             startActivity(i);
             finish();
         }
@@ -202,9 +203,8 @@ public class Register extends Activity {
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
             return true;
-        else {
+        else
             MakeToast("اتصال به اینترنت را بررسی نمایید");
-        }
         return false;
     }
 

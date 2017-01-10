@@ -231,7 +231,7 @@ public class MainScreenActivity extends AppCompatActivity {
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 2) {
                                 if (CheckInternet()) { // there isn't any network connection
-                                    Intent i = new Intent(getApplicationContext(), Profile.class);
+                                    Intent i = new Intent(getApplicationContext(), UserProfile.class);
                                     // start profile activity and NOT-FINISH main activity for return
                                     startActivity(i);
                                 } else  // network connected

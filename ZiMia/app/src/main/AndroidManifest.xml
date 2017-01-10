@@ -93,8 +93,13 @@
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Profile"
-            android:label="Profile"
+            android:name=".UserProfile"
+            android:label="User Profile"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SellerProfile"
+            android:label="User Profile"
             android:noHistory="true"
             android:screenOrientation="portrait" />
 

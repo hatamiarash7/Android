@@ -25,8 +25,8 @@ import helper.SQLiteHandler;
 import helper.SessionManager;
 import volley.Config_URL;
 
-public class Profile extends Activity {
-    private static final String TAG = Profile.class.getSimpleName();
+public class SellerProfile extends Activity {
+    private static final String TAG = SellerProfile.class.getSimpleName();
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PERSON = "persons";
     private static final String TAG_EMAIL = "email";
