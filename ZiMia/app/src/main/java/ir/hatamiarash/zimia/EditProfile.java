@@ -52,6 +52,7 @@ public class EditProfile extends Activity {
     private static final String TAG_NAME = "name";
     private static final String TAG_ADDRESS = "address";
     private static final String TAG_PHONE = "phone";
+    private static final String TAG_ID = "id";
     String email;
     JSONParser jsonParser = new JSONParser();
     Button btnConfirm, btnChangePassword;
@@ -63,11 +64,12 @@ public class EditProfile extends Activity {
     private EditText txtPassword2;
     private SQLiteHandler db;
     private SessionManager session;
+    String Backup_Phone, uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_profile);
+        setContentView(R.layout.edit_profile);
         txtName = (EditText) findViewById(R.id.new_name);
         txtAddress = (EditText) findViewById(R.id.new_address);
         txtPhone = (EditText) findViewById(R.id.new_phone);
@@ -76,15 +78,17 @@ public class EditProfile extends Activity {
         btnConfirm = (Button) findViewById(R.id.btnConfirm);
         btnChangePassword = (Button) findViewById(R.id.btnChangePassword);
         db = new SQLiteHandler(getApplicationContext());
+        pDialog = new ProgressDialog(this);
+        pDialog.setCancelable(false);
         session = new SessionManager(getApplicationContext());
-        if (!session.isLoggedIn()) {
-
-        }
+//        if (!session.isLoggedIn()) {
+//
+//        }
         HashMap<String, String> user = db.getUserDetails();        // get user detail from local database
         email = user.get("email");
         Log.d(email, "db : " + email);
         new EditProfile.GetPersonDetails().execute();              // get person detail from server
-        btnConfirm.setOnClickListener(new View.OnClickListener() { // logout button's event
+        btnConfirm.setOnClickListener(new View.OnClickListener() { // confirm button's event
             @Override
             public void onClick(View v) {
                 String name = txtName.getText().toString();
@@ -93,7 +97,7 @@ public class EditProfile extends Activity {
                 if (CheckInternet())
                     if (!name.isEmpty() && !address.isEmpty() && !phone.isEmpty())
                         if (phone.startsWith("09") && phone.length() == 11)
-                            updateUser(name, phone, address, phone);
+                            updateUser(name, address, phone, Backup_Phone, uid);
                         else
                             MakeToast("شماره موبایل را بررسی نمایید");
                     else
@@ -116,7 +120,9 @@ public class EditProfile extends Activity {
                             JSONObject person = productObj.getJSONObject(0);
                             txtName.setText(person.getString(TAG_NAME));
                             txtAddress.setText(person.getString(TAG_ADDRESS));
-                            txtPhone.setText(person.getString(TAG_PHONE));
+                            Backup_Phone = person.getString(TAG_PHONE);
+                            txtPhone.setText(Backup_Phone);
+                            uid = person.getString(TAG_ID);
                         } else {
                             Log.d(TAG, "Error !");
                         }
@@ -129,7 +135,7 @@ public class EditProfile extends Activity {
         }
     }
 
-    private void updateUser(final String name, final String email, final String address, final String phone) {
+    private void updateUser(final String name, final String address, final String phone, final String email, final String uid) {
         // Tag used to cancel the request
         String tag_string_req = "req_register";
         pDialog.setMessage("در حال ثبت ...");
@@ -151,7 +157,7 @@ public class EditProfile extends Activity {
                         String address = user.getString("address");
                         String phone = user.getString("phone");
                         // Inserting row in users table
-                        db.updateUser(name, email, address, phone, uid);
+                        db.updateUser(name, email, address, phone);
                         MakeToast("اطلاعات شما به روزرسانی شد");
                         Intent intent = new Intent(EditProfile.this, MainScreenActivity.class);
                         startActivity(intent);
@@ -180,6 +186,7 @@ public class EditProfile extends Activity {
                 params.put("tag", "update");
                 params.put("name", name);
                 params.put("email", email);
+                params.put("uid", uid);
                 params.put("address", address);
                 params.put("phone", phone);
                 return params;

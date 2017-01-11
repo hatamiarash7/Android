@@ -19,7 +19,7 @@ public class SplashScreen extends Activity {
         web.setBackgroundColor(Color.TRANSPARENT);
         // set loading logo with WebView
         web.loadDataWithBaseURL("file:///android_asset/"
-                , "<html><head><style type='text/css'>body{margin:auto auto;text-align:center;} img{width:100%25;}</style></head><body><img src='loading.gif'/><body><html>"
+                , "<html><head><style type='text/css'>body{margin:auto auto;text-align:center;} img{height=100; width=100;}</style></head><body><img src='loading.gif'/><body><html>"
                 , "text/html"
                 , "UTF-8"
                 , "");

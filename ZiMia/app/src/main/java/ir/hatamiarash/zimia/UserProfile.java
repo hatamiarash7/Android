@@ -36,6 +36,8 @@ public class UserProfile extends Activity {
     String email;
     JSONParser jsonParser = new JSONParser();
     Button btnLogout;
+    Button btnEdit;
+    Button btnCharge;
     private TextView txtName;
     private TextView txtEmail;
     private TextView txtAddress;
@@ -51,6 +53,8 @@ public class UserProfile extends Activity {
         txtAddress = (TextView) findViewById(R.id.profile_address);
         txtPhone = (TextView) findViewById(R.id.profile_phone);
         btnLogout = (Button) findViewById(R.id.btnLogout);
+        btnEdit = (Button) findViewById(R.id.btnEdit);
+        btnCharge = (Button) findViewById(R.id.btnCharge);
         db = new SQLiteHandler(getApplicationContext());
         session = new SessionManager(getApplicationContext());
         if (!session.isLoggedIn()) {
@@ -64,6 +68,20 @@ public class UserProfile extends Activity {
             @Override
             public void onClick(View v) {
                 logoutUser(); // logout user
+            }
+        });
+        btnEdit.setOnClickListener(new View.OnClickListener() { // logout button's event
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), EditProfile.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        btnCharge.setOnClickListener(new View.OnClickListener() { // logout button's event
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }

@@ -102,6 +102,11 @@
             android:label="User Profile"
             android:noHistory="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditProfile"
+            android:label="Edit User Profile"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

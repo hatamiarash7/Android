@@ -35,12 +35,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // create tables on call
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
+        String Query = "CREATE TABLE " + TABLE_LOGIN + "("
                 + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, "
                 + KEY_ADDRESS + " TEXT, " + KEY_PHONE + " TEXT, "
                 + KEY_EMAIL + " TEXT UNIQUE, " + KEY_UID + " TEXT, "
                 + KEY_TYPE + " TEXT, " + KEY_CREATED_AT + " TEXT" + ")";
-        db.execSQL(CREATE_LOGIN_TABLE);
+        db.execSQL(Query);
         Log.d(TAG, "Database table created");
     }
 
@@ -55,12 +55,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     public void CreateTable() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
+        String Query = "CREATE TABLE " + TABLE_LOGIN + "("
                 + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, "
                 + KEY_ADDRESS + " TEXT, " + KEY_PHONE + " TEXT, "
                 + KEY_EMAIL + " TEXT UNIQUE, " + KEY_UID + " TEXT, "
                 + KEY_TYPE + " TEXT, " + KEY_CREATED_AT + " TEXT" + ")";
-        db.execSQL(CREATE_LOGIN_TABLE);
+        db.execSQL(Query);
         db.close();
         Log.d(TAG, "Database table created2");
     }
@@ -99,13 +99,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // get user details from database and send them
     public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
-        String selectQuery = "SELECT * FROM " + TABLE_LOGIN;
+        String Query = "SELECT * FROM " + TABLE_LOGIN;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(Query, null);
         cursor.moveToFirst();
-        Log.d(TAG, "Sqlite: " + String.valueOf(cursor.getCount()));
         if (cursor.getCount() > 0) {
-            Log.d(TAG, "Sqlite2: " + cursor.getString(1));
+            Log.d(TAG, "Sqlite: " + cursor.getString(1));
             user.put("name", cursor.getString(1));
             user.put("address", cursor.getString(2));
             user.put("phone", cursor.getString(3));
@@ -120,24 +119,23 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return user;
     }
 
-    public void updateUser(String name, String email, String address, String phone , String uid) {
+    public void updateUser(String name, String email, String address, String phone) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
-                + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, "
-                + KEY_ADDRESS + " TEXT, " + KEY_PHONE + " TEXT, "
-                + KEY_EMAIL + " TEXT UNIQUE, " + KEY_UID + " TEXT, "
-                + KEY_TYPE + " TEXT, " + KEY_CREATED_AT + " TEXT" + ")";
-        db.execSQL(CREATE_LOGIN_TABLE);
+        name = "'" + name + "'";
+        email = "'" + email + "'";
+        address = "'" + address + "'";
+        phone = "'" + phone + "'";
+        String Query = "UPDATE " + TABLE_LOGIN + " SET " + KEY_NAME + "=" + name + ", " + KEY_ADDRESS + "=" + address + ", " + KEY_PHONE + "=" + phone + " WHERE " + KEY_EMAIL + "=" + email;
+        db.execSQL(Query);
         db.close();
-        Log.d(TAG, "Database table created2");
+        Log.d(TAG, "Row Updated");
     }
 
     // count all users
     public int getRowCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_LOGIN;
+        String Query = "SELECT  * FROM " + TABLE_LOGIN;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
+        Cursor cursor = db.rawQuery(Query, null);
         int rowCount = cursor.getCount();
         db.close();
         cursor.close();
