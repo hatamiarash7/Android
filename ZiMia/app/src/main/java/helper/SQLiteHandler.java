@@ -120,6 +120,19 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return user;
     }
 
+    public void updateUser(String name, String email, String address, String phone , String uid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
+        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
+                + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, "
+                + KEY_ADDRESS + " TEXT, " + KEY_PHONE + " TEXT, "
+                + KEY_EMAIL + " TEXT UNIQUE, " + KEY_UID + " TEXT, "
+                + KEY_TYPE + " TEXT, " + KEY_CREATED_AT + " TEXT" + ")";
+        db.execSQL(CREATE_LOGIN_TABLE);
+        db.close();
+        Log.d(TAG, "Database table created2");
+    }
+
     // count all users
     public int getRowCount() {
         String countQuery = "SELECT  * FROM " + TABLE_LOGIN;

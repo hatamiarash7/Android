@@ -1,8 +1,10 @@
 package ir.hatamiarash.zimia;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -102,13 +104,16 @@ public class Register extends Activity {
                 String phone = inputPhone.getText().toString();
                 if (CheckInternet())
                     if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
-                        if (password.length() > 8)
-                            if (password.equals(password2)) {
-                                registerUser(name, email, password, address, phone, UserType);
-                            } else
+                        if (phone.startsWith("09") && phone.length() == 11)
+                            if (password.length() > 8)
+                                if (password.equals(password2))
+                                    registerUser(name, email, password, address, phone, UserType);
+                                else
+                                    MakeToast("کلمه عبور تطابق ندارد");
+                            else
                                 MakeToast("کلمه عبور تطابق ندارد");
                         else
-                            MakeToast("کلمه عبور کوتاه است");
+                            MakeToast("شماره موبایل را بررسی نمایید");
                     else
                         MakeToast("تمامی کادر ها را پر نمایید");
             }
@@ -147,7 +152,7 @@ public class Register extends Activity {
                         String created_at = user.getString("created_at");
                         // Inserting row in users table
                         db.addUser(name, email, address, phone, uid, created_at, type);
-                        MakeToast("ثبت نام انجام شد");
+                        MakeQuestion("ثبت نام انجام شد", "نام کاربری شما تلفن همراهتان می باشد");
                         Intent intent = new Intent(Register.this, Login.class);
                         startActivity(intent);
                         finish();
@@ -211,5 +216,19 @@ public class Register extends Activity {
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+    }
+
+    public void MakeQuestion(String Title, String Message) {                     // build and show an confirm window
+        AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+        dialog.setTitle(Title);                                                  // set title
+        dialog.setMessage(Message);                                              // set message
+        dialog.setIcon(R.mipmap.confirm);                                         // set icon
+        dialog.setNegativeButton("تایید", new DialogInterface.OnClickListener() { // negative answer
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss(); // close dialog
+            }
+        });
+        AlertDialog alert = dialog.create(); // create dialog
+        alert.show();                        // show dialog
     }
 }
