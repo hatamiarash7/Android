@@ -120,7 +120,7 @@ public class MainScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (CheckInternet()) {
-                    Intent i = new Intent(getApplicationContext(), AllResturans.class);
+                    Intent i = new Intent(getApplicationContext(), All_Restaurants.class);
                     // start resturan activity and NOT-FINISH main activity for return
                     startActivity(i);
                 }

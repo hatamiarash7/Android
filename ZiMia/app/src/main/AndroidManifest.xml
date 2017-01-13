@@ -109,6 +109,12 @@
             android:noHistory="true"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".All_Restaurants"
+            android:label="All Restaurants"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCaLExRw_7fmt6ecXbWKoGJXAdjCfYdb4s" />

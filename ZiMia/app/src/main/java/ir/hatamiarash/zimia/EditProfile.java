@@ -5,8 +5,10 @@
 package ir.hatamiarash.zimia;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -39,6 +41,7 @@ import java.util.List;
 import helper.FontHelper;
 import helper.JSONParser;
 import helper.SQLiteHandler;
+import helper.SessionManager;
 import helper.TypefaceSpan;
 import volley.AppController;
 import volley.Config_URL;
@@ -63,6 +66,8 @@ public class EditProfile extends Activity {
     private EditText txtPassword2;
     private SQLiteHandler db;
     String Backup_Phone, uid;
+    private SessionManager session;
+    private boolean isPhoneChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,7 @@ public class EditProfile extends Activity {
         btnConfirm = (Button) findViewById(R.id.btnConfirm);
         btnChangePassword = (Button) findViewById(R.id.btnChangePassword);
         db = new SQLiteHandler(getApplicationContext());
+        session = new SessionManager(getApplicationContext());
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
         HashMap<String, String> user = db.getUserDetails();        // get user detail from local database
@@ -90,8 +96,11 @@ public class EditProfile extends Activity {
                 String phone = txtPhone.getText().toString();
                 if (CheckInternet())
                     if (!name.isEmpty() && !address.isEmpty() && !phone.isEmpty())
-                        if (phone.startsWith("09") && phone.length() == 11)
-                            updateUser(name, address, phone, Backup_Phone, uid);
+                        if (phone.startsWith("09") && phone.length() == 11 && phone.matches("\\d+(?:\\.\\d+)?"))
+                            if (!phone.equals(Backup_Phone))
+                                MakeQuestion("تغییر شماره تلفن", "اطلاعات ورود شما نیز تغییر خواهد کرد", name, address, phone, Backup_Phone, uid);
+                            else
+                                updateUser(name, address, phone, Backup_Phone, uid);
                         else
                             MakeToast("شماره موبایل را بررسی نمایید");
                     else
@@ -153,9 +162,11 @@ public class EditProfile extends Activity {
                         // Inserting row in users table
                         db.updateUser(name, email, address, phone);
                         MakeToast("اطلاعات شما به روزرسانی شد");
-                        Intent intent = new Intent(EditProfile.this, MainScreenActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if (!isPhoneChanged) {
+                            Intent intent = new Intent(EditProfile.this, MainScreenActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     } else {
                         // Error occurred in registration. Get the error message
                         String errorMsg = jObj.getString("error_msg");
@@ -215,5 +226,68 @@ public class EditProfile extends Activity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    public void MakeQuestion(String Title, String Message, final String name, final String address, final String phone, final String Backup_Phone, final String uid) {                     // build and show an confirm window
+        AlertDialog.Builder dialog = new AlertDialog.Builder(EditProfile.this);
+        dialog.setTitle(Title);                                                     // set title
+        dialog.setMessage(Message);                                                 // set message
+        dialog.setIcon(R.drawable.ic_alert);                                        // set icon
+        dialog.setPositiveButton("باشه !", new DialogInterface.OnClickListener() {  // positive answer
+            public void onClick(DialogInterface dialog, int id) {
+                isPhoneChanged = true;
+                updateUser(name, address, phone, Backup_Phone, uid);
+                logoutUser();
+            }
+        });
+        dialog.setNegativeButton("بیخیال", new DialogInterface.OnClickListener() { // negative answer
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss(); // close dialog
+            }
+        });
+        AlertDialog alert = dialog.create(); // create dialog
+        alert.show();                        // show dialog
+    }
+
+    public void logoutUser() {
+        session.setLogin(false);
+        db.deleteUsers();                 // delete user from local database
+        new DelPersonDetails().execute(); // delete user from server
+        Toast.makeText(getApplicationContext(), "خروج موفقیت آمیز بود", Toast.LENGTH_LONG).show();
+        Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+        MainScreenActivity.pointer.finish();
+        // finish old activity and start again for refresh
+        startActivity(i);
+        finish();
+    }
+
+    class DelPersonDetails extends AsyncTask<String, String, String> {
+        protected String doInBackground(String... params) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    try {
+                        List<NameValuePair> params = new ArrayList<NameValuePair>();
+                        params.add(new BasicNameValuePair("email", email));
+                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_delete_person, "GET", params);
+                        if (json.getInt(TAG_SUCCESS) == 1) {
+                            Log.d(TAG, "Done !");
+                        } else {
+                            Log.d(TAG, "Error !");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return null;
+        }
+    }
+
+    public static Boolean isValidInteger(String value) {
+        try {
+            return value.matches("\\d+(?:\\.\\d+)?");
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

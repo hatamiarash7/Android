@@ -226,7 +226,7 @@ public class Register extends Activity {
         AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
         dialog.setTitle(Title);                                                  // set title
         dialog.setMessage(Message);                                              // set message
-        dialog.setIcon(R.mipmap.confirm);                                         // set icon
+        dialog.setIcon(R.drawable.ic_confirm);                                         // set icon
         dialog.setNegativeButton("تایید", new DialogInterface.OnClickListener() { // negative answer
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss(); // close dialog

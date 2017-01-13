@@ -41,8 +41,7 @@ import volley.Config_URL;
 
 public class All_Restaurants extends ListActivity {
     private static final String TAG = All_Restaurants.class.getSimpleName();
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_RESTURANS = "resturans";
+    private static final String TAG_RESTURANS = "restaurants";
     private static final String TAG_PID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_PICTURE = "picture";
@@ -70,6 +69,7 @@ public class All_Restaurants extends ListActivity {
                 startActivityForResult(in, 100);
             }
         });
+        FetchAllRestaurants();
     }
 
     @Override
@@ -166,7 +166,7 @@ public class All_Restaurants extends ListActivity {
             protected java.util.Map<String, String> getParams() {
                 // Posting params to register url
                 java.util.Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "user_register");
+                params.put("tag", "seller_restaurants");
                 return params;
             }
         };

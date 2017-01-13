@@ -154,7 +154,7 @@ public class ShopCard extends ListActivity {
         AlertDialog.Builder dialog = new AlertDialog.Builder(ShopCard.this);
         dialog.setTitle(Title);                                                  // set title
         dialog.setMessage(Message);                                              // set message
-        dialog.setIcon(R.mipmap.delete);                                         // set icon
+        dialog.setIcon(R.drawable.ic_alert);                                         // set icon
         dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {  // positive answer
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();                      // close dialog
