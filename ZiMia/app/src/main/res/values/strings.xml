@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016 - All Rights Reserved - Arash Hatami
+  -->
+
 <resources>
     <string name="app_name">ZiMia</string>
     <string name="app_website">http://zimia.ir</string>

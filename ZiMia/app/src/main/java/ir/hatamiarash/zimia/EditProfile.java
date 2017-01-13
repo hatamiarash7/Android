@@ -39,7 +39,6 @@ import java.util.List;
 import helper.FontHelper;
 import helper.JSONParser;
 import helper.SQLiteHandler;
-import helper.SessionManager;
 import helper.TypefaceSpan;
 import volley.AppController;
 import volley.Config_URL;
@@ -63,7 +62,6 @@ public class EditProfile extends Activity {
     private EditText txtPassword;
     private EditText txtPassword2;
     private SQLiteHandler db;
-    private SessionManager session;
     String Backup_Phone, uid;
 
     @Override
@@ -80,10 +78,6 @@ public class EditProfile extends Activity {
         db = new SQLiteHandler(getApplicationContext());
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
-        session = new SessionManager(getApplicationContext());
-//        if (!session.isLoggedIn()) {
-//
-//        }
         HashMap<String, String> user = db.getUserDetails();        // get user detail from local database
         email = user.get("email");
         Log.d(email, "db : " + email);
@@ -183,7 +177,7 @@ public class EditProfile extends Activity {
             protected java.util.Map<String, String> getParams() {
                 // Posting params to register url
                 java.util.Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "update");
+                params.put("tag", "user_update");
                 params.put("name", name);
                 params.put("email", email);
                 params.put("uid", uid);

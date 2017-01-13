@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 - All Rights Reserved - Arash Hatami
+ */
+
 package ir.hatamiarash.zimia;
 
 import android.app.Activity;
@@ -138,7 +142,7 @@ public class Login extends Activity {
             @Override
             protected Map<String, String> getParams() {           // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "login");
+                params.put("tag", "user_login");
                 params.put("email", email);
                 params.put("password", password);
                 return params;

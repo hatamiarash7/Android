@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 - All Rights Reserved - Arash Hatami
+ */
+
 package ir.hatamiarash.zimia;
 
 import android.app.AlertDialog;

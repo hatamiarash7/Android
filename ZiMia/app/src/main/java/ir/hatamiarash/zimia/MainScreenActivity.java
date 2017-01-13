@@ -15,8 +15,10 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,6 +47,7 @@ import helper.SessionManager;
 import helper.TypefaceSpan;
 
 public class MainScreenActivity extends AppCompatActivity {
+    private static final String TAG = MainScreenActivity.class.getSimpleName();
     public static MainScreenActivity pointer;  // use to finish activity from anywhere
     public static SQLiteHandlerItem db;        // items database
     public static SQLiteHandler db2;           // users database
@@ -58,6 +61,7 @@ public class MainScreenActivity extends AppCompatActivity {
     Button btnClosePopup;                      // close popup
     ImageView Telegram, Website, Email;        // contact icons
     SessionManager session;                    // session for check user logged
+    private long back_pressed;                 // for check back key pressed count
     private PopupWindow pwindo;                // popup
     private AccountHeader headerResult = null;
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
@@ -256,7 +260,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     .withSelectedItem(1)
                     .withSavedInstance(savedInstanceState)
                     .withDrawerGravity(Gravity.END) // set drawer to end of screen ( rtl )
-                    .build(); // build drawer
+                    .build();                       // build drawer
         }
     }
 
@@ -279,7 +283,7 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
     private void initiatePopupWindow(int id) { // build and open popup
-        result.closeDrawer(); // close drawer first
+        result.closeDrawer();                  // close drawer first
         try {
             Display display = getWindowManager().getDefaultDisplay(); // get display data
             Point size = new Point(); // define new point variable
@@ -312,14 +316,24 @@ public class MainScreenActivity extends AppCompatActivity {
 
     public boolean CheckInternet() { // check network connection for run from possible exceptions
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
-            return true; // network connected
-        else {
-            // show notification
-            MakeToast("اتصال به اینترنت را بررسی نمایید");
+        if (CheckSimCard()) {
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+                return true; // network connected
+            else {
+                // show notification
+                MakeToast("اتصال به اینترنت را بررسی نمایید");
+                return false;
+            }
+        } else {
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+                return true; // network connected
+            else {
+                // show notification
+                MakeToast("اتصال به اینترنت را بررسی نمایید");
+                return false;
+            }
         }
-        return false;
     }
 
     public void MakeToast(String Message) { // build and show notification with custom typeface
@@ -327,5 +341,24 @@ public class MainScreenActivity extends AppCompatActivity {
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean CheckSimCard() {
+        TelephonyManager Telephone = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        Log.d(TAG, "ss : " + String.valueOf( TelephonyManager.SIM_STATE_ABSENT));
+        return Telephone.getSimState() != TelephonyManager.SIM_STATE_ABSENT;
+    }
+
+    @Override
+    public void onBackPressed() {
+        // check if back key press twice in 2 second
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            // kill app completely
+            android.os.Process.killProcess(android.os.Process.myPid());
+        } else
+            MakeToast("Press Back Again To Exit");
+        // set current time for counter
+        back_pressed = System.currentTimeMillis();
     }
 }

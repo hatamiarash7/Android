@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 - All Rights Reserved - Arash Hatami
+ */
+
 apply plugin: 'com.android.application'
 def minSdk = hasProperty('minSdk') ? minSdk : 15
 android {
@@ -8,7 +12,7 @@ android {
         minSdkVersion minSdk
         targetSdkVersion 25
         versionCode 1
-        versionName "1.1"
+        versionName "1.2"
     }
     buildTypes {
         debug {

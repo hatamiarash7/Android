@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 - All Rights Reserved - Arash Hatami
+ */
+
 package ir.hatamiarash.zimia;
 
 import android.app.Activity;
@@ -105,7 +109,7 @@ public class Register extends Activity {
                 if (CheckInternet())
                     if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
                         if (phone.startsWith("09") && phone.length() == 11)
-                            if (password.length() > 8)
+                            if (password.length() >= 8)
                                 if (password.equals(password2))
                                     registerUser(name, email, password, address, phone, UserType);
                                 else
@@ -177,7 +181,7 @@ public class Register extends Activity {
             protected Map<String, String> getParams() {
                 // Posting params to register url
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "register");
+                params.put("tag", "user_register");
                 params.put("name", name);
                 params.put("email", email);
                 params.put("address", address);

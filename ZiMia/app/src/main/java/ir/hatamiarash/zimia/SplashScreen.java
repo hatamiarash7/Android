@@ -1,33 +1,30 @@
+/*
+ * Copyright (c) 2016 - All Rights Reserved - Arash Hatami
+ */
+
 package ir.hatamiarash.zimia;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
-import android.webkit.WebView;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 public class SplashScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-        WebView web = (WebView) findViewById(R.id.gif2);
-        web.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        web.getSettings().setLoadsImagesAutomatically(true);
-        web.setBackgroundColor(Color.TRANSPARENT);
-        // set loading logo with WebView
-        web.loadDataWithBaseURL("file:///android_asset/"
-                , "<html><head><style type='text/css'>body{margin:auto auto;text-align:center;} img{height=100; width=100;}</style></head><body><img src='loading.gif'/><body><html>"
-                , "text/html"
-                , "UTF-8"
-                , "");
+        ImageView loading = (ImageView) findViewById(R.id.loading);
+        loading.setImageDrawable(getResources().getDrawable(R.drawable.loading));
+        loading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotation));
+        ImageView logo = (ImageView) findViewById(R.id.logo);
+        logo.setImageDrawable(getResources().getDrawable(R.drawable.logo));
         Thread timerThread = new Thread() {
             public void run() {
-                // wait some milliseconds for loading all parts ao app
+                // wait some milliseconds for loading all parts of app
                 try {
-                    sleep(2000);
+                    sleep(2500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
@@ -41,7 +38,6 @@ public class SplashScreen extends Activity {
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
         finish();
     }
