@@ -6,8 +6,12 @@ package ir.hatamiarash.zimia;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,9 +28,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import helper.FontHelper;
 import helper.JSONParser;
 import helper.SQLiteHandler;
 import helper.SessionManager;
+import helper.TypefaceSpan;
 import volley.Config_URL;
 
 public class UserProfile extends Activity {
@@ -85,9 +91,20 @@ public class UserProfile extends Activity {
         btnCharge.setOnClickListener(new View.OnClickListener() { // logout button's event
             @Override
             public void onClick(View v) {
-
+                MakeToast("انتقال به صفحه شارژ");
             }
         });
+    }
+
+    public void MakeToast(String Message) { // build and show notification with custom typeface
+        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+    }
+
+    public void MakeSnack(View v, String Msg) {
+        Snackbar.make(v, Msg, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
     }
 
     public void logoutUser() {

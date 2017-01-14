@@ -4,8 +4,11 @@
 
 package ir.hatamiarash.zimia;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -13,12 +16,13 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,6 +45,7 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import helper.FontHelper;
+import helper.Notify;
 import helper.SQLiteHandler;
 import helper.SQLiteHandlerItem;
 import helper.SessionManager;
@@ -104,6 +109,8 @@ public class MainScreenActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.drawer);
+        //Notify NOTIFY = new Notify("Hello", "Welcome to zimia", MainScreenActivity.class);
+        //NOTIFY.MakeNotification();
         pointer = this;                                      // point the pointer to this activity for control from anywhere
         db = new SQLiteHandlerItem(getApplicationContext()); // items database
         db2 = new SQLiteHandler(getApplicationContext());    // users database
@@ -130,7 +137,7 @@ public class MainScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (CheckInternet()) {
-                    Intent i = new Intent(getApplicationContext(), AllFastFoods.class);
+                    Intent i = new Intent(getApplicationContext(), All_FastFoods.class);
                     // start fastfood activity and NOT-FINISH main activity for return
                     startActivity(i);
                 }
@@ -140,7 +147,7 @@ public class MainScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (CheckInternet()) {
-                    Intent i = new Intent(getApplicationContext(), AllMarkets.class);
+                    Intent i = new Intent(getApplicationContext(), All_Markets.class);
                     // start market activity and NOT-FINISH main activity for return
                     startActivity(i);
                 }
@@ -316,24 +323,19 @@ public class MainScreenActivity extends AppCompatActivity {
 
     public boolean CheckInternet() { // check network connection for run from possible exceptions
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (CheckSimCard()) {
+        TelephonyManager Telephone = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        PackageManager PM = getPackageManager();
+        //if (Telephone.getSimState() != TelephonyManager.SIM_STATE_ABSENT) {
+        if (PM.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
             if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                     connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
-                return true; // network connected
-            else {
-                // show notification
-                MakeToast("اتصال به اینترنت را بررسی نمایید");
-                return false;
-            }
+                return true;
         } else {
             if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
-                return true; // network connected
-            else {
-                // show notification
-                MakeToast("اتصال به اینترنت را بررسی نمایید");
-                return false;
-            }
+                return true;
         }
+        MakeToast("اتصال به اینترنت را بررسی نمایید");
+        return false;
     }
 
     public void MakeToast(String Message) { // build and show notification with custom typeface
@@ -341,12 +343,6 @@ public class MainScreenActivity extends AppCompatActivity {
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
-    }
-
-    public boolean CheckSimCard() {
-        TelephonyManager Telephone = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        Log.d(TAG, "ss : " + String.valueOf( TelephonyManager.SIM_STATE_ABSENT));
-        return Telephone.getSimState() != TelephonyManager.SIM_STATE_ABSENT;
     }
 
     @Override
@@ -360,5 +356,20 @@ public class MainScreenActivity extends AppCompatActivity {
             MakeToast("Press Back Again To Exit");
         // set current time for counter
         back_pressed = System.currentTimeMillis();
+    }
+
+    public void MakeNotification(String Title, String Msg) {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setSmallIcon(R.drawable.ic_alert);
+        mBuilder.setContentTitle(Title);
+        mBuilder.setContentText(Msg);
+        Intent intent = new Intent(this, MainScreenActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainScreenActivity.class);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent resault = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resault);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1001, mBuilder.build());
     }
 }

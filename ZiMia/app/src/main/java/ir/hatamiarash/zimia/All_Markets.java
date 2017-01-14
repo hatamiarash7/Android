@@ -39,9 +39,9 @@ import helper.TypefaceSpan;
 import volley.AppController;
 import volley.Config_URL;
 
-public class All_Restaurants extends ListActivity {
-    private static final String TAG = All_Restaurants.class.getSimpleName();
-    private static final String TAG_TYPE = "restaurants";
+public class All_Markets extends ListActivity {
+    private static final String TAG = All_Markets.class.getSimpleName();
+    private static final String TAG_TYPE = "markets";
     private static final String TAG_PID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_PICTURE = "picture";
@@ -49,13 +49,13 @@ public class All_Restaurants extends ListActivity {
     private static final String TAG_OPENHOUR = "open_hour";
     private static final String TAG_CLOSEHOUR = "close_hour";
     private ProgressDialog pDialog;
-    ArrayList<HashMap<String, String>> resturanList;
+    ArrayList<HashMap<String, String>> marketList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_resturans);
-        resturanList = new ArrayList<HashMap<String, String>>();
+        marketList = new ArrayList<HashMap<String, String>>();
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -64,12 +64,12 @@ public class All_Restaurants extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
-                Intent in = new Intent(getApplicationContext(), ResturanDetail.class);
+                Intent in = new Intent(getApplicationContext(), MarketDetail.class);
                 in.putExtra(TAG_PID, pid);
                 startActivityForResult(in, 100);
             }
         });
-        FetchAllRestaurants();
+        FetchAllMarkets();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class All_Restaurants extends ListActivity {
         }
     }
 
-    private void FetchAllRestaurants() {
+    private void FetchAllMarkets() {
         // Tag used to cancel the request
         String tag_string_req = "req_fetch";
         pDialog.setMessage("لطفا منتظر بمانید ...");
@@ -90,21 +90,21 @@ public class All_Restaurants extends ListActivity {
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Restaurants Response: " + response);
+                Log.d(TAG, "Markets Response: " + response);
                 hideDialog();
                 try {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
-                        // Restaurants List fetched from server
-                        JSONArray resturans = jObj.getJSONArray(TAG_TYPE);
-                        for (int i = 0; i < resturans.length(); i++) {
-                            JSONObject restaurant = resturans.getJSONObject(i);
-                            String id = restaurant.getString(TAG_PID);
-                            String name = restaurant.getString(TAG_NAME);
-                            int picture = restaurant.getInt(TAG_PICTURE);
-                            int open_hour = restaurant.getInt(TAG_OPENHOUR);
-                            int close_hour = restaurant.getInt(TAG_CLOSEHOUR);
+                        // Markets List fetched from server
+                        JSONArray markets = jObj.getJSONArray(TAG_TYPE);
+                        for (int i = 0; i < markets.length(); i++) {
+                            JSONObject market = markets.getJSONObject(i);
+                            String id = market.getString(TAG_PID);
+                            String name = market.getString(TAG_NAME);
+                            int picture = market.getInt(TAG_PICTURE);
+                            int open_hour = market.getInt(TAG_OPENHOUR);
+                            int close_hour = market.getInt(TAG_CLOSEHOUR);
                             HashMap<String, String> map = new HashMap<String, String>();
                             map.put(TAG_PID, id);
                             map.put(TAG_NAME, name);
@@ -121,11 +121,11 @@ public class All_Restaurants extends ListActivity {
                                 pic = getResources().getIdentifier("close", "drawable", getPackageName());
                                 map.put(TAG_STATUS_PICTURE, String.valueOf(pic));
                             }
-                            resturanList.add(map);
+                            marketList.add(map);
                             runOnUiThread(new Runnable() {
                                 public void run() {
                                     ListAdapter adapter = new SimpleAdapter(
-                                            All_Restaurants.this, resturanList,
+                                            All_Markets.this, marketList,
                                             R.layout.list_item, new String[]{
                                             TAG_PID,
                                             TAG_NAME,
@@ -165,7 +165,7 @@ public class All_Restaurants extends ListActivity {
             protected java.util.Map<String, String> getParams() {
                 // Posting params to register url
                 java.util.Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "seller_restaurants");
+                params.put("tag", "seller_markets");
                 return params;
             }
         };

@@ -16,10 +16,6 @@ public class Config_URL {
     public static final String url_all_fastfood_foods = base_URL + "get_all_fastfood_foods.php";
     public static final String url_all_market_products = base_URL + "get_all_market_products.php";
     public static final String url_all_resturan_foods = base_URL + "get_all_resturan_foods.php";
-    // Get All Providers
-    public static final String url_all_fastfoods = base_URL + "get_all_fastfoods.php";
-    public static final String url_all_markets = base_URL + "get_all_markets.php";
-    public static final String url_all_resturans = base_URL + "get_all_resturans.php";
     // User Management
     public static final String url_get_person_detials = base_URL + "users/include/Get_User_Detail.php";
     public static final String url_delete_person = base_URL + "users/include/Del_User_Detail.php";

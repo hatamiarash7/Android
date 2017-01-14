@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
-        <TextView
+        <helper.PersianTextView
             android:id="@+id/profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             android:textColor="@color/black"
             android:textSize="26sp"/>
 
-        <TextView
+        <helper.PersianTextView
             android:id="@+id/profile_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:textColor="@color/gray"
             android:textSize="15sp"/>
 
-        <TextView
+        <helper.PersianTextView
             android:id="@+id/profile_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

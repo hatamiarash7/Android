@@ -48,18 +48,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AllResturans"
-            android:label="All Resturans"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".AllFastFoods"
-            android:label="All FastFoods"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".AllMarkets"
-            android:label="All Markets"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".FastFoodDetail"
             android:label="Edit FastFood"
             android:screenOrientation="portrait" />
@@ -108,10 +96,19 @@
             android:label="Edit User Profile"
             android:noHistory="true"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".All_Restaurants"
             android:label="All Restaurants"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".All_FastFoods"
+            android:label="All FastFoods"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".All_Markets"
+            android:label="All Markets"
             android:noHistory="true"
             android:screenOrientation="portrait" />
 

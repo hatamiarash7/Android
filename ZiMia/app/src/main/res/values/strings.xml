@@ -25,6 +25,8 @@
     <string name="hint_email">تلفن همراه</string>
     <string name="hint_password">کلمه عبور</string>
     <string name="hint_password2">تکرار کلمه عبور</string>
+    <string name="hint_newpassword">کلمه عبور جدید</string>
+    <string name="hint_newpassword2">تکرار کلمه عبور جدید</string>
     <string name="hint_name">نام کامل</string>
     <string name="hint_address">آدرس</string>
     <string name="hint_phone">شماره تلفن</string>
