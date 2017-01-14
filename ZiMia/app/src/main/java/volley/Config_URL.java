@@ -19,7 +19,6 @@ public class Config_URL {
     // User Management
     public static final String url_get_person_detials = base_URL + "users/include/Get_User_Detail.php";
     public static final String url_delete_person = base_URL + "users/include/Del_User_Detail.php";
-    public static final String url_set_person_detials = base_URL + "users/include/Set_User_Detail.php";
     public static final String url_login = base_URL + "users/";
     public static final String url_register = base_URL + "users/";
 }

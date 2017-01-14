@@ -48,13 +48,6 @@ import volley.Config_URL;
 
 public class EditProfile extends Activity {
     private static final String TAG = UserProfile.class.getSimpleName();
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_PERSON = "persons";
-    private static final String TAG_EMAIL = "email";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_ADDRESS = "address";
-    private static final String TAG_PHONE = "phone";
-    private static final String TAG_ID = "id";
     String email;
     JSONParser jsonParser = new JSONParser();
     Button btnConfirm, btnChangePassword;
@@ -87,7 +80,9 @@ public class EditProfile extends Activity {
         HashMap<String, String> user = db.getUserDetails();        // get user detail from local database
         email = user.get("email");
         Log.d(email, "db : " + email);
-        new EditProfile.GetPersonDetails().execute();              // get person detail from server
+        pDialog.setMessage("لطفا منتظر بمانید ...");
+        showDialog();
+        GetUser(email);                                            // get person detail from server
         btnConfirm.setOnClickListener(new View.OnClickListener() { // confirm button's event
             @Override
             public void onClick(View v) {
@@ -100,7 +95,7 @@ public class EditProfile extends Activity {
                             if (!phone.equals(Backup_Phone))
                                 MakeQuestion("تغییر شماره تلفن", "اطلاعات ورود شما نیز تغییر خواهد کرد", name, address, phone, Backup_Phone, uid);
                             else
-                                updateUser(name, address, phone, Backup_Phone, uid);
+                                UpdateUser(name, address, phone, Backup_Phone, uid);
                         else
                             MakeToast("شماره موبایل را بررسی نمایید");
                     else
@@ -109,36 +104,54 @@ public class EditProfile extends Activity {
         });
     }
 
-    class GetPersonDetails extends AsyncTask<String, String, String> {
-        protected String doInBackground(String... params) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    try {
-                        List<NameValuePair> params = new ArrayList<NameValuePair>();
-                        params.add(new BasicNameValuePair("email", email));
-                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_get_person_detials, "GET", params);
-                        Log.d("Single Person Details", json.toString());
-                        if (json.getInt(TAG_SUCCESS) == 1) {
-                            JSONArray productObj = json.getJSONArray(TAG_PERSON);
-                            JSONObject person = productObj.getJSONObject(0);
-                            txtName.setText(person.getString(TAG_NAME));
-                            txtAddress.setText(person.getString(TAG_ADDRESS));
-                            Backup_Phone = person.getString(TAG_PHONE);
-                            txtPhone.setText(Backup_Phone);
-                            uid = person.getString(TAG_ID);
-                        } else {
-                            Log.d(TAG, "Error !");
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+
+    private void GetUser(final String email) {          // check login request from server
+        String tag_string_req = "req_get";               // Tag used to cancel the request
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_login, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Login Response: " + response); // log server response
+                hideDialog();                              // close dialog
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {                          // Check for error node in json
+                        JSONObject user = jObj.getJSONObject("user");
+                        txtName.setText(user.getString("name"));
+                        txtAddress.setText(user.getString("address"));
+                        Backup_Phone = user.getString("phone");
+                        txtPhone.setText(Backup_Phone);
+                        uid = jObj.getString("uid");
+                    } else {
+                        // Error in login. Get the error message
+                        String errorMsg = jObj.getString("error_msg");
+                        MakeToast(errorMsg); // show error message
                     }
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
                 }
-            });
-            return null;
-        }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Login Error: " + error.getMessage()); // log login's error
+                MakeToast(error.getMessage());                    // show error in notification
+            }
+        }) {
+            @Override
+            protected java.util.Map<String, String> getParams() { // Posting parameters to login url
+                java.util.Map<String, String> params = new HashMap<String, String>();
+                params.put("tag", "user_get");
+                params.put("email", email);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
-    private void updateUser(final String name, final String address, final String phone, final String email, final String uid) {
+    private void UpdateUser(final String name, final String address, final String phone, final String email, final String uid) {
         // Tag used to cancel the request
         String tag_string_req = "req_register";
         pDialog.setMessage("در حال ثبت ...");
@@ -236,7 +249,7 @@ public class EditProfile extends Activity {
         dialog.setPositiveButton("باشه !", new DialogInterface.OnClickListener() {  // positive answer
             public void onClick(DialogInterface dialog, int id) {
                 isPhoneChanged = true;
-                updateUser(name, address, phone, Backup_Phone, uid);
+                UpdateUser(name, address, phone, Backup_Phone, uid);
                 logoutUser();
             }
         });
@@ -250,10 +263,11 @@ public class EditProfile extends Activity {
     }
 
     public void logoutUser() {
+        pDialog.setMessage("در حال خروج ...");
+        showDialog();
         session.setLogin(false);
         db.deleteUsers();                 // delete user from local database
-        new DelPersonDetails().execute(); // delete user from server
-        Toast.makeText(getApplicationContext(), "خروج موفقیت آمیز بود", Toast.LENGTH_LONG).show();
+        DeleteUser(email);
         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
         MainScreenActivity.pointer.finish();
         // finish old activity and start again for refresh
@@ -261,33 +275,44 @@ public class EditProfile extends Activity {
         finish();
     }
 
-    class DelPersonDetails extends AsyncTask<String, String, String> {
-        protected String doInBackground(String... params) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    try {
-                        List<NameValuePair> params = new ArrayList<NameValuePair>();
-                        params.add(new BasicNameValuePair("email", email));
-                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_delete_person, "GET", params);
-                        if (json.getInt(TAG_SUCCESS) == 1) {
-                            Log.d(TAG, "Done !");
-                        } else {
-                            Log.d(TAG, "Error !");
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+    private void DeleteUser(final String email) {          // check login request from server
+        String tag_string_req = "req_delete";               // Tag used to cancel the request
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_login, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Login Response: " + response); // log server response
+                hideDialog();                              // close dialog
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {                          // Check for error node in json
+                        Log.d(TAG, "Done !");
+                    } else {
+                        // Error in login. Get the error message
+                        String errorMsg = jObj.getString("error_msg");
+                        MakeToast(errorMsg); // show error message
                     }
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
                 }
-            });
-            return null;
-        }
-    }
-
-    public static Boolean isValidInteger(String value) {
-        try {
-            return value.matches("\\d+(?:\\.\\d+)?");
-        } catch (NumberFormatException e) {
-            return false;
-        }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Login Error: " + error.getMessage()); // log login's error
+                MakeToast(error.getMessage());                    // show error in notification
+            }
+        }) {
+            @Override
+            protected java.util.Map<String, String> getParams() { // Posting parameters to login url
+                java.util.Map<String, String> params = new HashMap<String, String>();
+                params.put("tag", "user_delete");
+                params.put("email", email);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 }
