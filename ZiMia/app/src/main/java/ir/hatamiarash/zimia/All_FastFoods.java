@@ -37,25 +37,19 @@ import java.util.HashMap;
 import helper.FontHelper;
 import helper.TypefaceSpan;
 import volley.AppController;
+import volley.Config_TAG;
 import volley.Config_URL;
 
 public class All_FastFoods extends ListActivity {
     private static final String TAG = All_FastFoods.class.getSimpleName();
-    private static final String TAG_TYPE = "fastfoods";
-    private static final String TAG_PID = "id";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_PICTURE = "picture";
-    private static final String TAG_STATUS_PICTURE = "status";
-    private static final String TAG_OPENHOUR = "open_hour";
-    private static final String TAG_CLOSEHOUR = "close_hour";
     private ProgressDialog pDialog;
-    ArrayList<HashMap<String, String>> fastfoodList;
+    ArrayList<HashMap<String, String>> FastFoodList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_fastfoods);
-        fastfoodList = new ArrayList<HashMap<String, String>>();
+        FastFoodList = new ArrayList<HashMap<String, String>>();
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -65,7 +59,7 @@ public class All_FastFoods extends ListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
                 Intent in = new Intent(getApplicationContext(), FastFoodDetail.class);
-                in.putExtra(TAG_PID, pid);
+                in.putExtra(Config_TAG.TAG_ID, pid);
                 startActivityForResult(in, 100);
             }
         });
@@ -97,41 +91,40 @@ public class All_FastFoods extends ListActivity {
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
                         // FastFoods List fetched from server
-                        JSONArray fastfoods = jObj.getJSONArray(TAG_TYPE);
+                        JSONArray fastfoods = jObj.getJSONArray("fastfoods");
                         for (int i = 0; i < fastfoods.length(); i++) {
                             JSONObject fastfood = fastfoods.getJSONObject(i);
-                            String id = fastfood.getString(TAG_PID);
-                            String name = fastfood.getString(TAG_NAME);
-                            int picture = fastfood.getInt(TAG_PICTURE);
-                            int open_hour = fastfood.getInt(TAG_OPENHOUR);
-                            int close_hour = fastfood.getInt(TAG_CLOSEHOUR);
-                            HashMap<String, String> map = new HashMap<String, String>();
-                            map.put(TAG_PID, id);
-                            map.put(TAG_NAME, name);
+                            String id = fastfood.getString(Config_TAG.TAG_ID);
+                            String name = fastfood.getString(Config_TAG.TAG_NAME);
+                            int picture = fastfood.getInt(Config_TAG.TAG_PICTURE);
+                            int open_hour = fastfood.getInt(Config_TAG.TAG_OPEN_HOUR);
+                            int close_hour = fastfood.getInt(Config_TAG.TAG_CLOSE_HOUR);
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put(Config_TAG.TAG_ID, id);
+                            map.put(Config_TAG.TAG_NAME, name);
                             String add = "i" + String.valueOf(picture);
                             int pic = getResources().getIdentifier(add, "drawable", getPackageName());
-                            map.put(TAG_PICTURE, String.valueOf(pic));
+                            map.put(Config_TAG.TAG_PICTURE, String.valueOf(pic));
                             Calendar time = Calendar.getInstance();
                             int current_hour = time.get(Calendar.HOUR_OF_DAY);
-                            Log.d("Time: ", String.valueOf(current_hour));
                             if (current_hour > open_hour && current_hour < close_hour) {
                                 pic = getResources().getIdentifier("open", "drawable", getPackageName());
-                                map.put(TAG_STATUS_PICTURE, String.valueOf(pic));
+                                map.put(Config_TAG.TAG_STATUS_PICTURE, String.valueOf(pic));
                             } else {
                                 pic = getResources().getIdentifier("close", "drawable", getPackageName());
-                                map.put(TAG_STATUS_PICTURE, String.valueOf(pic));
+                                map.put(Config_TAG.TAG_STATUS_PICTURE, String.valueOf(pic));
                             }
-                            fastfoodList.add(map);
+                            FastFoodList.add(map);
                             runOnUiThread(new Runnable() {
                                 public void run() {
                                     ListAdapter adapter = new SimpleAdapter(
-                                            All_FastFoods.this, fastfoodList,
+                                            All_FastFoods.this, FastFoodList,
                                             R.layout.list_item, new String[]{
-                                            TAG_PID,
-                                            TAG_NAME,
-                                            TAG_PICTURE,
+                                            Config_TAG.TAG_ID,
+                                            Config_TAG.TAG_NAME,
+                                            Config_TAG.TAG_PICTURE,
                                             "",
-                                            TAG_STATUS_PICTURE
+                                            Config_TAG.TAG_STATUS_PICTURE
                                     },
                                             new int[]{
                                                     R.id.pid,
@@ -146,7 +139,7 @@ public class All_FastFoods extends ListActivity {
                         }
                     } else {
                         // Error occurred
-                        String errorMsg = jObj.getString("error_msg");
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
                         MakeToast(errorMsg);
                     }
                 } catch (JSONException e) {
@@ -164,8 +157,8 @@ public class All_FastFoods extends ListActivity {
             @Override
             protected java.util.Map<String, String> getParams() {
                 // Posting params to register url
-                java.util.Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "seller_fastfoods");
+                java.util.Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "seller_fastfoods");
                 return params;
             }
         };

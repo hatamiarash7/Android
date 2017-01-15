@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -48,7 +49,7 @@ public class ShopCard extends ListActivity {
     private static final String TAG_COUNT = "count"; // count tag
     ArrayList<HashMap<String, String>> ItemList;     // item array list
     Button Clear_Card, Pay_Card;                     // pay or clear card
-    Button btnConfirm, btnCancle, btnDelete;         // popup buttons
+    Button btnConfirm, btnCancel, btnDelete;         // popup buttons
     Button inc, dec;                                 // increase or decrease item count
     TextView name, count, price;                     // item details
     TextView CardPrice, TotalPrice, CardDiscount;    // card prices
@@ -112,7 +113,7 @@ public class ShopCard extends ListActivity {
         setContentView(R.layout.shop_card);
         db = new SQLiteHandlerItem(getApplicationContext()); // items database
         db2 = new SQLiteHandler(getApplicationContext());    // users database
-        ItemList = new ArrayList<HashMap<String, String>>(); // list for save items
+        ItemList = new ArrayList<>();                        // list for save items
         Clear_Card = (Button) findViewById(R.id.btnClear);   // clear button
         Pay_Card = (Button) findViewById(R.id.btnPay);       // pay button
         new LoadAllCardItems().execute();                    // execute load class
@@ -199,16 +200,17 @@ public class ShopCard extends ListActivity {
             item_name.setText(name);                                      // set item name
             item_count.setText(count);                                    // set item count
             btnConfirm = (Button) layout.findViewById(R.id.btnConfirm);   // confirm button
-            btnCancle = (Button) layout.findViewById(R.id.btnCancel);     // cancel button
+            btnCancel = (Button) layout.findViewById(R.id.btnCancel);     // cancel button
             btnDelete = (Button) layout.findViewById(R.id.btnDelete);     // delete button
             inc = (Button) layout.findViewById(R.id.inc);                 // increase button
             dec = (Button) layout.findViewById(R.id.dec);                 // decrease button
             btnConfirm.setOnClickListener(confirm_button_click_listener); // confirm event
-            btnCancle.setOnClickListener(cancel_button_click_listener);   // cancel event
+            btnCancel.setOnClickListener(cancel_button_click_listener);   // cancel event
             btnDelete.setOnClickListener(delete_button_click_listener);   // delete event
             inc.setOnClickListener(inc_button_click_listener);            // increase event
             dec.setOnClickListener(dec_button_click_listener);            // decrease event
         } catch (Exception e) {
+            Log.e(TAG, "Error : " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -218,7 +220,7 @@ public class ShopCard extends ListActivity {
             List<String> Item = db.getItemDetails();    // get all items
             if (Item.size() > 0)                        // if there is item in card
                 for (int i = 0; i < (Item.size() / 4); i++) {
-                    HashMap<String, String> map = new HashMap<String, String>();
+                    HashMap<String, String> map = new HashMap<>();
                     String id = Item.get(i * 4);        // get item id
                     String name = Item.get(i * 4 + 1);  // get item name
                     String price = Item.get(i * 4 + 2); // get item price
@@ -251,17 +253,17 @@ public class ShopCard extends ListActivity {
             }
             int card_price = db.TotalPrice();                                     // get total price from database
             int total_price = card_price - discount;                              // calculate final price with discount
-            final String cardprice = String.valueOf(card_price) + " تومان";       // set price ( original )
-            final String carddiscount = String.valueOf(discount) + " تومان";      // set price ( discount )
-            final String cardtotalprice = String.valueOf(total_price) + " تومان"; // set price ( final )
+            final String Price = String.valueOf(card_price) + " تومان";       // set price ( original )
+            final String Discount = String.valueOf(discount) + " تومان";      // set price ( discount )
+            final String FinalPrice = String.valueOf(total_price) + " تومان"; // set price ( final )
             TotalPrice = (TextView) findViewById(R.id.CardTotalPrice);            // original price
             CardDiscount = (TextView) findViewById(R.id.CardDiscount);            // discount
             CardPrice = (TextView) findViewById(R.id.CardPrice);                  // final price
             runOnUiThread(new Runnable() {
                 public void run() {
-                    TotalPrice.setText(cardtotalprice); // set price
-                    CardDiscount.setText(carddiscount); // set price
-                    CardPrice.setText(cardprice);       // set price
+                    TotalPrice.setText(FinalPrice); // set price
+                    CardDiscount.setText(Discount); // set price
+                    CardPrice.setText(Price);       // set price
                 }
             });
             return null;

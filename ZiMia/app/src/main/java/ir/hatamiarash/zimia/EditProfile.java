@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -28,29 +27,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import helper.FontHelper;
-import helper.JSONParser;
 import helper.SQLiteHandler;
 import helper.SessionManager;
 import helper.TypefaceSpan;
 import volley.AppController;
+import volley.Config_TAG;
 import volley.Config_URL;
 
 public class EditProfile extends Activity {
-    private static final String TAG = UserProfile.class.getSimpleName();
-    String email;
-    JSONParser jsonParser = new JSONParser();
-    Button btnConfirm, btnChangePassword;
+    private static final String TAG = EditProfile.class.getSimpleName();
+    private boolean isPhoneChanged = false;
     private ProgressDialog pDialog;
     private EditText txtName;
     private EditText txtAddress;
@@ -58,32 +50,31 @@ public class EditProfile extends Activity {
     private EditText txtPassword;
     private EditText txtPassword2;
     private SQLiteHandler db;
-    String Backup_Phone, uid;
     private SessionManager session;
-    private boolean isPhoneChanged = false;
+    String Backup_Phone, uid, email;
+    Button btnConfirm, btnChangePassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile);
-        txtName = (EditText) findViewById(R.id.new_name);
-        txtAddress = (EditText) findViewById(R.id.new_address);
-        txtPhone = (EditText) findViewById(R.id.new_phone);
-        txtPassword = (EditText) findViewById(R.id.new_password);
-        txtPassword2 = (EditText) findViewById(R.id.new_password2);
-        btnConfirm = (Button) findViewById(R.id.btnConfirm);
-        btnChangePassword = (Button) findViewById(R.id.btnChangePassword);
-        db = new SQLiteHandler(getApplicationContext());
+        txtName = (EditText) findViewById(R.id.new_name);                  // name
+        txtAddress = (EditText) findViewById(R.id.new_address);            // address
+        txtPhone = (EditText) findViewById(R.id.new_phone);                // phone number
+        txtPassword = (EditText) findViewById(R.id.new_password);          // password
+        txtPassword2 = (EditText) findViewById(R.id.new_password2);        // repeat password
+        btnConfirm = (Button) findViewById(R.id.btnConfirm);               // detail change button
+        btnChangePassword = (Button) findViewById(R.id.btnChangePassword); // password change button
+        db = new SQLiteHandler(getApplicationContext());                   // user local database
         session = new SessionManager(getApplicationContext());
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
-        HashMap<String, String> user = db.getUserDetails();        // get user detail from local database
-        email = user.get("email");
-        Log.d(email, "db : " + email);
+        HashMap<String, String> user = db.getUserDetails();                // get user detail from local database
+        email = user.get(Config_TAG.TAG_EMAIL);                            // get user's email
         pDialog.setMessage("لطفا منتظر بمانید ...");
         showDialog();
-        GetUser(email);                                            // get person detail from server
-        btnConfirm.setOnClickListener(new View.OnClickListener() { // confirm button's event
+        GetUser(email);                                                    // get person detail from server
+        btnConfirm.setOnClickListener(new View.OnClickListener() {         // confirm button's event
             @Override
             public void onClick(View v) {
                 String name = txtName.getText().toString();
@@ -104,9 +95,8 @@ public class EditProfile extends Activity {
         });
     }
 
-
-    private void GetUser(final String email) {          // check login request from server
-        String tag_string_req = "req_get";               // Tag used to cancel the request
+    private void GetUser(final String email) {             // check login request from server
+        String tag_string_req = "req_get";                 // Tag used to cancel the request
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_login, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -114,17 +104,17 @@ public class EditProfile extends Activity {
                 hideDialog();                              // close dialog
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
                     if (!error) {                          // Check for error node in json
-                        JSONObject user = jObj.getJSONObject("user");
-                        txtName.setText(user.getString("name"));
-                        txtAddress.setText(user.getString("address"));
-                        Backup_Phone = user.getString("phone");
+                        JSONObject user = jObj.getJSONObject(Config_TAG.TAG_USER);
+                        txtName.setText(user.getString(Config_TAG.TAG_NAME));
+                        txtAddress.setText(user.getString(Config_TAG.TAG_ADDRESS));
+                        Backup_Phone = user.getString(Config_TAG.TAG_PHONE);
                         txtPhone.setText(Backup_Phone);
-                        uid = jObj.getString("uid");
+                        uid = jObj.getString(Config_TAG.TAG_UID);
                     } else {
                         // Error in login. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
                         MakeToast(errorMsg); // show error message
                     }
                 } catch (JSONException e) {
@@ -141,9 +131,9 @@ public class EditProfile extends Activity {
         }) {
             @Override
             protected java.util.Map<String, String> getParams() { // Posting parameters to login url
-                java.util.Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "user_get");
-                params.put("email", email);
+                java.util.Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "user_get");
+                params.put(Config_TAG.TAG_EMAIL, email);
                 return params;
             }
         };
@@ -163,15 +153,14 @@ public class EditProfile extends Activity {
                 hideDialog();
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
                     if (!error) {
-                        // User successfully stored in MySQL , Now store the user in sqlite
-                        String uid = jObj.getString("uid");
-                        JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
-                        String email = user.getString("email");
-                        String address = user.getString("address");
-                        String phone = user.getString("phone");
+                        // Update User In SQLite
+                        JSONObject user = jObj.getJSONObject(Config_TAG.TAG_USER);
+                        String name = user.getString(Config_TAG.TAG_NAME);
+                        String email = user.getString(Config_TAG.TAG_EMAIL);
+                        String address = user.getString(Config_TAG.TAG_ADDRESS);
+                        String phone = user.getString(Config_TAG.TAG_PHONE);
                         // Inserting row in users table
                         db.updateUser(name, email, address, phone);
                         MakeToast("اطلاعات شما به روزرسانی شد");
@@ -182,7 +171,7 @@ public class EditProfile extends Activity {
                         }
                     } else {
                         // Error occurred in registration. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
                         MakeToast(errorMsg);
                     }
                 } catch (JSONException e) {
@@ -200,13 +189,13 @@ public class EditProfile extends Activity {
             @Override
             protected java.util.Map<String, String> getParams() {
                 // Posting params to register url
-                java.util.Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "user_update");
-                params.put("name", name);
-                params.put("email", email);
-                params.put("uid", uid);
-                params.put("address", address);
-                params.put("phone", phone);
+                java.util.Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "user_update");
+                params.put(Config_TAG.TAG_NAME, name);
+                params.put(Config_TAG.TAG_EMAIL, email);
+                params.put(Config_TAG.TAG_UID, uid);
+                params.put(Config_TAG.TAG_ADDRESS, address);
+                params.put(Config_TAG.TAG_PHONE, phone);
                 return params;
             }
         };
@@ -241,7 +230,7 @@ public class EditProfile extends Activity {
             pDialog.dismiss();
     }
 
-    public void MakeQuestion(String Title, String Message, final String name, final String address, final String phone, final String Backup_Phone, final String uid) {                     // build and show an confirm window
+    public void MakeQuestion(String Title, String Message, final String name, final String address, final String phone, final String Backup_Phone, final String uid) { // build and show an confirm window
         AlertDialog.Builder dialog = new AlertDialog.Builder(EditProfile.this);
         dialog.setTitle(Title);                                                     // set title
         dialog.setMessage(Message);                                                 // set message
@@ -255,7 +244,7 @@ public class EditProfile extends Activity {
         });
         dialog.setNegativeButton("بیخیال", new DialogInterface.OnClickListener() { // negative answer
             public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss(); // close dialog
+                dialog.dismiss();            // close dialog
             }
         });
         AlertDialog alert = dialog.create(); // create dialog
@@ -266,7 +255,7 @@ public class EditProfile extends Activity {
         pDialog.setMessage("در حال خروج ...");
         showDialog();
         session.setLogin(false);
-        db.deleteUsers();                 // delete user from local database
+        db.deleteUsers();                    // delete user from local database
         DeleteUser(email);
         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
         MainScreenActivity.pointer.finish();
@@ -276,7 +265,7 @@ public class EditProfile extends Activity {
     }
 
     private void DeleteUser(final String email) {          // check login request from server
-        String tag_string_req = "req_delete";               // Tag used to cancel the request
+        String tag_string_req = "req_delete";              // Tag used to cancel the request
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_login, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -284,12 +273,12 @@ public class EditProfile extends Activity {
                 hideDialog();                              // close dialog
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
                     if (!error) {                          // Check for error node in json
                         Log.d(TAG, "Done !");
                     } else {
                         // Error in login. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
                         MakeToast(errorMsg); // show error message
                     }
                 } catch (JSONException e) {
@@ -306,9 +295,9 @@ public class EditProfile extends Activity {
         }) {
             @Override
             protected java.util.Map<String, String> getParams() { // Posting parameters to login url
-                java.util.Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "user_delete");
-                params.put("email", email);
+                java.util.Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "user_delete");
+                params.put(Config_TAG.TAG_EMAIL, email);
                 return params;
             }
         };

@@ -39,6 +39,7 @@ import helper.SQLiteHandler;
 import helper.SessionManager;
 import helper.TypefaceSpan;
 import volley.AppController;
+import volley.Config_TAG;
 import volley.Config_URL;
 
 public class Register extends Activity {
@@ -63,24 +64,20 @@ public class Register extends Activity {
         setContentView(R.layout.register);
         inputFullName = (EditText) findViewById(R.id.name);
         inputEmail = (EditText) findViewById(R.id.email);
-        inputEmail.setError("همانند نمونه 09123456789");
         inputPassword = (EditText) findViewById(R.id.password);
         inputPassword2 = (EditText) findViewById(R.id.password2);
         inputAddress = (EditText) findViewById(R.id.address);
-        inputPhone = inputEmail;
         btnRegister = (Button) findViewById(R.id.btnRegister);
         btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
-        inputPassword.setError("حداقل 8 حرف");
         RadioGroup = (RadioGroup) findViewById(R.id.TypeRadioGroup);
-        // Progress dialog
-        pDialog = new ProgressDialog(this);
+        inputPhone = inputEmail;
+        inputEmail.setError("همانند نمونه 09123456789");
+        inputPassword.setError("حداقل 8 حرف");
+        pDialog = new ProgressDialog(this);                   // Progress dialog
         pDialog.setCancelable(false);
-        // Session manager
-        session = new SessionManager(getApplicationContext());
-        // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
-        // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
+        session = new SessionManager(getApplicationContext());// Session manager
+        db = new SQLiteHandler(getApplicationContext());      // SQLite database handler
+        if (session.isLoggedIn()) { // Check if user is already logged in or not
             // User is already logged in. Take him to main activity
             Intent i = new Intent(getApplicationContext(), UserProfile.class);
             startActivity(i);
@@ -144,16 +141,16 @@ public class Register extends Activity {
                 hideDialog();
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
                     if (!error) {
-                        // User successfully stored in MySQL , Now store the user in sqlite
-                        String uid = jObj.getString("uid");
-                        JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
-                        String email = user.getString("email");
-                        String address = user.getString("address");
-                        String phone = user.getString("phone");
-                        String created_at = user.getString("created_at");
+                        // User successfully stored in MySQL , Now store the user in SQLite
+                        String uid = jObj.getString(Config_TAG.TAG_UID);
+                        JSONObject user = jObj.getJSONObject(Config_TAG.TAG_USER);
+                        String name = user.getString(Config_TAG.TAG_NAME);
+                        String email = user.getString(Config_TAG.TAG_EMAIL);
+                        String address = user.getString(Config_TAG.TAG_ADDRESS);
+                        String phone = user.getString(Config_TAG.TAG_PHONE);
+                        String created_at = user.getString(Config_TAG.TAG_CREATED_AT);
                         // Inserting row in users table
                         db.addUser(name, email, address, phone, uid, created_at, type);
                         MakeQuestion("ثبت نام انجام شد", "نام کاربری شما تلفن همراهتان می باشد");
@@ -162,7 +159,7 @@ public class Register extends Activity {
                         finish();
                     } else {
                         // Error occurred in registration. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
                         MakeToast(errorMsg);
                     }
                 } catch (JSONException e) {
@@ -180,14 +177,14 @@ public class Register extends Activity {
             @Override
             protected Map<String, String> getParams() {
                 // Posting params to register url
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "user_register");
-                params.put("name", name);
-                params.put("email", email);
-                params.put("address", address);
-                params.put("phone", phone);
-                params.put("password", password);
-                params.put("type", type);
+                Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "user_register");
+                params.put(Config_TAG.TAG_NAME, name);
+                params.put(Config_TAG.TAG_EMAIL, email);
+                params.put(Config_TAG.TAG_ADDRESS, address);
+                params.put(Config_TAG.TAG_PHONE, phone);
+                params.put(Config_TAG.TAG_PASSWORD, password);
+                params.put(Config_TAG.TAG_TYPE, type);
                 return params;
             }
         };
@@ -226,7 +223,7 @@ public class Register extends Activity {
         AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
         dialog.setTitle(Title);                                                  // set title
         dialog.setMessage(Message);                                              // set message
-        dialog.setIcon(R.drawable.ic_confirm);                                         // set icon
+        dialog.setIcon(R.drawable.ic_confirm);                                   // set icon
         dialog.setNegativeButton("تایید", new DialogInterface.OnClickListener() { // negative answer
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss(); // close dialog

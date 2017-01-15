@@ -36,6 +36,7 @@ import helper.SQLiteHandler;
 import helper.SessionManager;
 import helper.TypefaceSpan;
 import volley.AppController;
+import volley.Config_TAG;
 import volley.Config_URL;
 
 public class Login extends Activity {
@@ -92,7 +93,7 @@ public class Login extends Activity {
     }
 
     private void CheckLogin(final String email, final String password) { // check login request from server
-        String tag_string_req = "req_login";               // Tag used to cancel the request
+        String tag_string_req = "req_login";                             // Tag used to cancel the request
         StringRequest strReq = new StringRequest(Method.POST, Config_URL.url_login, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -100,12 +101,12 @@ public class Login extends Activity {
                 hideDialog();                              // close dialog
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
-                    if (!error) {                         // Check for error node in json
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
+                    if (!error) {                          // Check for error node in json
                         SetUser(email);
                     } else {
                         // Error in login. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
                         MakeToast(errorMsg); // show error message
                     }
                 } catch (JSONException e) {
@@ -122,10 +123,10 @@ public class Login extends Activity {
         }) {
             @Override
             protected Map<String, String> getParams() {           // Posting parameters to login url
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "user_login");
-                params.put("email", email);
-                params.put("password", password);
+                Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "user_login");
+                params.put(Config_TAG.TAG_EMAIL, email);
+                params.put(Config_TAG.TAG_PASSWORD, password);
                 return params;
             }
         };
@@ -148,9 +149,8 @@ public class Login extends Activity {
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
             return true;
-        else {
+        else
             MakeToast("اتصال به اینترنت را بررسی نمایید");
-        }
         return false;
     }
 
@@ -161,7 +161,7 @@ public class Login extends Activity {
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 
-    private void SetUser(final String email) { // check login request from server
+    private void SetUser(final String email) {             // check login request from server
         String tag_string_req = "req_login";               // Tag used to cancel the request
         StringRequest strReq = new StringRequest(Method.POST, Config_URL.url_login, new Response.Listener<String>() {
             @Override
@@ -170,20 +170,20 @@ public class Login extends Activity {
                 hideDialog();                              // close dialog
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
-                    if (!error) {                         // Check for error node in json
-                        session.setLogin(true);           // set login status true
-                        String uid = jObj.getString("uid");
-                        JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
-                        String email = user.getString("email");
-                        String address = user.getString("address");
-                        String phone = user.getString("phone");
-                        String type = user.getString("type");
-                        String created_at = user.getString("created_at");
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
+                    if (!error) {                          // Check for error node in json
+                        session.setLogin(true);            // set login status true
+                        String uid = jObj.getString(Config_TAG.TAG_UID);
+                        JSONObject user = jObj.getJSONObject(Config_TAG.TAG_USER);
+                        String name = user.getString(Config_TAG.TAG_NAME);
+                        String email = user.getString(Config_TAG.TAG_EMAIL);
+                        String address = user.getString(Config_TAG.TAG_ADDRESS);
+                        String phone = user.getString(Config_TAG.TAG_PHONE);
+                        String type = user.getString(Config_TAG.TAG_TYPE);
+                        String created_at = user.getString(Config_TAG.TAG_CREATED_AT);
                         db.addUser(name, email, address, phone, uid, type, created_at); // save user to local database
                         String msg = "سلام " + name;
-                        MakeToast(msg);                   // show welcome notification
+                        MakeToast(msg); // show welcome notification
                         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
                         // finish old main activity
                         MainScreenActivity.pointer.finish();
@@ -193,7 +193,7 @@ public class Login extends Activity {
                         finish();
                     } else {
                         // Error in login. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
                         MakeToast(errorMsg); // show error message
                     }
                 } catch (JSONException e) {
@@ -210,9 +210,9 @@ public class Login extends Activity {
         }) {
             @Override
             protected Map<String, String> getParams() {           // Posting parameters to login url
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "user_set");
-                params.put("email", email);
+                Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "user_set");
+                params.put(Config_TAG.TAG_EMAIL, email);
                 return params;
             }
         };
