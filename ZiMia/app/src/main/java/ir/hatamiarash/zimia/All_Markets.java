@@ -91,7 +91,7 @@ public class All_Markets extends ListActivity {
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
                         // Markets List fetched from server
-                        JSONArray markets = jObj.getJSONArray("markets");
+                        JSONArray markets = jObj.getJSONArray("seller");
                         for (int i = 0; i < markets.length(); i++) {
                             JSONObject market = markets.getJSONObject(i);
                             String id = market.getString(Config_TAG.TAG_ID);
@@ -158,7 +158,8 @@ public class All_Markets extends ListActivity {
             protected java.util.Map<String, String> getParams() {
                 // Posting params to register url
                 java.util.Map<String, String> params = new HashMap<>();
-                params.put(Config_TAG.TAG, "seller_markets");
+                params.put(Config_TAG.TAG, "sellers");
+                params.put(Config_TAG.TAG_TYPE, "Restaurants");
                 return params;
             }
         };

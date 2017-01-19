@@ -57,7 +57,7 @@ public class All_Restaurants extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
-                Intent i = new Intent(getApplicationContext(), ResturanDetail.class);
+                Intent i = new Intent(getApplicationContext(), RestaurantDetail.class);
                 i.putExtra(Config_TAG.TAG_ID, pid);
                 startActivityForResult(i, 100);
             }
@@ -90,7 +90,7 @@ public class All_Restaurants extends ListActivity {
                     boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
                     if (!error) {
                         // Restaurants List fetched from server
-                        JSONArray resturans = jObj.getJSONArray("restaurants");
+                        JSONArray resturans = jObj.getJSONArray("seller");
                         for (int i = 0; i < resturans.length(); i++) {
                             JSONObject restaurant = resturans.getJSONObject(i);
                             String id = restaurant.getString(Config_TAG.TAG_ID);
@@ -157,7 +157,8 @@ public class All_Restaurants extends ListActivity {
             protected java.util.Map<String, String> getParams() {
                 // Posting params to register url
                 java.util.Map<String, String> params = new HashMap<>();
-                params.put(Config_TAG.TAG, "seller_restaurants");
+                params.put(Config_TAG.TAG, "sellers");
+                params.put(Config_TAG.TAG_TYPE, "Restaurants");
                 return params;
             }
         };

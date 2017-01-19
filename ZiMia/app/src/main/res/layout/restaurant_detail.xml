@@ -10,7 +10,7 @@
     android:orientation="vertical">
 
     <helper.PersianTextView
-        android:id="@+id/ResturanName"
+        android:id="@+id/RestaurantName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -20,12 +20,12 @@
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:paddingTop="10dip"
-        android:text="Resturan Name"
+        android:text="Restaurant Name"
         android:textAlignment="center"
         android:textSize="26sp" />
 
     <helper.PersianTextView
-        android:id="@+id/ResturanAddress"
+        android:id="@+id/RestaurantAddress"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/ResturanAddress"
+        android:layout_below="@+id/RestaurantAddress"
         android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"
         android:layout_marginTop="49dp"
@@ -60,12 +60,12 @@
         android:id="@+id/L1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ResturanName"
+        android:layout_below="@+id/RestaurantName"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
         <helper.PersianTextView
-            android:id="@+id/ResturanCloseHour"
+            android:id="@+id/RestaurantCloseHour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dip"
@@ -85,7 +85,7 @@
             android:textStyle="normal|bold" />
 
         <helper.PersianTextView
-            android:id="@+id/ResturanOpenHour"
+            android:id="@+id/RestaurantOpenHour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -112,5 +112,5 @@
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ResturanAddress" />
+        android:layout_below="@+id/RestaurantAddress" />
 </RelativeLayout>

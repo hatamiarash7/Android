@@ -26,6 +26,8 @@ public class Config_TAG {
     public static final String TAG_CLOSE_HOUR;
     public static final String TAG_PICTURE;
     public static final String TAG_STATUS_PICTURE;
+    public static final String TAG_PAY_STATUS;
+    public static final String TAG_SPECIFICATION;
 
     static {
         TAG_ADDRESS = "address";
@@ -49,5 +51,7 @@ public class Config_TAG {
         TAG_CLOSE_HOUR = "close_hour";
         TAG_PICTURE = "picture";
         TAG_STATUS_PICTURE = "status";
+        TAG_PAY_STATUS = "pay";
+        TAG_SPECIFICATION = "specification";
     }
 }

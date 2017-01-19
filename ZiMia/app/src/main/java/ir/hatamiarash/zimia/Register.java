@@ -154,9 +154,6 @@ public class Register extends Activity {
                         // Inserting row in users table
                         db.addUser(name, email, address, phone, uid, created_at, type);
                         MakeQuestion("ثبت نام انجام شد", "نام کاربری شما تلفن همراهتان می باشد");
-                        Intent intent = new Intent(Register.this, Login.class);
-                        startActivity(intent);
-                        finish();
                     } else {
                         // Error occurred in registration. Get the error message
                         String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
@@ -226,6 +223,9 @@ public class Register extends Activity {
         dialog.setIcon(R.drawable.ic_confirm);                                   // set icon
         dialog.setNegativeButton("تایید", new DialogInterface.OnClickListener() { // negative answer
             public void onClick(DialogInterface dialog, int id) {
+                Intent intent = new Intent(Register.this, Login.class);
+                startActivity(intent);
+                finish();
                 dialog.dismiss(); // close dialog
             }
         });

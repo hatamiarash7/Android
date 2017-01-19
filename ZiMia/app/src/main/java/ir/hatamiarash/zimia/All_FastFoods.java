@@ -91,7 +91,7 @@ public class All_FastFoods extends ListActivity {
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
                         // FastFoods List fetched from server
-                        JSONArray fastfoods = jObj.getJSONArray("fastfoods");
+                        JSONArray fastfoods = jObj.getJSONArray("seller");
                         for (int i = 0; i < fastfoods.length(); i++) {
                             JSONObject fastfood = fastfoods.getJSONObject(i);
                             String id = fastfood.getString(Config_TAG.TAG_ID);
@@ -158,7 +158,8 @@ public class All_FastFoods extends ListActivity {
             protected java.util.Map<String, String> getParams() {
                 // Posting params to register url
                 java.util.Map<String, String> params = new HashMap<>();
-                params.put(Config_TAG.TAG, "seller_fastfoods");
+                params.put(Config_TAG.TAG, "sellers");
+                params.put(Config_TAG.TAG_TYPE, "Restaurants");
                 return params;
             }
         };

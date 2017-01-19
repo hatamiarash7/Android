@@ -21,4 +21,10 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@android:color/white</item>
     </style>
+
+    <style name="Dark" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="colorPrimaryDark">@color/md_black_1000</item>
+        <item name="colorPrimary">@color/md_black_1000</item>
+        <item name="colorAccent">@color/md_black_1000</item>
+    </style>
 </resources>

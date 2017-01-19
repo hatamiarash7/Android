@@ -40,6 +40,7 @@ import helper.FontHelper;
 import helper.SQLiteHandler;
 import helper.SQLiteHandlerItem;
 import helper.TypefaceSpan;
+import volley.Config_TAG;
 
 public class ShopCard extends ListActivity {
     private static final String TAG = ShopCard.class.getSimpleName(); // class tag for log
@@ -67,8 +68,8 @@ public class ShopCard extends ListActivity {
             int new_price = Integer.parseInt(ItemPrice) / Integer.parseInt(ItemCount) * itemCount;
             // update database row
             db.updateItem(ItemName, String.valueOf(new_price), String.valueOf(itemCount));
-            pwindo.dismiss();                  // close popup
-            MakeToast("سفارش به روزرسانی شد"); // show notification
+            pwindo.dismiss();                        // close popup
+            MakeToast("سفارش به روزرسانی شد");       // show notification
             Intent i = new Intent(getApplicationContext(), ShopCard.class);
             // start card activity and finish this one to refresh
             startActivity(i);
@@ -93,8 +94,8 @@ public class ShopCard extends ListActivity {
     };
     private View.OnClickListener inc_button_click_listener = new View.OnClickListener() { // increase event
         public void onClick(View v) {
-            itemCount++;                                   // increase item's count by one
-            item_count.setText(String.valueOf(itemCount)); // set new count
+            itemCount++;                                       // increase item's count by one
+            item_count.setText(String.valueOf(itemCount));     // set new count
         }
     };
     private View.OnClickListener dec_button_click_listener = new View.OnClickListener() { // decrease event
@@ -111,25 +112,50 @@ public class ShopCard extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shop_card);
-        db = new SQLiteHandlerItem(getApplicationContext()); // items database
-        db2 = new SQLiteHandler(getApplicationContext());    // users database
-        ItemList = new ArrayList<>();                        // list for save items
-        Clear_Card = (Button) findViewById(R.id.btnClear);   // clear button
-        Pay_Card = (Button) findViewById(R.id.btnPay);       // pay button
-        new LoadAllCardItems().execute();                    // execute load class
+        db = new SQLiteHandlerItem(getApplicationContext());       // items database
+        db2 = new SQLiteHandler(getApplicationContext());          // users database
+        ItemList = new ArrayList<>();                              // list for save items
+        Clear_Card = (Button) findViewById(R.id.btnClear);         // clear button
+        Pay_Card = (Button) findViewById(R.id.btnPay);             // pay button
+        new LoadAllCardItems().execute();                          // execute load class
         Clear_Card.setOnClickListener(new View.OnClickListener() { // clear event
             @Override
             public void onClick(View view) {
                 MakeQuestion("سبد خرید", "تمام کالا های سبد خرید حذف شوند ؟"); // question for clearing card
             }
         });
-        Pay_Card.setOnClickListener(new View.OnClickListener() { // pay event
+        Pay_Card.setOnClickListener(new View.OnClickListener() {              // pay event
             @Override
             public void onClick(View view) {
-                if (db2.getRowCount() > 0)              // check user logged
-                    MakeToast("انتقال به صفحه پرداخت"); // show notification now ( replace with pay work )
-                else {
-                    MakeToast("شما وارد نشده اید");     // show error notification
+                if (db2.getRowCount() > 0) {                                  // check user logged
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(ShopCard.this);
+                    dialog.setTitle("پرداخت");                                                    // set title
+                    dialog.setMessage("وضعیت");                                                   // set message
+                    dialog.setIcon(R.drawable.ic_alert);                                          // set icon
+                    dialog.setPositiveButton("بدون خطا", new DialogInterface.OnClickListener() {  // positive answer
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();                                                     // close dialog
+                            String pay_code = "ok";
+                            Intent i = new Intent(getApplicationContext(), Pay_Log.class);
+                            i.putExtra(Config_TAG.TAG_PAY_STATUS, pay_code);
+                            startActivity(i);
+                            finish();
+                        }
+                    });
+                    dialog.setNegativeButton("با خطا", new DialogInterface.OnClickListener() { // negative answer
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss(); // close dialog
+                            String pay_code = "error";
+                            Intent i = new Intent(getApplicationContext(), Pay_Log.class);
+                            i.putExtra(Config_TAG.TAG_PAY_STATUS, pay_code);
+                            startActivity(i);
+                            finish();
+                        }
+                    });
+                    AlertDialog alert = dialog.create(); // create dialog
+                    alert.show();                        // show dialog
+                } else {
+                    MakeToast("شما وارد نشده اید");      // show error notification
                     Intent i = new Intent(getApplicationContext(), Login.class);
                     // start login activity
                     startActivity(i);
@@ -155,7 +181,7 @@ public class ShopCard extends ListActivity {
         AlertDialog.Builder dialog = new AlertDialog.Builder(ShopCard.this);
         dialog.setTitle(Title);                                                  // set title
         dialog.setMessage(Message);                                              // set message
-        dialog.setIcon(R.drawable.ic_alert);                                         // set icon
+        dialog.setIcon(R.drawable.ic_alert);                                     // set icon
         dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {  // positive answer
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();                      // close dialog
@@ -253,9 +279,9 @@ public class ShopCard extends ListActivity {
             }
             int card_price = db.TotalPrice();                                     // get total price from database
             int total_price = card_price - discount;                              // calculate final price with discount
-            final String Price = String.valueOf(card_price) + " تومان";       // set price ( original )
-            final String Discount = String.valueOf(discount) + " تومان";      // set price ( discount )
-            final String FinalPrice = String.valueOf(total_price) + " تومان"; // set price ( final )
+            final String Price = String.valueOf(card_price) + " تومان";           // set price ( original )
+            final String Discount = String.valueOf(discount) + " تومان";          // set price ( discount )
+            final String FinalPrice = String.valueOf(total_price) + " تومان";     // set price ( final )
             TotalPrice = (TextView) findViewById(R.id.CardTotalPrice);            // original price
             CardDiscount = (TextView) findViewById(R.id.CardDiscount);            // discount
             CardPrice = (TextView) findViewById(R.id.CardPrice);                  // final price

@@ -105,6 +105,7 @@ public class ItemDetail extends Activity {
                 if (!ItemPrice_Backup.isEmpty() && !ItemName_Backup.isEmpty())
                     if (session.isLoggedIn()) // check for logged status
                         if (count >= 1) {
+                            count = Integer.parseInt(counter.getText().toString());
                             final_price = String.valueOf(Integer.parseInt(ItemPrice_Backup) * count);
                             AddToCard(ItemName_Backup, final_price, count);
                             finish();

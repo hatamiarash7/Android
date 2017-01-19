@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -45,7 +47,6 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import helper.FontHelper;
-import helper.Notify;
 import helper.SQLiteHandler;
 import helper.SQLiteHandlerItem;
 import helper.SessionManager;
@@ -68,7 +69,9 @@ public class MainScreenActivity extends AppCompatActivity {
     SessionManager session;                    // session for check user logged
     private long back_pressed;                 // for check back key pressed count
     private PopupWindow pwindo;                // popup
-    private AccountHeader headerResult = null;
+    private AccountHeader headerResult = null; // Header for drawer
+    Button temp_login, temp_signup;            // temp screen buttons
+    VideoView lobby;
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
             pwindo.dismiss(); // close popup
@@ -108,166 +111,200 @@ public class MainScreenActivity extends AppCompatActivity {
         // promote application with need permissions ( specially for map )
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        setContentView(R.layout.drawer);
-        //Notify NOTIFY = new Notify("Hello", "Welcome to zimia", MainScreenActivity.class);
-        //NOTIFY.MakeNotification();
-        pointer = this;                                      // point the pointer to this activity for control from anywhere
-        db = new SQLiteHandlerItem(getApplicationContext()); // items database
-        db2 = new SQLiteHandler(getApplicationContext());    // users database
-        if (!card_check) {                                   // check that there is card database or not
-            db.CreateTable();                                // create card table
+        session = new SessionManager(getApplicationContext()); // session manager for check user logged
+        pointer = this;                                        // point the pointer to this activity for control from anywhere
+        db = new SQLiteHandlerItem(getApplicationContext());   // items database
+        db2 = new SQLiteHandler(getApplicationContext());      // users database
+        if (!card_check) {                                     // check that there is card database or not
+            db.CreateTable();                                  // create card table
             card_check = true;
         }
-        persianTypeface = Typeface.createFromAsset(getAssets(), FontHelper.FontPath); // set font for typeface
-        btnViewResturans = (ImageView) findViewById(R.id.btnViewResturans);           // resturans button
-        btnViewFastFoods = (ImageView) findViewById(R.id.btnViewFastFoods);           // fastfoods button
-        btnViewMarkets = (ImageView) findViewById(R.id.btnViewMarkets);               // markets button
-        btnViewMap = (ImageView) findViewById(R.id.btnViewMap);                       // map button
-        btnViewResturans.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (CheckInternet()) {
-                    Intent i = new Intent(getApplicationContext(), All_Restaurants.class);
-                    // start resturan activity and NOT-FINISH main activity for return
-                    startActivity(i);
+        persianTypeface = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);     // set font for typeface
+        if (session.isLoggedIn()) {
+            setContentView(R.layout.drawer);
+            btnViewResturans = (ImageView) findViewById(R.id.btnViewResturans);           // resturans button
+            btnViewFastFoods = (ImageView) findViewById(R.id.btnViewFastFoods);           // fastfoods button
+            btnViewMarkets = (ImageView) findViewById(R.id.btnViewMarkets);               // markets button
+            btnViewMap = (ImageView) findViewById(R.id.btnViewMap);                       // map button
+            btnViewResturans.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (CheckInternet()) {
+                        Intent i = new Intent(getApplicationContext(), All_Restaurants.class);
+                        // start restaurant activity and NOT-FINISH main activity for return
+                        startActivity(i);
+                    }
                 }
-            }
-        });
-        btnViewFastFoods.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (CheckInternet()) {
-                    Intent i = new Intent(getApplicationContext(), All_FastFoods.class);
-                    // start fastfood activity and NOT-FINISH main activity for return
-                    startActivity(i);
+            });
+            btnViewFastFoods.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (CheckInternet()) {
+                        Intent i = new Intent(getApplicationContext(), All_FastFoods.class);
+                        // start fastfood activity and NOT-FINISH main activity for return
+                        startActivity(i);
+                    }
                 }
-            }
-        });
-        btnViewMarkets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (CheckInternet()) {
-                    Intent i = new Intent(getApplicationContext(), All_Markets.class);
-                    // start market activity and NOT-FINISH main activity for return
-                    startActivity(i);
+            });
+            btnViewMarkets.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (CheckInternet()) {
+                        Intent i = new Intent(getApplicationContext(), All_Markets.class);
+                        // start market activity and NOT-FINISH main activity for return
+                        startActivity(i);
+                    }
                 }
-            }
-        });
-        btnViewMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (CheckInternet()) {
-                    Intent i = new Intent(getApplicationContext(), Map.class);
-                    // start map activity and NOT-FINISH main activity for return
-                    startActivity(i);
+            });
+            btnViewMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (CheckInternet()) {
+                        Intent i = new Intent(getApplicationContext(), Map.class);
+                        // start map activity and NOT-FINISH main activity for return
+                        startActivity(i);
+                    }
                 }
-            }
-        });
-        session = new SessionManager(getApplicationContext()); // session manager for check user logged
-        if (!session.isLoggedIn()) { // user not logged
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            result = new DrawerBuilder()
-                    .withActivity(this)
-                    .withAccountHeader(headerResult)
-                    .addDrawerItems(
-                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withTypeface(persianTypeface).withSetSelected(true),
-                            new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_sign_in).withIdentifier(2).withTypeface(persianTypeface),
-                            new PrimaryDrawerItem().withName("ثبت نام").withIcon(FontAwesome.Icon.faw_user_plus).withIdentifier(3).withTypeface(persianTypeface),
-                            new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
-                            new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(4).withTypeface(persianTypeface),
-                            new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(5).withTypeface(persianTypeface)
-                    )
-                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                        @Override
-                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                            if (drawerItem != null && drawerItem.getIdentifier() == 1) {
-                                Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
-                                // start main activity again and finish this one
-                                startActivity(i);
-                                finish();
-                            }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 2) {
-                                if (CheckInternet()) { // there isn't any network connection
-                                    Intent i = new Intent(getApplicationContext(), Login.class);
-                                    // start login activity and NOT-FINISH main activity for return
+            });
+            if (!session.isLoggedIn()) { // user not logged
+                final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+                result = new DrawerBuilder()
+                        .withActivity(this)
+                        .withAccountHeader(headerResult)
+                        .addDrawerItems(
+                                new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withTypeface(persianTypeface).withSetSelected(true),
+                                new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_sign_in).withIdentifier(2).withTypeface(persianTypeface),
+                                new PrimaryDrawerItem().withName("ثبت نام").withIcon(FontAwesome.Icon.faw_user_plus).withIdentifier(3).withTypeface(persianTypeface),
+                                new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
+                                new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(4).withTypeface(persianTypeface),
+                                new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(5).withTypeface(persianTypeface)
+                        )
+                        .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                            @Override
+                            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                                if (drawerItem != null && drawerItem.getIdentifier() == 1) {
+                                    Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+                                    // start main activity again and finish this one
                                     startActivity(i);
-                                } else  // network connected
-                                    result.closeDrawer(); // close drawer
+                                    finish();
+                                }
+                                if (drawerItem != null && drawerItem.getIdentifier() == 2) {
+                                    if (CheckInternet()) {
+                                        Intent i = new Intent(getApplicationContext(), Login.class);
+                                        // start login activity and NOT-FINISH main activity for return
+                                        startActivity(i);
+                                    } else
+                                        result.closeDrawer(); // close drawer
+                                }
+                                if (drawerItem != null && drawerItem.getIdentifier() == 3) {
+                                    if (CheckInternet()) {
+                                        Intent i = new Intent(getApplicationContext(), Register.class);
+                                        // start register activity and NOT-FINISH main activity for return
+                                        startActivity(i);
+                                    } else
+                                        result.closeDrawer(); // close drawer
+                                }
+                                if (drawerItem != null && drawerItem.getIdentifier() == 4) {
+                                    initiatePopupWindow(R.id.popup_about); // show about popup
+                                    return true;
+                                }
+                                if (drawerItem != null && drawerItem.getIdentifier() == 5) {
+                                    initiatePopupWindow(R.id.popup_contact); // show contact popup
+                                    return true;
+                                }
+                                return false;
                             }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 3) {
-                                if (CheckInternet()) { // there isn't any network connection
-                                    Intent i = new Intent(getApplicationContext(), Register.class);
-                                    // start register activity and NOT-FINISH main activity for return
+                        })
+                        .withSavedInstance(savedInstanceState)
+                        .withDrawerGravity(Gravity.END)
+                        .build();
+            } else { // user logged
+                final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+                result = new DrawerBuilder()
+                        .withActivity(this)
+                        .withAccountHeader(headerResult)
+                        .addDrawerItems(
+                                new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withSetSelected(true).withTypeface(persianTypeface),
+                                new PrimaryDrawerItem().withName("حساب کاربری").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(2).withTypeface(persianTypeface),
+                                new PrimaryDrawerItem().withName("سبد خرید").withIcon(FontAwesome.Icon.faw_shopping_cart).withIdentifier(5).withTypeface(persianTypeface),
+                                new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
+                                new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(3).withTypeface(persianTypeface),
+                                new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(4).withTypeface(persianTypeface)
+                        )
+                        .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                            @Override
+                            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                                if (drawerItem != null && drawerItem.getIdentifier() == 1) {
+                                    Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+                                    // start main activity
                                     startActivity(i);
-                                } else  // network connected
-                                    result.closeDrawer(); // close drawer
-                            }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 4) {
-                                initiatePopupWindow(R.id.popup_about); // show about popup
-                                return true;
-                            }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 5) {
-                                initiatePopupWindow(R.id.popup_contact); // show contact popup
-                                return true;
-                            }
-                            return false;
-                        }
-                    })
-                    .withSavedInstance(savedInstanceState)
-                    .withDrawerGravity(Gravity.END)
-                    .build();
-        } else { // user logged
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            result = new DrawerBuilder()
-                    .withActivity(this)
-                    .withAccountHeader(headerResult)
-                    .addDrawerItems(
-                            new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withSetSelected(true).withTypeface(persianTypeface),
-                            new PrimaryDrawerItem().withName("حساب کاربری").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(2).withTypeface(persianTypeface),
-                            new PrimaryDrawerItem().withName("سبد خرید").withIcon(FontAwesome.Icon.faw_shopping_cart).withIdentifier(5).withTypeface(persianTypeface),
-                            new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
-                            new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(3).withTypeface(persianTypeface),
-                            new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_phone).withIdentifier(4).withTypeface(persianTypeface)
-                    )
-                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                        @Override
-                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                            if (drawerItem != null && drawerItem.getIdentifier() == 1) {
-                                Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
-                                // start main activity
-                                startActivity(i);
-                                finish();
-                            }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 2) {
-                                if (CheckInternet()) { // there isn't any network connection
-                                    Intent i = new Intent(getApplicationContext(), UserProfile.class);
-                                    // start profile activity and NOT-FINISH main activity for return
+                                    finish();
+                                }
+                                if (drawerItem != null && drawerItem.getIdentifier() == 2) {
+                                    if (CheckInternet()) {
+                                        Intent i = new Intent(getApplicationContext(), UserProfile.class);
+                                        // start profile activity and NOT-FINISH main activity for return
+                                        startActivity(i);
+                                    } else
+                                        result.closeDrawer(); // close drawer
+                                }
+                                if (drawerItem != null && drawerItem.getIdentifier() == 3) {
+                                    initiatePopupWindow(R.id.popup_about); // open about popup
+                                    return true;
+                                }
+                                if (drawerItem != null && drawerItem.getIdentifier() == 4) {
+                                    initiatePopupWindow(R.id.popup_contact); // open contact popup
+                                    return true;
+                                }
+                                if (drawerItem != null && drawerItem.getIdentifier() == 5) {
+                                    Intent i = new Intent(getApplicationContext(), ShopCard.class);
+                                    // start card activity and NOT-FINISH main activity for return
                                     startActivity(i);
-                                } else  // network connected
-                                    result.closeDrawer(); // close drawer
+                                }
+                                return false;
                             }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 3) {
-                                initiatePopupWindow(R.id.popup_about); // open about popup
-                                return true;
-                            }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 4) {
-                                initiatePopupWindow(R.id.popup_contact); // open contact popup
-                                return true;
-                            }
-                            if (drawerItem != null && drawerItem.getIdentifier() == 5) {
-                                Intent i = new Intent(getApplicationContext(), ShopCard.class);
-                                // start card activity and NOT-FINISH main activity for return
-                                startActivity(i);
-                            }
-                            return false;
-                        }
-                    })
-                    .withSelectedItem(1)
-                    .withSavedInstance(savedInstanceState)
-                    .withDrawerGravity(Gravity.END) // set drawer to end of screen ( rtl )
-                    .build();                       // build drawer
+                        })
+                        .withSelectedItem(1)
+                        .withSavedInstance(savedInstanceState)
+                        .withDrawerGravity(Gravity.END) // set drawer to end of screen ( rtl )
+                        .build();                       // build drawer
+            }
+        } else {
+            setContentView(R.layout.temp);
+            temp_login = (Button) findViewById(R.id.temp_login);
+            temp_signup = (Button) findViewById(R.id.temp_signup);
+            lobby = (VideoView) findViewById(R.id.lobby);
+            Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.lobby);
+            lobby.setVideoURI(uri);
+            lobby.start();
+            temp_login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (CheckInternet()) {
+                        Intent i = new Intent(getApplicationContext(), Login.class);
+                        // start restaurant activity and NOT-FINISH main activity for return
+                        startActivity(i);
+                    }
+                }
+            });
+            temp_signup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (CheckInternet()) {
+                        Intent i = new Intent(getApplicationContext(), Register.class);
+                        // start restaurant activity and NOT-FINISH main activity for return
+                        startActivity(i);
+                    }
+                }
+            });
+            lobby.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.setLooping(true);
+                }
+            });
         }
     }
 
@@ -293,10 +330,10 @@ public class MainScreenActivity extends AppCompatActivity {
         result.closeDrawer();                  // close drawer first
         try {
             Display display = getWindowManager().getDefaultDisplay(); // get display data
-            Point size = new Point(); // define new point variable
-            display.getSize(size);    // get phone's screen size
-            int width = size.x;       // get x var of screen
-            int height = size.y;      // get y var of screen
+            Point size = new Point();                                 // define new point variable
+            display.getSize(size);                                    // get phone's screen size
+            int width = size.x;                                       // get x var of screen
+            int height = size.y;                                      // get y var of screen
             LayoutInflater inflater = (LayoutInflater) MainScreenActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // declare manual layout for fun from exception
             View layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
@@ -307,7 +344,7 @@ public class MainScreenActivity extends AppCompatActivity {
             if (id == R.id.drawershow)
                 result.openDrawer();
             pwindo = new PopupWindow(layout, width - (width / 5), height - (height / 4), true); // set layout's size
-            pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);                                // set location to centr of screen
+            pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);                                // set location to center of screen
             btnClosePopup = (Button) layout.findViewById(R.id.btn_close_popup);                 // close button
             Telegram = (ImageView) layout.findViewById(R.id.contact_telegram);                  // telegram button
             Website = (ImageView) layout.findViewById(R.id.contact_website);                    // website button
@@ -321,28 +358,16 @@ public class MainScreenActivity extends AppCompatActivity {
         }
     }
 
-    public boolean CheckInternet() { // check network connection for run from possible exceptions
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        TelephonyManager Telephone = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        PackageManager PM = getPackageManager();
-        //if (Telephone.getSimState() != TelephonyManager.SIM_STATE_ABSENT) {
-        if (PM.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
-            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
-                return true;
-        } else {
-            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
-                return true;
-        }
-        MakeToast("اتصال به اینترنت را بررسی نمایید");
-        return false;
+    @Override
+    protected void onResume() {
+        lobby.start();
+        super.onResume();
     }
 
-    public void MakeToast(String Message) { // build and show notification with custom typeface
-        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
-        SpannableString efr = new SpannableString(Message);
-        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onPause() {
+        lobby.pause();
+        super.onPause();
     }
 
     @Override
@@ -353,23 +378,46 @@ public class MainScreenActivity extends AppCompatActivity {
             // kill app completely
             android.os.Process.killProcess(android.os.Process.myPid());
         } else
-            MakeToast("Press Back Again To Exit");
+            MakeToast("برای خروج دوباره کلیک کنید");
         // set current time for counter
         back_pressed = System.currentTimeMillis();
     }
 
-    public void MakeNotification(String Title, String Msg) {
+    public void MakeNotification(String Title, String Message) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setSmallIcon(R.drawable.ic_alert);
         mBuilder.setContentTitle(Title);
-        mBuilder.setContentText(Msg);
+        mBuilder.setContentText(Message);
         Intent intent = new Intent(this, MainScreenActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainScreenActivity.class);
         stackBuilder.addNextIntent(intent);
-        PendingIntent resault = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resault);
+        PendingIntent result = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(result);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1001, mBuilder.build());
+    }
+
+    public void MakeToast(String Message) {
+        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean CheckInternet() { // check network connection for run from possible exceptions
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        TelephonyManager Telephone = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        PackageManager PM = getPackageManager();
+        if (PM.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+                return true;
+        } else {
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+                return true;
+        }
+        MakeToast("اتصال به اینترنت را بررسی نمایید");
+        return false;
     }
 }
