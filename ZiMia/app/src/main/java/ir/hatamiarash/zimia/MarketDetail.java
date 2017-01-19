@@ -8,7 +8,6 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -21,8 +20,11 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,62 +32,57 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 
 import helper.FontHelper;
-import helper.JSONParser;
 import helper.TypefaceSpan;
+import volley.AppController;
+import volley.Config_TAG;
 import volley.Config_URL;
 
 public class MarketDetail extends ListActivity {
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_MARKET = "markets";
-    private static final String TAG_PID = "id";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_OPENHOUR = "open_hour";
-    private static final String TAG_CLOSEHOUR = "close_hour";
-    private static final String TAG_ADDRESS = "address";
-
-    private static final String TAG_PRODUCTS = "products";
-    private static final String TAG_PRODUCT_PID = "id";
-    private static final String TAG_PRODUCT_NAME = "name";
-    private static final String TAG_PRODUCT_PRICE = "price";
-    private static final String TAG_PRODUCT_PICTURE = "picture";
-    TextView marketname;
-    TextView marketopenhour;
-    TextView marketclosehour;
-    TextView marketaddress;
-    String pid;
-    JSONParser jsonParser = new JSONParser();
-    JSONParser jParser = new JSONParser();
-    ArrayList<HashMap<String, String>> productList;
-    JSONArray products = null;
-    Boolean is_open = false;
+    private static final String TAG = MarketDetail.class.getSimpleName();
+    ArrayList<HashMap<String, String>> ProductsList;
     private ProgressDialog pDialog;
+    TextView market_name;
+    TextView market_open_hour;
+    TextView market_close_hour;
+    TextView market_address;
+    TextView other1, other2;
+    Boolean is_open = false;
+    String pid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.market_detail);
-        marketname = (TextView) findViewById(R.id.MarketName);
-        marketopenhour = (TextView) findViewById(R.id.MarketOpenHour);
-        marketclosehour = (TextView) findViewById(R.id.MarketCloseHour);
-        marketaddress = (TextView) findViewById(R.id.MarketAddress);
+        setContentView(R.layout.seller_details);
+        market_name = (TextView) findViewById(R.id.SellerName);
+        market_open_hour = (TextView) findViewById(R.id.SellerOpenHour);
+        market_close_hour = (TextView) findViewById(R.id.SellerCloseHour);
+        market_address = (TextView) findViewById(R.id.SellerAddress);
+        other1 = (TextView) findViewById(R.id.textView2);
+        other2 = (TextView) findViewById(R.id.textView3);
+        market_name.setText(null);
+        market_open_hour.setText(null);
+        market_close_hour.setText(null);
+        market_address.setText(null);
+        other1.setVisibility(View.INVISIBLE);
+        other2.setVisibility(View.INVISIBLE);
+        pDialog = new ProgressDialog(this);           // Progress dialog
+        pDialog.setCancelable(false);
+        ProductsList = new ArrayList<>();
         Intent i = getIntent();
-        pid = i.getStringExtra(TAG_PID);
-        new GetMarketDetails().execute();
-        productList = new ArrayList<HashMap<String, String>>();
-        new MarketDetail.LoadAllProducts().execute();
+        pid = i.getStringExtra(Config_TAG.TAG_ID);    // get param from top level
+        FetchSellerDetails();                         // start to fetching data from server
         ListView lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (is_open) {
                     String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
-                    Intent in = new Intent(getApplicationContext(), ItemDetail.class);
-                    in.putExtra(TAG_PID, pid);
-                    in.putExtra("item_type", "Market_Products");
-                    startActivityForResult(in, 100);
+                    Intent i = new Intent(getApplicationContext(), ItemDetail.class);
+                    i.putExtra(Config_TAG.TAG_ID, pid);
+                    i.putExtra("item_type", "Market_Products");
+                    startActivityForResult(i, 100);
                 } else
                     MakeToast("این فروشگاه در حال حاضر قادر به خدمت رسانی نمی باشد");
             }
@@ -109,105 +106,154 @@ public class MarketDetail extends ListActivity {
         }
     }
 
-    class GetMarketDetails extends AsyncTask<String, String, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(MarketDetail.this);
-            pDialog.setMessage("لطفا منتظر بمانید ...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        protected String doInBackground(String... params) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    int success;
-                    try {
-                        List<NameValuePair> params = new ArrayList<NameValuePair>();
-                        params.add(new BasicNameValuePair("id", pid));
-                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_market_detials, "GET", params);
-                        Log.d("Single Market Details", json.toString());
-                        success = json.getInt(TAG_SUCCESS);
-                        if (success == 1) {
-                            JSONArray productObj = json.getJSONArray(TAG_MARKET);
-                            JSONObject product = productObj.getJSONObject(0);
-                            String openh = product.getString(TAG_OPENHOUR);
-                            String closeh = product.getString(TAG_CLOSEHOUR);
-                            Calendar time = Calendar.getInstance();
-                            int current_hour = time.get(Calendar.HOUR_OF_DAY);
-                            is_open = current_hour > Integer.parseInt(openh) && current_hour < Integer.parseInt(closeh);
-                            String text = "فروشگاه " + product.getString(TAG_NAME);
-                            marketname.setText(text);
-                            marketopenhour.setText(openh);
-                            marketclosehour.setText(closeh);
-                            text = "آدرس : " + product.getString(TAG_ADDRESS);
-                            marketaddress.setText(text);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+    private void FetchSellerDetails() {
+        // Tag used to cancel the request
+        String tag_string_req = "req_fetch";
+        pDialog.setMessage("لطفا منتظر بمانید ...");
+        showDialog();
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Seller Response: " + response);
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
+                    if (!error) {
+                        JSONObject seller = jObj.getJSONObject("seller");
+                        String open_hour = seller.getString(Config_TAG.TAG_OPEN_HOUR);
+                        String close_hour = seller.getString(Config_TAG.TAG_CLOSE_HOUR);
+                        String name = "فروشگاه " + seller.getString(Config_TAG.TAG_NAME);
+                        String address = "آدرس : " + seller.getString(Config_TAG.TAG_ADDRESS);
+                        other1.setVisibility(View.VISIBLE);
+                        other2.setVisibility(View.VISIBLE);
+                        market_name.setText(name);
+                        market_open_hour.setText(open_hour);
+                        market_close_hour.setText(close_hour);
+                        market_address.setText(address);
+                        Calendar time = Calendar.getInstance();
+                        int current_hour = time.get(Calendar.HOUR_OF_DAY);
+                        is_open = current_hour > Integer.parseInt(open_hour) && current_hour < Integer.parseInt(close_hour);
+                        FetchSellerProducts();
+                    } else {
+                        // Error occurred
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
+                        MakeToast(errorMsg);
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
-            return null;
-        }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Fetch Error: " + error.getMessage());
+                MakeToast(error.getMessage());
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected java.util.Map<String, String> getParams() {
+                // Posting params to register url
+                java.util.Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "seller_details");
+                params.put(Config_TAG.TAG_TYPE, "Markets");
+                params.put(Config_TAG.TAG_ID, pid);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
-    class LoadAllProducts extends AsyncTask<String, String, String> {
-        protected String doInBackground(String... args) {
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("id", pid));
-            JSONObject jso = jParser.makeHttpRequest(Config_URL.url_all_market_products, "GET", params);
-            Log.d("All Products: ", jso.toString());
-            try {
-                int success = jso.getInt(TAG_SUCCESS);
-                if (success == 1) {
-                    products = jso.getJSONArray(TAG_PRODUCTS);
-                    for (int i = 0; i < products.length(); i++) {
-                        JSONObject c = products.getJSONObject(i);
-                        String id = c.getString(TAG_PRODUCT_PID);
-                        String name = c.getString(TAG_PRODUCT_NAME);
-                        String price = c.getString(TAG_PRODUCT_PRICE);
-                        price += " تومان";
-                        int picture = c.getInt(TAG_PRODUCT_PICTURE);
-                        HashMap<String, String> map = new HashMap<String, String>();
-                        map.put(TAG_PRODUCT_PID, id);
-                        map.put(TAG_PRODUCT_NAME, name);
-                        map.put(TAG_PRODUCT_PRICE, price);
-                        String add = "i" + String.valueOf(picture);
-                        int pic = getResources().getIdentifier(add, "drawable", getPackageName());
-                        map.put(TAG_PRODUCT_PICTURE, String.valueOf(pic));
-                        productList.add(map);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(String file_url) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    ListAdapter adapter = new SimpleAdapter(
-                            MarketDetail.this, productList,
-                            R.layout.list_item, new String[]{
-                            TAG_PRODUCT_PID,
-                            TAG_PRODUCT_NAME,
-                            TAG_PRODUCT_PRICE,
-                            TAG_PRODUCT_PICTURE
-                    },
-                            new int[]{
-                                    R.id.pid,
-                                    R.id.name,
-                                    R.id.price,
-                                    R.id.img
+    private void FetchSellerProducts() {
+        // Tag used to cancel the request
+        String tag_string_req = "req_fetch";
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Products Response: " + response);
+                hideDialog();
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
+                    if (!error) {
+                        // Products List fetched from server
+                        JSONArray product = jObj.getJSONArray("products");
+                        for (int i = 0; i < product.length(); i++) {
+                            JSONObject products = product.getJSONObject(i);
+                            String id = products.getString(Config_TAG.TAG_ID);
+                            String name = products.getString(Config_TAG.TAG_NAME);
+                            String price = products.getString(Config_TAG.TAG_PRICE);
+                            String specification = products.getString(Config_TAG.TAG_SPECIFICATION);
+                            int picture = products.getInt(Config_TAG.TAG_PICTURE);
+                            String type = products.getString(Config_TAG.TAG_TYPE);
+                            price += " تومان";
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put(Config_TAG.TAG_ID, id);
+                            map.put(Config_TAG.TAG_NAME, name);
+                            map.put(Config_TAG.TAG_PRICE, price);
+                            String add = "i" + String.valueOf(picture);
+                            int pic = getResources().getIdentifier(add, "drawable", getPackageName());
+                            map.put(Config_TAG.TAG_PICTURE, String.valueOf(pic));
+                            ProductsList.add(map);
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    ListAdapter adapter = new SimpleAdapter(
+                                            MarketDetail.this, ProductsList,
+                                            R.layout.list_item, new String[]{
+                                            Config_TAG.TAG_ID,
+                                            Config_TAG.TAG_NAME,
+                                            Config_TAG.TAG_PRICE,
+                                            Config_TAG.TAG_PICTURE
+                                    },
+                                            new int[]{
+                                                    R.id.pid,
+                                                    R.id.name,
+                                                    R.id.price,
+                                                    R.id.img
+                                            });
+                                    setListAdapter(adapter);
+                                }
                             });
-                    setListAdapter(adapter);
+                        }
+                    } else {
+                        // Error occurred
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
+                        MakeToast(errorMsg);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Fetch Error: " + error.getMessage());
+                MakeToast(error.getMessage());
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected java.util.Map<String, String> getParams() {
+                // Posting params to register url
+                java.util.Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "seller_products");
+                params.put(Config_TAG.TAG_TYPE, "Market_Products");
+                params.put(Config_TAG.TAG_ID, pid);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
             pDialog.dismiss();
-        }
     }
 }

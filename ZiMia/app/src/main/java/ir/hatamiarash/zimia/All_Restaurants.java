@@ -48,7 +48,7 @@ public class All_Restaurants extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.all_resturans);
+        setContentView(R.layout.all_sellers);
         RestaurantList = new ArrayList<>();
         pDialog = new ProgressDialog(this); // Progress dialog
         pDialog.setCancelable(false);
@@ -69,6 +69,7 @@ public class All_Restaurants extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 100) {
+            Log.d(TAG, "result : " + String.valueOf(resultCode));
             Intent intent = getIntent();
             finish();
             startActivity(intent);

@@ -37,6 +37,7 @@ import helper.TypefaceSpan;
 import volley.Config_URL;
 
 public class ItemDetail extends Activity {
+    private static final String TAG = ItemDetail.class.getSimpleName();
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_ITEM = "items";
     private static final String TAG_NAME = "name";
@@ -78,6 +79,7 @@ public class ItemDetail extends Activity {
         // get parameters from last activity
         pid = i.getStringExtra(TAG_PID);
         item_type = i.getStringExtra(TAG_TYPE);
+        Log.d(TAG, "i: " + pid + " " + item_type);
         // buttons
         inc = (Button) findViewById(R.id.inc);
         dec = (Button) findViewById(R.id.dec);

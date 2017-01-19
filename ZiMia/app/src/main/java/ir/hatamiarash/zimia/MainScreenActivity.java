@@ -72,6 +72,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private AccountHeader headerResult = null; // Header for drawer
     Button temp_login, temp_signup;            // temp screen buttons
     VideoView lobby;
+    Boolean is_logged = false;
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
             pwindo.dismiss(); // close popup
@@ -122,6 +123,7 @@ public class MainScreenActivity extends AppCompatActivity {
         persianTypeface = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);     // set font for typeface
         if (session.isLoggedIn()) {
             setContentView(R.layout.drawer);
+            is_logged = true;
             btnViewResturans = (ImageView) findViewById(R.id.btnViewResturans);           // resturans button
             btnViewFastFoods = (ImageView) findViewById(R.id.btnViewFastFoods);           // fastfoods button
             btnViewMarkets = (ImageView) findViewById(R.id.btnViewMarkets);               // markets button
@@ -168,6 +170,7 @@ public class MainScreenActivity extends AppCompatActivity {
             });
             if (!session.isLoggedIn()) { // user not logged
                 final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                is_logged = false;
                 setSupportActionBar(toolbar);
                 result = new DrawerBuilder()
                         .withActivity(this)
@@ -272,7 +275,9 @@ public class MainScreenActivity extends AppCompatActivity {
                         .build();                       // build drawer
             }
         } else {
+            setTheme(R.style.Dark);
             setContentView(R.layout.temp);
+            is_logged = false;
             temp_login = (Button) findViewById(R.id.temp_login);
             temp_signup = (Button) findViewById(R.id.temp_signup);
             lobby = (VideoView) findViewById(R.id.lobby);
@@ -360,13 +365,15 @@ public class MainScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        lobby.start();
+        if (!is_logged)
+            lobby.start();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        lobby.pause();
+        if (!is_logged)
+            lobby.pause();
         super.onPause();
     }
 

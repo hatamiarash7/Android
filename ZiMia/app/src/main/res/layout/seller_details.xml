@@ -5,12 +5,12 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@drawable/inner_background"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <helper.PersianTextView
-        android:id="@+id/FastFoodName"
+        android:id="@+id/SellerName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -20,12 +20,12 @@
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:paddingTop="10dip"
-        android:text="FastFood Name"
+        android:text="Seller Name"
         android:textAlignment="center"
         android:textSize="26sp" />
 
     <helper.PersianTextView
-        android:id="@+id/FastFoodAddress"
+        android:id="@+id/SellerAddress"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/FastFoodAddress"
+        android:layout_below="@+id/SellerAddress"
         android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"
         android:layout_marginTop="49dp"
@@ -60,12 +60,12 @@
         android:id="@+id/L1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/FastFoodName"
+        android:layout_below="@+id/SellerName"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
         <helper.PersianTextView
-            android:id="@+id/FastFoodCloseHour"
+            android:id="@+id/SellerCloseHour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dip"
@@ -85,7 +85,7 @@
             android:textStyle="normal|bold" />
 
         <helper.PersianTextView
-            android:id="@+id/FastFoodOpenHour"
+            android:id="@+id/SellerOpenHour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -112,5 +112,5 @@
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/FastFoodAddress" />
+        android:layout_below="@+id/SellerAddress" />
 </RelativeLayout>

@@ -47,26 +47,32 @@ public class RestaurantDetail extends ListActivity {
     TextView restaurant_open_hour;
     TextView restaurant_close_hour;
     TextView restaurant_address;
+    TextView other1, other2;
     Boolean is_open = false;
     String pid;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.restaurant_detail);
-        restaurant_name = (TextView) findViewById(R.id.RestaurantName);
-        restaurant_open_hour = (TextView) findViewById(R.id.RestaurantOpenHour);
-        restaurant_close_hour = (TextView) findViewById(R.id.RestaurantCloseHour);
-        restaurant_address = (TextView) findViewById(R.id.RestaurantAddress);
+        setContentView(R.layout.seller_details);
+        restaurant_name = (TextView) findViewById(R.id.SellerName);
+        restaurant_open_hour = (TextView) findViewById(R.id.SellerOpenHour);
+        restaurant_close_hour = (TextView) findViewById(R.id.SellerCloseHour);
+        restaurant_address = (TextView) findViewById(R.id.SellerAddress);
+        other1 = (TextView) findViewById(R.id.textView2);
+        other2 = (TextView) findViewById(R.id.textView3);
         restaurant_name.setText(null);
         restaurant_open_hour.setText(null);
         restaurant_close_hour.setText(null);
         restaurant_address.setText(null);
+        other1.setVisibility(View.INVISIBLE);
+        other2.setVisibility(View.INVISIBLE);
         pDialog = new ProgressDialog(this);           // Progress dialog
         pDialog.setCancelable(false);
+        ProductsList = new ArrayList<>();
         Intent i = getIntent();
         pid = i.getStringExtra(Config_TAG.TAG_ID);    // get param from top level
-        FetchRestaurantDetails();                     // start to fetching data from server
+        FetchSellerDetails();                         // start to fetching data from server
         ListView lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -82,14 +88,14 @@ public class RestaurantDetail extends ListActivity {
             }
         });
     }
-    
+
     public void MakeToast(String Message) {
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -100,7 +106,7 @@ public class RestaurantDetail extends ListActivity {
         }
     }
 
-    private void FetchRestaurantDetails() {
+    private void FetchSellerDetails() {
         // Tag used to cancel the request
         String tag_string_req = "req_fetch";
         pDialog.setMessage("لطفا منتظر بمانید ...");
@@ -108,7 +114,7 @@ public class RestaurantDetail extends ListActivity {
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Restaurants Response: " + response);
+                Log.d(TAG, "Seller Response: " + response);
                 try {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
@@ -118,6 +124,8 @@ public class RestaurantDetail extends ListActivity {
                         String close_hour = seller.getString(Config_TAG.TAG_CLOSE_HOUR);
                         String name = "رستوران " + seller.getString(Config_TAG.TAG_NAME);
                         String address = "آدرس : " + seller.getString(Config_TAG.TAG_ADDRESS);
+                        other1.setVisibility(View.VISIBLE);
+                        other2.setVisibility(View.VISIBLE);
                         restaurant_name.setText(name);
                         restaurant_open_hour.setText(open_hour);
                         restaurant_close_hour.setText(close_hour);
@@ -125,7 +133,7 @@ public class RestaurantDetail extends ListActivity {
                         Calendar time = Calendar.getInstance();
                         int current_hour = time.get(Calendar.HOUR_OF_DAY);
                         is_open = current_hour > Integer.parseInt(open_hour) && current_hour < Integer.parseInt(close_hour);
-                        FetchRestaurantProducts();
+                        FetchSellerProducts();
                     } else {
                         // Error occurred
                         String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
@@ -157,7 +165,7 @@ public class RestaurantDetail extends ListActivity {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
-    private void FetchRestaurantProducts() {
+    private void FetchSellerProducts() {
         // Tag used to cancel the request
         String tag_string_req = "req_fetch";
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {

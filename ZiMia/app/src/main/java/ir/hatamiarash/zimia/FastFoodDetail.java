@@ -8,7 +8,6 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -21,8 +20,11 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,72 +32,64 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 
 import helper.FontHelper;
-import helper.JSONParser;
 import helper.TypefaceSpan;
+import volley.AppController;
+import volley.Config_TAG;
 import volley.Config_URL;
 
 public class FastFoodDetail extends ListActivity {
-    // shop detail tags
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_FASTFOOD = "fastfoods";
-    private static final String TAG_PID = "id";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_OPENHOUR = "open_hour";
-    private static final String TAG_CLOSEHOUR = "close_hour";
-    private static final String TAG_ADDRESS = "address";
-    // shop products tags
-    private static final String TAG_FOODS = "foods";
-    private static final String TAG_FOOD_PID = "id";
-    private static final String TAG_FOOD_NAME = "name";
-    private static final String TAG_FOOD_PRICE = "price";
-    private static final String TAG_FOOD_PICTURE = "picture";
-    TextView fastfoodname;
-    TextView fastfoodopenhour;
-    TextView fastfoodclosehour;
-    TextView fastfoodaddress;
-    String pid;
-    int picture;
+    private static final String TAG = FastFoodDetail.class.getSimpleName();
+    ArrayList<HashMap<String, String>> ProductsList;
+    private ProgressDialog pDialog;
+    TextView fastfood_name;
+    TextView fastfood_open_hour;
+    TextView fastfood_close_hour;
+    TextView fastfood_address;
+    TextView other1, other2;
     Boolean is_open = false;
-    JSONParser jsonParser = new JSONParser(); // JSON parser class
-    JSONParser jParser = new JSONParser();    // JSON parser class
-    ArrayList<HashMap<String, String>> foodList;
-    JSONArray foods = null;
-    private ProgressDialog pDialog;           // Progress Dialog
+    String pid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fastfood_detail);
-        fastfoodname = (TextView) findViewById(R.id.FastFoodName);
-        fastfoodopenhour = (TextView) findViewById(R.id.FastFoodOpenHour);
-        fastfoodclosehour = (TextView) findViewById(R.id.FastFoodCloseHour);
-        fastfoodaddress = (TextView) findViewById(R.id.FastFoodAddress);
+        setContentView(R.layout.seller_details);
+        fastfood_name = (TextView) findViewById(R.id.SellerName);
+        fastfood_open_hour = (TextView) findViewById(R.id.SellerOpenHour);
+        fastfood_close_hour = (TextView) findViewById(R.id.SellerCloseHour);
+        fastfood_address = (TextView) findViewById(R.id.SellerAddress);
+        other1 = (TextView) findViewById(R.id.textView2);
+        other2 = (TextView) findViewById(R.id.textView3);
+        fastfood_name.setText(null);
+        fastfood_open_hour.setText(null);
+        fastfood_close_hour.setText(null);
+        fastfood_address.setText(null);
+        other1.setVisibility(View.INVISIBLE);
+        other2.setVisibility(View.INVISIBLE);
+        pDialog = new ProgressDialog(this);           // Progress dialog
+        pDialog.setCancelable(false);
+        ProductsList = new ArrayList<>();
         Intent i = getIntent();
-        pid = i.getStringExtra(TAG_PID);    // getting product id from intent
-        new GetFastFoodDetails().execute(); // Getting shop details
-        foodList = new ArrayList<HashMap<String, String>>();
-        new LoadAllFoods().execute();       // getting shop products
+        pid = i.getStringExtra(Config_TAG.TAG_ID);    // get param from top level
+        FetchSellerDetails();                         // start to fetching data from server
         ListView lv = getListView();
-        // on selecting single product launching Product Screen
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (is_open) { // check that shop is open or not
+                if (is_open) {
                     String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
-                    Intent in = new Intent(getApplicationContext(), ItemDetail.class);
-                    in.putExtra(TAG_PID, pid);                  // sending pid to next activity
-                    in.putExtra("item_type", "FastFood_Foods"); // sending type to next activity
-                    startActivityForResult(in, 100);
+                    Intent i = new Intent(getApplicationContext(), ItemDetail.class);
+                    i.putExtra(Config_TAG.TAG_ID, pid);
+                    i.putExtra("item_type", "FastFood_Foods");
+                    startActivityForResult(i, 100);
                 } else
                     MakeToast("این فروشگاه در حال حاضر قادر به خدمت رسانی نمی باشد");
             }
         });
     }
 
-    public void MakeToast(String Message) { // build and show toast with custom typeface
+    public void MakeToast(String Message) {
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -112,109 +106,154 @@ public class FastFoodDetail extends ListActivity {
         }
     }
 
-    class GetFastFoodDetails extends AsyncTask<String, String, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(FastFoodDetail.this);
-            pDialog.setMessage("لطفا منتظر بمانید ...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        protected String doInBackground(String... params) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    int success;
-                    try {
-                        // Building Parameters
-                        List<NameValuePair> params = new ArrayList<NameValuePair>();
-                        params.add(new BasicNameValuePair("id", pid));
-                        JSONObject json = jsonParser.makeHttpRequest(Config_URL.url_fastfood_detials, "GET", params);
-                        Log.d("Single FastFood Details", json.toString());
-                        success = json.getInt(TAG_SUCCESS); // json success tag
-                        if (success == 1) {                 // successfully received product details
-                            JSONArray productObj = json.getJSONArray(TAG_FASTFOOD);
-                            JSONObject product = productObj.getJSONObject(0);
-                            String openh = product.getString(TAG_OPENHOUR);
-                            String closeh = product.getString(TAG_CLOSEHOUR);
-                            Calendar time = Calendar.getInstance();
-                            int current_hour = time.get(Calendar.HOUR_OF_DAY);      // get current device time
-                            is_open = current_hour > Integer.parseInt(openh) && current_hour < Integer.parseInt(closeh);
-                            String text = "فست فود " + product.getString(TAG_NAME); // add shop type to first or it's name
-                            fastfoodname.setText(text);
-                            fastfoodopenhour.setText(openh);
-                            fastfoodclosehour.setText(closeh);
-                            text = "آدرس : " + product.getString(TAG_ADDRESS);
-                            fastfoodaddress.setText(text);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+    private void FetchSellerDetails() {
+        // Tag used to cancel the request
+        String tag_string_req = "req_fetch";
+        pDialog.setMessage("لطفا منتظر بمانید ...");
+        showDialog();
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Seller Response: " + response);
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
+                    if (!error) {
+                        JSONObject seller = jObj.getJSONObject("seller");
+                        String open_hour = seller.getString(Config_TAG.TAG_OPEN_HOUR);
+                        String close_hour = seller.getString(Config_TAG.TAG_CLOSE_HOUR);
+                        String name = "فست فود " + seller.getString(Config_TAG.TAG_NAME);
+                        String address = "آدرس : " + seller.getString(Config_TAG.TAG_ADDRESS);
+                        other1.setVisibility(View.VISIBLE);
+                        other2.setVisibility(View.VISIBLE);
+                        fastfood_name.setText(name);
+                        fastfood_open_hour.setText(open_hour);
+                        fastfood_close_hour.setText(close_hour);
+                        fastfood_address.setText(address);
+                        Calendar time = Calendar.getInstance();
+                        int current_hour = time.get(Calendar.HOUR_OF_DAY);
+                        is_open = current_hour > Integer.parseInt(open_hour) && current_hour < Integer.parseInt(close_hour);
+                        FetchSellerProducts();
+                    } else {
+                        // Error occurred
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
+                        MakeToast(errorMsg);
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
-            return null;
-        }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Fetch Error: " + error.getMessage());
+                MakeToast(error.getMessage());
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected java.util.Map<String, String> getParams() {
+                // Posting params to register url
+                java.util.Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "seller_details");
+                params.put(Config_TAG.TAG_TYPE, "FastFoods");
+                params.put(Config_TAG.TAG_ID, pid);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
-    class LoadAllFoods extends AsyncTask<String, String, String> {
-        protected String doInBackground(String... args) {
-            // Building Parameters
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("id", pid));
-            // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(Config_URL.url_all_fastfood_foods, "GET", params);
-            Log.d("All Foods: ", json.toString());
-            try {
-                int success = json.getInt(TAG_SUCCESS);
-                if (success == 1) {
-                    foods = json.getJSONArray(TAG_FOODS);      // Getting Array of Products
-                    for (int i = 0; i < foods.length(); i++) { // looping through All Products
-                        JSONObject c = foods.getJSONObject(i);
-                        String id = c.getString(TAG_FOOD_PID);
-                        String name = c.getString(TAG_FOOD_NAME);
-                        String price = c.getString(TAG_FOOD_PRICE);
-                        price += " تومان";
-                        picture = c.getInt(TAG_FOOD_PICTURE);
-                        HashMap<String, String> map = new HashMap<String, String>();
-                        // adding each child node to HashMap key => value
-                        map.put(TAG_FOOD_PID, id);
-                        map.put(TAG_FOOD_NAME, name);
-                        map.put(TAG_FOOD_PRICE, price);
-                        String add = "i" + String.valueOf(picture);
-                        int pic = getResources().getIdentifier(add, "drawable", getPackageName()); // get drawable by name
-                        map.put(TAG_FOOD_PICTURE, String.valueOf(pic));
-                        foodList.add(map);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(String file_url) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    ListAdapter adapter = new SimpleAdapter(
-                            FastFoodDetail.this, foodList,
-                            R.layout.list_item, new String[]{
-                            TAG_FOOD_PID,
-                            TAG_FOOD_NAME,
-                            TAG_FOOD_PRICE,
-                            TAG_FOOD_PICTURE
-                    },
-                            new int[]{
-                                    R.id.pid,
-                                    R.id.name,
-                                    R.id.price,
-                                    R.id.img
+    private void FetchSellerProducts() {
+        // Tag used to cancel the request
+        String tag_string_req = "req_fetch";
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Products Response: " + response);
+                hideDialog();
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
+                    if (!error) {
+                        // Products List fetched from server
+                        JSONArray product = jObj.getJSONArray("products");
+                        for (int i = 0; i < product.length(); i++) {
+                            JSONObject products = product.getJSONObject(i);
+                            String id = products.getString(Config_TAG.TAG_ID);
+                            String name = products.getString(Config_TAG.TAG_NAME);
+                            String price = products.getString(Config_TAG.TAG_PRICE);
+                            String specification = products.getString(Config_TAG.TAG_SPECIFICATION);
+                            int picture = products.getInt(Config_TAG.TAG_PICTURE);
+                            String type = products.getString(Config_TAG.TAG_TYPE);
+                            price += " تومان";
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put(Config_TAG.TAG_ID, id);
+                            map.put(Config_TAG.TAG_NAME, name);
+                            map.put(Config_TAG.TAG_PRICE, price);
+                            String add = "i" + String.valueOf(picture);
+                            int pic = getResources().getIdentifier(add, "drawable", getPackageName());
+                            map.put(Config_TAG.TAG_PICTURE, String.valueOf(pic));
+                            ProductsList.add(map);
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    ListAdapter adapter = new SimpleAdapter(
+                                            FastFoodDetail.this, ProductsList,
+                                            R.layout.list_item, new String[]{
+                                            Config_TAG.TAG_ID,
+                                            Config_TAG.TAG_NAME,
+                                            Config_TAG.TAG_PRICE,
+                                            Config_TAG.TAG_PICTURE
+                                    },
+                                            new int[]{
+                                                    R.id.pid,
+                                                    R.id.name,
+                                                    R.id.price,
+                                                    R.id.img
+                                            });
+                                    setListAdapter(adapter);
+                                }
                             });
-                    setListAdapter(adapter);
+                        }
+                    } else {
+                        // Error occurred
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
+                        MakeToast(errorMsg);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Fetch Error: " + error.getMessage());
+                MakeToast(error.getMessage());
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected java.util.Map<String, String> getParams() {
+                // Posting params to register url
+                java.util.Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "seller_products");
+                params.put(Config_TAG.TAG_TYPE, "FastFood_Foods");
+                params.put(Config_TAG.TAG_ID, pid);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
             pDialog.dismiss();
-        }
     }
 }

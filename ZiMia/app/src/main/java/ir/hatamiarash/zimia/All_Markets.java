@@ -48,8 +48,8 @@ public class All_Markets extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.all_resturans);
-        MarketList = new ArrayList<HashMap<String, String>>();
+        setContentView(R.layout.all_sellers);
+        MarketList = new ArrayList<>();
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -159,7 +159,7 @@ public class All_Markets extends ListActivity {
                 // Posting params to register url
                 java.util.Map<String, String> params = new HashMap<>();
                 params.put(Config_TAG.TAG, "sellers");
-                params.put(Config_TAG.TAG_TYPE, "Restaurants");
+                params.put(Config_TAG.TAG_TYPE, "Markets");
                 return params;
             }
         };
