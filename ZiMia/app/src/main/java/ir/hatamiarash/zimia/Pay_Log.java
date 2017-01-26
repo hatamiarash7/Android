@@ -60,7 +60,7 @@ public class Pay_Log extends Activity {
         });
     }
 
-    public void MakeToast(String Message) { // build and show notification with custom typeface
+    private void MakeToast(String Message) { // build and show notification with custom typeface
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

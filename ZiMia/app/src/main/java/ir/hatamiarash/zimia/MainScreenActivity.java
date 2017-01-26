@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -24,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -46,9 +48,12 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.HashMap;
+
 import helper.FontHelper;
 import helper.SQLiteHandler;
 import helper.SQLiteHandlerItem;
+import helper.SQLiteHandlerSetup;
 import helper.SessionManager;
 import helper.TypefaceSpan;
 
@@ -57,6 +62,7 @@ public class MainScreenActivity extends AppCompatActivity {
     public static MainScreenActivity pointer;  // use to finish activity from anywhere
     public static SQLiteHandlerItem db;        // items database
     public static SQLiteHandler db2;           // users database
+    public static SQLiteHandlerSetup db3;      // setup database
     public static boolean card_check = false;
     static Typeface persianTypeface;           // persian font typeface
     public Drawer result = null;
@@ -71,8 +77,8 @@ public class MainScreenActivity extends AppCompatActivity {
     private PopupWindow pwindo;                // popup
     private AccountHeader headerResult = null; // Header for drawer
     Button temp_login, temp_signup;            // temp screen buttons
-    VideoView lobby;
-    Boolean is_logged = false;
+    private VideoView lobby;
+    private Boolean is_logged = false;
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
             pwindo.dismiss(); // close popup
@@ -109,6 +115,17 @@ public class MainScreenActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences settings = getSharedPreferences("MyPrefsFile", 0);
+        boolean isFirstTime = settings.getBoolean("my_first_time", true);
+        db3 = new SQLiteHandlerSetup(getApplicationContext()); // setup database
+        if (settings.getBoolean("my_first_time", true)) db3.CreateTable();
+        HashMap<String, String> item = db3.GetProperties();    // get setup data
+        Log.d(TAG, "1:" + String.valueOf(isFirstTime) + " " + String.valueOf(item.get("web")));
+        if (isFirstTime && item.get("web").equals("-1")) {
+            Intent i = new Intent(getApplicationContext(), SetupWeb.class);
+            startActivity(i);
+            finish();
+        }
         // promote application with need permissions ( specially for map )
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -340,7 +357,7 @@ public class MainScreenActivity extends AppCompatActivity {
             int width = size.x;                                       // get x var of screen
             int height = size.y;                                      // get y var of screen
             LayoutInflater inflater = (LayoutInflater) MainScreenActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            // declare manual layout for fun from exception
+            // declare manual layout for run from exception
             View layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
             if (id == R.id.popup_about)
                 layout = inflater.inflate(R.layout.about, (ViewGroup) findViewById(R.id.popup_about));
@@ -405,14 +422,14 @@ public class MainScreenActivity extends AppCompatActivity {
         notificationManager.notify(1001, mBuilder.build());
     }
 
-    public void MakeToast(String Message) {
+    private void MakeToast(String Message) {
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 
-    public boolean CheckInternet() { // check network connection for run from possible exceptions
+    private boolean CheckInternet() { // check network connection for run from possible exceptions
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         TelephonyManager Telephone = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         PackageManager PM = getPackageManager();

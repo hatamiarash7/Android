@@ -11,11 +11,13 @@ public class Config_TAG {
     public static final String TAG_SUCCESS;
     public static final String TAG_USER;
     public static final String TAG_EMAIL;
+    public static final String TAG_RESET_EMAIL;
     public static final String TAG_PASSWORD;
     public static final String TAG_NAME;
     public static final String TAG_ADDRESS;
     public static final String TAG_PHONE;
     public static final String TAG_TYPE;
+    public static final String TAG_TYPE_ITEM;
     public static final String TAG_CREATED_AT;
     public static final String TAG_UPDATED_AT;
     public static final String TAG_ID;
@@ -28,12 +30,14 @@ public class Config_TAG {
     public static final String TAG_STATUS_PICTURE;
     public static final String TAG_PAY_STATUS;
     public static final String TAG_SPECIFICATION;
+    public static final String TAG_WEB_3D;
 
     static {
         TAG_ADDRESS = "address";
         TAG_NAME = "name";
         TAG_PASSWORD = "password";
         TAG_EMAIL = "email";
+        TAG_RESET_EMAIL = "reset_email";
         TAG_USER = "user";
         TAG_SUCCESS = "success";
         TAG_ERROR_MSG = "error_msg";
@@ -41,6 +45,7 @@ public class Config_TAG {
         TAG = "tag";
         TAG_PHONE = "phone";
         TAG_TYPE = "type";
+        TAG_TYPE_ITEM = "item_type";
         TAG_CREATED_AT = "created_at";
         TAG_UPDATED_AT = "updated_at";
         TAG_ID = "id";
@@ -53,5 +58,6 @@ public class Config_TAG {
         TAG_STATUS_PICTURE = "status";
         TAG_PAY_STATUS = "pay";
         TAG_SPECIFICATION = "specification";
+        TAG_WEB_3D = "web3d";
     }
 }

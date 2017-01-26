@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -35,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import helper.FontHelper;
+import helper.Helper;
 import helper.SQLiteHandler;
 import helper.SessionManager;
 import helper.TypefaceSpan;
@@ -47,14 +47,13 @@ public class Register extends Activity {
     Button btnRegister;
     Button btnLinkToLogin;
     SessionManager session;
-    RadioGroup RadioGroup;
-    String UserType = "null";
     private EditText inputFullName;
     private EditText inputEmail;
     private EditText inputPassword;
     private EditText inputPassword2;
     private EditText inputAddress;
     private EditText inputPhone;
+    private EditText inputResetEmail;
     private ProgressDialog pDialog;
     private SQLiteHandler db;
 
@@ -67,9 +66,9 @@ public class Register extends Activity {
         inputPassword = (EditText) findViewById(R.id.password);
         inputPassword2 = (EditText) findViewById(R.id.password2);
         inputAddress = (EditText) findViewById(R.id.address);
+        inputResetEmail = (EditText) findViewById(R.id.reset_email);
         btnRegister = (Button) findViewById(R.id.btnRegister);
         btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
-        RadioGroup = (RadioGroup) findViewById(R.id.TypeRadioGroup);
         inputPhone = inputEmail;
         inputEmail.setError("همانند نمونه 09123456789");
         inputPassword.setError("حداقل 8 حرف");
@@ -83,17 +82,6 @@ public class Register extends Activity {
             startActivity(i);
             finish();
         }
-        // User Select Radio Buttons - find by RadioButton id
-        RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.UserRadioButton) {          // user button
-                    UserType = "User";
-                } else if (checkedId == R.id.SellerRadioButton) { // seller button
-                    UserType = "Seller";
-                }
-            }
-        });
         // Register Button Click event
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -103,16 +91,21 @@ public class Register extends Activity {
                 String password2 = inputPassword2.getText().toString();
                 String address = inputAddress.getText().toString();
                 String phone = inputPhone.getText().toString();
+                String reset_email = inputResetEmail.getText().toString();
+                Helper helper = new Helper(reset_email);
                 if (CheckInternet())
                     if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
                         if (phone.startsWith("09") && phone.length() == 11)
-                            if (password.length() >= 8)
-                                if (password.equals(password2))
-                                    registerUser(name, email, password, address, phone, UserType);
+                            if (helper.isValidEmail())
+                                if (password.length() >= 8)
+                                    if (password.equals(password2))
+                                        registerUser(name, email, password, address, phone, "User", reset_email);
+                                    else
+                                        MakeToast("کلمه عبور تطابق ندارد");
                                 else
-                                    MakeToast("کلمه عبور تطابق ندارد");
+                                    MakeToast("کلمه عبور کوتاه است");
                             else
-                                MakeToast("کلمه عبور تطابق ندارد");
+                                MakeToast("ایمیل وارد شده ایراد دارد");
                         else
                             MakeToast("شماره موبایل را بررسی نمایید");
                     else
@@ -129,12 +122,12 @@ public class Register extends Activity {
         });
     }
 
-    private void registerUser(final String name, final String email, final String password, final String address, final String phone, final String type) {
+    private void registerUser(final String name, final String email, final String password, final String address, final String phone, final String type, final String reset_email) {
         // Tag used to cancel the request
         String tag_string_req = "req_register";
         pDialog.setMessage("در حال ثبت ...");
         showDialog();
-        StringRequest strReq = new StringRequest(Method.POST, Config_URL.url_register, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Register Response: " + response);
@@ -167,7 +160,10 @@ public class Register extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Registration Error: " + error.getMessage());
-                MakeToast(error.getMessage());
+                if (error.getMessage() != null) {
+                    MakeToast(error.getMessage());
+                } else
+                    MakeToast("خطایی رخ داده است");
                 hideDialog();
             }
         }) {
@@ -182,6 +178,7 @@ public class Register extends Activity {
                 params.put(Config_TAG.TAG_PHONE, phone);
                 params.put(Config_TAG.TAG_PASSWORD, password);
                 params.put(Config_TAG.TAG_TYPE, type);
+                params.put(Config_TAG.TAG_RESET_EMAIL, reset_email);
                 return params;
             }
         };
@@ -199,7 +196,7 @@ public class Register extends Activity {
             pDialog.dismiss();
     }
 
-    public boolean CheckInternet() {
+    private boolean CheckInternet() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
@@ -209,18 +206,18 @@ public class Register extends Activity {
         return false;
     }
 
-    public void MakeToast(String Message) {
+    private void MakeToast(String Message) {
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 
-    public void MakeQuestion(String Title, String Message) {                     // build and show an confirm window
+    private void MakeQuestion(String Title, String Message) {                     // build and show an confirm window
         AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
-        dialog.setTitle(Title);                                                  // set title
-        dialog.setMessage(Message);                                              // set message
-        dialog.setIcon(R.drawable.ic_confirm);                                   // set icon
+        dialog.setTitle(Title);                                                   // set title
+        dialog.setMessage(Message);                                               // set message
+        dialog.setIcon(R.drawable.ic_confirm);                                    // set icon
         dialog.setNegativeButton("تایید", new DialogInterface.OnClickListener() { // negative answer
             public void onClick(DialogInterface dialog, int id) {
                 Intent intent = new Intent(Register.this, Login.class);

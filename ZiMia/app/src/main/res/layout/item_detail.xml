@@ -4,12 +4,12 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_detail"
-    android:layout_width="match_parent"
-    android:background="@drawable/inner_background"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
+              android:id="@+id/item_detail"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/inner_background"
+              android:orientation="vertical"
+              android:weightSum="1">
 
     <ImageView
         android:id="@+id/ItemImage"
@@ -19,7 +19,7 @@
         android:contentDescription="@string/item_pic"
         android:padding="10dp"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp" />
+        android:paddingTop="10dp"/>
 
     <helper.PersianTextView
         android:id="@+id/ItemName"
@@ -31,7 +31,7 @@
         android:paddingTop="10dip"
         android:text="@string/item_name"
         android:textAlignment="center"
-        android:textSize="26sp" />
+        android:textSize="26sp"/>
 
     <helper.PersianTextView
         android:id="@+id/ItemDesc"
@@ -44,7 +44,7 @@
         android:paddingTop="10dip"
         android:text="@string/item_desc"
         android:textAlignment="center"
-        android:textSize="17sp" />
+        android:textSize="17sp"/>
 
     <helper.PersianTextView
         android:id="@+id/ItemType"
@@ -57,7 +57,7 @@
         android:paddingTop="10dip"
         android:text="@string/item_type"
         android:textAlignment="center"
-        android:textSize="15sp" />
+        android:textSize="15sp"/>
 
     <helper.PersianTextView
         android:id="@+id/ItemPrice"
@@ -70,7 +70,7 @@
         android:paddingTop="10dip"
         android:text="@string/item_price"
         android:textAlignment="center"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dip"
             android:text="-"
-            android:textSize="30sp" />
+            android:textSize="30sp"/>
 
         <helper.PersianEditText
             android:id="@+id/count"
@@ -117,17 +117,44 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dip"
             android:text="+"
-            android:textSize="30sp" />
+            android:textSize="30sp"/>
 
     </LinearLayout>
 
-    <helper.PersianButton
-        android:id="@+id/add"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="5dip"
-        android:text="@string/add"
-        android:textSize="20sp" />
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <helper.PersianButton
+            android:id="@+id/add"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dip"
+            android:layout_weight="1"
+            android:text="@string/add"
+            android:textSize="20sp"/>
+
+        <helper.PersianButton
+            android:id="@+id/web3d_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dip"
+            android:layout_weight="1"
+            android:background="@color/md_amber_A700"
+            android:paddingEnd="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingStart="5dp"
+            android:text="@string/web3d"
+            android:textSize="20sp"/>
+    </LinearLayout>
 </LinearLayout>

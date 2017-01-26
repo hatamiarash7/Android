@@ -48,17 +48,17 @@ public class ShopCard extends ListActivity {
     private static final String TAG_NAME = "name";   // name tag
     private static final String TAG_PRICE = "price"; // price tag
     private static final String TAG_COUNT = "count"; // count tag
-    ArrayList<HashMap<String, String>> ItemList;     // item array list
-    Button Clear_Card, Pay_Card;                     // pay or clear card
+    private ArrayList<HashMap<String, String>> ItemList;     // item array list
+    private Button Clear_Card, Pay_Card;                     // pay or clear card
     Button btnConfirm, btnCancel, btnDelete;         // popup buttons
     Button inc, dec;                                 // increase or decrease item count
-    TextView name, count, price;                     // item details
-    TextView CardPrice, TotalPrice, CardDiscount;    // card prices
+    private TextView name, count, price;                     // item details
+    private TextView CardPrice, TotalPrice, CardDiscount;    // card prices
     TextView item_name;
-    EditText item_count;
+    private EditText item_count;
     int discount = 0;                                // price discount
-    int itemCount;                                   // item count ( integer )
-    String ItemPrice, ItemName, ItemCount;           // item details
+    private int itemCount;                                   // item count ( integer )
+    private String ItemPrice, ItemName, ItemCount;           // item details
     private PopupWindow pwindo;                      // popup
     private SQLiteHandlerItem db;                    // users database
     private SQLiteHandler db2;                       // items database
@@ -177,7 +177,7 @@ public class ShopCard extends ListActivity {
         });
     }
 
-    public void MakeQuestion(String Title, String Message) {                     // build and show an confirm window
+    private  void MakeQuestion(String Title, String Message) {                     // build and show an confirm window
         AlertDialog.Builder dialog = new AlertDialog.Builder(ShopCard.this);
         dialog.setTitle(Title);                                                  // set title
         dialog.setMessage(Message);                                              // set message
@@ -203,7 +203,7 @@ public class ShopCard extends ListActivity {
         alert.show();                        // show dialog
     }
 
-    public void MakeToast(String Message) { // show notification with custom typeface
+    private  void MakeToast(String Message) { // show notification with custom typeface
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -241,7 +241,7 @@ public class ShopCard extends ListActivity {
         }
     }
 
-    class LoadAllCardItems extends AsyncTask<String, String, String> { // load all items from database
+    private class LoadAllCardItems extends AsyncTask<String, String, String> { // load all items from database
         protected String doInBackground(String... args) {
             List<String> Item = db.getItemDetails();    // get all items
             if (Item.size() > 0)                        // if there is item in card

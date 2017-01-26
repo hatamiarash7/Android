@@ -47,11 +47,11 @@ public class EditProfile extends Activity {
     private EditText txtName;
     private EditText txtAddress;
     private EditText txtPhone;
-    private EditText txtPassword;
-    private EditText txtPassword2;
+    EditText txtPassword;
+    EditText txtPassword2;
     private SQLiteHandler db;
     private SessionManager session;
-    String Backup_Phone, uid, email;
+    private String Backup_Phone, uid, email;
     Button btnConfirm, btnChangePassword;
 
     @Override
@@ -66,8 +66,8 @@ public class EditProfile extends Activity {
         btnConfirm = (Button) findViewById(R.id.btnConfirm);               // detail change button
         btnChangePassword = (Button) findViewById(R.id.btnChangePassword); // password change button
         db = new SQLiteHandler(getApplicationContext());                   // user local database
-        session = new SessionManager(getApplicationContext());
-        pDialog = new ProgressDialog(this);
+        session = new SessionManager(getApplicationContext());             // user session
+        pDialog = new ProgressDialog(this);                                // dialog
         pDialog.setCancelable(false);
         HashMap<String, String> user = db.getUserDetails();                // get user detail from local database
         email = user.get(Config_TAG.TAG_EMAIL);                            // get user's email
@@ -93,11 +93,26 @@ public class EditProfile extends Activity {
                         MakeToast("تمامی کادر ها را پر نمایید");
             }
         });
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {         // confirm button's event
+            @Override
+            public void onClick(View v) {
+                String pass = txtPassword.getText().toString();
+                String pass2 = txtPassword2.getText().toString();
+                if (CheckInternet())
+                    if (pass.length() >= 8)
+                        if (pass.equals(pass2))
+                            UpdatePassword(pass, email);
+                        else
+                            MakeToast("کلمه عبور تطابق ندارد");
+                    else
+                        MakeToast("کلمه عبور کوتاه است");
+            }
+        });
     }
 
     private void GetUser(final String email) {             // check login request from server
         String tag_string_req = "req_get";                 // Tag used to cancel the request
-        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_login, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response); // log server response
@@ -146,7 +161,7 @@ public class EditProfile extends Activity {
         String tag_string_req = "req_register";
         pDialog.setMessage("در حال ثبت ...");
         showDialog();
-        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Register Response: " + response);
@@ -190,7 +205,7 @@ public class EditProfile extends Activity {
             protected java.util.Map<String, String> getParams() {
                 // Posting params to register url
                 java.util.Map<String, String> params = new HashMap<>();
-                params.put(Config_TAG.TAG, "user_update");
+                params.put(Config_TAG.TAG, "user_update_details");
                 params.put(Config_TAG.TAG_NAME, name);
                 params.put(Config_TAG.TAG_EMAIL, email);
                 params.put(Config_TAG.TAG_UID, uid);
@@ -203,70 +218,56 @@ public class EditProfile extends Activity {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
-    public boolean CheckInternet() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
-            return true;
-        else
-            MakeToast("اتصال به اینترنت را بررسی نمایید");
-        return false;
-    }
-
-    public void MakeToast(String Message) {
-        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
-        SpannableString efr = new SpannableString(Message);
-        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
-    }
-
-    private void showDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hideDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
-
-    public void MakeQuestion(String Title, String Message, final String name, final String address, final String phone, final String Backup_Phone, final String uid) { // build and show an confirm window
-        AlertDialog.Builder dialog = new AlertDialog.Builder(EditProfile.this);
-        dialog.setTitle(Title);                                                     // set title
-        dialog.setMessage(Message);                                                 // set message
-        dialog.setIcon(R.drawable.ic_alert);                                        // set icon
-        dialog.setPositiveButton("باشه !", new DialogInterface.OnClickListener() {  // positive answer
-            public void onClick(DialogInterface dialog, int id) {
-                isPhoneChanged = true;
-                UpdateUser(name, address, phone, Backup_Phone, uid);
-                logoutUser();
-            }
-        });
-        dialog.setNegativeButton("بیخیال", new DialogInterface.OnClickListener() { // negative answer
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();            // close dialog
-            }
-        });
-        AlertDialog alert = dialog.create(); // create dialog
-        alert.show();                        // show dialog
-    }
-
-    public void logoutUser() {
-        pDialog.setMessage("در حال خروج ...");
+    private void UpdatePassword(final String pass, final String email) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_update";
+        pDialog.setMessage("در حال ثبت ...");
         showDialog();
-        session.setLogin(false);
-        db.deleteUsers();                    // delete user from local database
-        DeleteUser(email);
-        Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
-        MainScreenActivity.pointer.finish();
-        // finish old activity and start again for refresh
-        startActivity(i);
-        finish();
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Updating Response: " + response);
+                hideDialog();
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean(Config_TAG.TAG_ERROR);
+                    if (!error) {
+                        MakeToast("اطلاعات شما به روزرسانی شد");
+                        logoutUser();
+                    } else {
+                        // Error occurred in registration. Get the error message
+                        String errorMsg = jObj.getString(Config_TAG.TAG_ERROR_MSG);
+                        MakeToast(errorMsg);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Updating Error: " + error.getMessage());
+                MakeToast(error.getMessage());
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected java.util.Map<String, String> getParams() {
+                // Posting params to register url
+                java.util.Map<String, String> params = new HashMap<>();
+                params.put(Config_TAG.TAG, "user_update_password");
+                params.put(Config_TAG.TAG_PASSWORD, pass);
+                params.put(Config_TAG.TAG_EMAIL, email);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
     private void DeleteUser(final String email) {          // check login request from server
         String tag_string_req = "req_delete";              // Tag used to cancel the request
-        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_login, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response); // log server response
@@ -303,5 +304,66 @@ public class EditProfile extends Activity {
         };
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private boolean CheckInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+            return true;
+        else
+            MakeToast("اتصال به اینترنت را بررسی نمایید");
+        return false;
+    }
+
+    private void MakeToast(String Message) {
+        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
+    }
+
+    private void MakeQuestion(String Title, String Message, final String name, final String address, final String phone, final String Backup_Phone, final String uid) { // build and show an confirm window
+        AlertDialog.Builder dialog = new AlertDialog.Builder(EditProfile.this);
+        dialog.setTitle(Title);                                                     // set title
+        dialog.setMessage(Message);                                                 // set message
+        dialog.setIcon(R.drawable.ic_alert);                                        // set icon
+        dialog.setPositiveButton("باشه !", new DialogInterface.OnClickListener() {  // positive answer
+            public void onClick(DialogInterface dialog, int id) {
+                isPhoneChanged = true;
+                UpdateUser(name, address, phone, Backup_Phone, uid);
+                logoutUser();
+            }
+        });
+        dialog.setNegativeButton("بیخیال", new DialogInterface.OnClickListener() { // negative answer
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();            // close dialog
+            }
+        });
+        AlertDialog alert = dialog.create(); // create dialog
+        alert.show();                        // show dialog
+    }
+
+    private void logoutUser() {
+        pDialog.setMessage("در حال خروج ...");
+        showDialog();
+        session.setLogin(false);
+        db.deleteUsers();                    // delete user from local database
+        DeleteUser(email);
+        Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+        MainScreenActivity.pointer.finish();
+        // finish old activity and start again for refresh
+        startActivity(i);
+        finish();
     }
 }

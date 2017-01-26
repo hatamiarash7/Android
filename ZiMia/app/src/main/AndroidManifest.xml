@@ -4,7 +4,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="ir.hatamiarash.zimia">
-    <!--  Internet Permissions -->
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -87,11 +87,6 @@
             android:noHistory="true"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".SellerProfile"
-            android:label="User Profile"
-            android:noHistory="true"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".EditProfile"
             android:label="Edit User Profile"
             android:noHistory="true"
@@ -114,6 +109,21 @@
         <activity
             android:name=".Pay_Log"
             android:label="Pay Log"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Web3d"
+            android:label="Web 3D View"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SetupWeb"
+            android:label="Web Setup"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ResetPassword"
+            android:label="Reset Forgotten Password"
             android:noHistory="true"
             android:screenOrientation="portrait"/>
 

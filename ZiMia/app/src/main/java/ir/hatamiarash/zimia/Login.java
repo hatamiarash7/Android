@@ -43,7 +43,7 @@ public class Login extends Activity {
     private static final String TAG = Login.class.getSimpleName(); // class's tag for log
     Button btnLogin;                                               // login button
     Button btnLinkToRegister;                                      // register activity button
-    String name;
+    Button btnLinkToResetPassword;
     private EditText inputEmail;                                   // email input
     private EditText inputPassword;                                // password input
     private ProgressDialog pDialog;                                // dialog window
@@ -58,6 +58,7 @@ public class Login extends Activity {
         inputPassword = (EditText) findViewById(R.id.password);                  // password text input
         btnLogin = (Button) findViewById(R.id.btnLogin);                         // login button
         btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen); // register activity button
+        btnLinkToResetPassword = (Button) findViewById(R.id.btnLinkToResetPassword);
         pDialog = new ProgressDialog(this);                                      // new dialog
         pDialog.setCancelable(false);                                            // set unacceptable dialog
         db = new SQLiteHandler(getApplicationContext());                         // users database
@@ -90,11 +91,20 @@ public class Login extends Activity {
                 finish();
             }
         });
+        btnLinkToResetPassword.setOnClickListener(new View.OnClickListener() {            // register button's event
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), ResetPassword.class);
+                // start register activity
+                startActivity(i);
+                // finish this one
+                finish();
+            }
+        });
     }
 
     private void CheckLogin(final String email, final String password) { // check login request from server
         String tag_string_req = "req_login";                             // Tag used to cancel the request
-        StringRequest strReq = new StringRequest(Method.POST, Config_URL.url_login, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response); // log server response
@@ -117,8 +127,12 @@ public class Login extends Activity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage()); // log login's error
-                MakeToast(error.getMessage());                    // show error in notification
+                Log.e(TAG, "Login Error: " + error.getMessage());
+                if (error.getMessage() != null) {
+                    MakeToast(error.getMessage());
+                } else
+                    MakeToast("خطایی رخ داده است");
+                hideDialog();
             }
         }) {
             @Override
@@ -154,7 +168,7 @@ public class Login extends Activity {
         return false;
     }
 
-    public void MakeToast(String Message) { // show notification with custom typeface
+    private void MakeToast(String Message) { // show notification with custom typeface
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -163,7 +177,7 @@ public class Login extends Activity {
 
     private void SetUser(final String email) {             // check login request from server
         String tag_string_req = "req_login";               // Tag used to cancel the request
-        StringRequest strReq = new StringRequest(Method.POST, Config_URL.url_login, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response); // log server response
@@ -204,8 +218,12 @@ public class Login extends Activity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage()); // log login's error
-                MakeToast(error.getMessage());                    // show error in notification
+                Log.e(TAG, "Login Error: " + error.getMessage());
+                if (error.getMessage() != null) {
+                    MakeToast(error.getMessage());
+                } else
+                    MakeToast("خطایی رخ داده است");
+                hideDialog();
             }
         }) {
             @Override

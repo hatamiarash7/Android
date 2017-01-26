@@ -5,15 +5,10 @@
 
 <resources>
     <string name="app_name">ZiMia</string>
-    <string name="app_website">http://zimia.ir</string>
-    <string name="app_email">info@zimia.ir</string>
-    <string name="app_telegram">http://telegram.me/zimia_ir</string>
 
-    <string name="help_title">راهنما</string>
     <string name="about_title">درباره ما</string>
     <string name="contact_title">تماس با ما</string>
     <string name="item_edit_title">ویرایش سفارش</string>
-    <string name="help_text">متن راهنما</string>
     <string name="about_text">آیا برای شما هم اتفاق افتاده است که به خاطر خرید یک کالای کوچک مجبور باشید که بیرون از خانه بروید و یک مسیر طولانی را طی کنید ؟ خانه یا خوابگاهتان دور از مرکز شهر باشد و به خاطر خرید یک وعده غذای ساده چند ساعت وقت صرف کرده باشید ؟ تا به حال شده مهمان ناخوانده ای دیروقت به خانه شما بیاید و اقلام پذیرایی نداشته و مغازه ها هم بسته باشند ؟ و یا شب امتحان برای کپی یک جزوه از خوابگاه داخل محوطه دانشگاه تا مرکز شهر بروید تا فقط چند برگه کپی کنید ؟ اگر یکی از این موقعیت ها را تجربه کرده باشید ، به یک سامانه جامع همیشه همراه با قابلیت ارسال کالای سریع نیاز دارید ... زیمیا به این نیاز شما پاسخ خواهد داد</string>
     <string name="contact_text">می توانید از طریق راه های زیر با ما در تماس باشید</string>
 
@@ -22,7 +17,7 @@
     <string name="markets">Markets</string>
     <string name="map">Map</string>
 
-    <string name="hint_email">تلفن همراه</string>
+    <string name="hint_email">آدرس ایمیل</string>
     <string name="hint_password">کلمه عبور</string>
     <string name="hint_password2">تکرار کلمه عبور</string>
     <string name="hint_newpassword">کلمه عبور جدید</string>
@@ -44,14 +39,15 @@
     <string name="btn_register">ثبت نام</string>
     <string name="btn_link_to_register">عضو نیستید ؟ حساب کاربری ایجاد کنید</string>
     <string name="btn_link_to_login">ثبت نام کرده اید ؟ وارد شوید</string>
+    <string name="btn_link_to_resetpassword">رمز عبور را فراموش کرده اید ؟</string>
+    <string name="btn_set">ثبت</string>
 
-    <string name="welcome">خوش آمدید</string>
-    <string name="name">نام کامل</string>
     <string name="close">بستن</string>
     <string name="cancle">انصراف</string>
     <string name="confirm">تایید</string>
     <string name="delete">حذف</string>
     <string name="add">اضافه به سبد خرید</string>
+    <string name="web3d">مدل سه بعدی</string>
 
     <string name="item_pic">عکس محصول</string>
     <string name="item_name">نام محصول</string>

@@ -16,8 +16,8 @@ public class SessionManager {
     // LogCat tag
     private static String TAG = SessionManager.class.getSimpleName();
     // Shared Preferences
-    SharedPreferences pref;
-    Editor editor;
+    private SharedPreferences pref;
+    private Editor editor;
     Context _context;
     // Shared pref mode
     int PRIVATE_MODE = 0;

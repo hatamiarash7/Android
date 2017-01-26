@@ -43,7 +43,7 @@ import volley.Config_URL;
 public class All_Markets extends ListActivity {
     private static final String TAG = All_Markets.class.getSimpleName();
     private ProgressDialog pDialog;
-    ArrayList<HashMap<String, String>> MarketList;
+    private ArrayList<HashMap<String, String>> MarketList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class All_Markets extends ListActivity {
         String tag_string_req = "req_fetch";
         pDialog.setMessage("لطفا منتظر بمانید ...");
         showDialog();
-        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Markets Response: " + response);
@@ -150,8 +150,12 @@ public class All_Markets extends ListActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Fetch Error: " + error.getMessage());
-                MakeToast(error.getMessage());
+                if (error.getMessage() != null) {
+                    MakeToast(error.getMessage());
+                } else
+                    MakeToast("خطایی رخ داده است");
                 hideDialog();
+                finish();
             }
         }) {
             @Override
@@ -177,7 +181,7 @@ public class All_Markets extends ListActivity {
             pDialog.dismiss();
     }
 
-    public void MakeToast(String Message) {
+    private void MakeToast(String Message) {
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

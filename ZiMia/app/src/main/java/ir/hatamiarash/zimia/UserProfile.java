@@ -32,11 +32,12 @@ import helper.SQLiteHandler;
 import helper.SessionManager;
 import helper.TypefaceSpan;
 import volley.AppController;
+import volley.Config_TAG;
 import volley.Config_URL;
 
 public class UserProfile extends Activity {
     private static final String TAG = UserProfile.class.getSimpleName();
-    String email;
+    private String email;
     Button btnLogout;
     Button btnEdit;
     Button btnCharge;
@@ -68,10 +69,8 @@ public class UserProfile extends Activity {
             logoutUser();
         }
         HashMap<String, String> user = db.getUserDetails();       // get user detail from local database
-        email = user.get("email");
+        email = user.get(Config_TAG.TAG_EMAIL);
         Log.d(email, "db : " + email);
-        pDialog.setMessage("لطفا منتظر بمانید ...");
-        showDialog();
         GetUser(email);
         btnLogout.setOnClickListener(new View.OnClickListener() { // logout button's event
             @Override
@@ -95,14 +94,14 @@ public class UserProfile extends Activity {
         });
     }
 
-    public void MakeToast(String Message) { // build and show notification with custom typeface
+    private void MakeToast(String Message) { // build and show notification with custom typeface
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 
-    public void logoutUser() {
+    private void logoutUser() {
         pDialog.setMessage("در حال خروج ...");
         showDialog();
         session.setLogin(false);
@@ -117,7 +116,9 @@ public class UserProfile extends Activity {
 
     private void GetUser(final String email) {          // check login request from server
         String tag_string_req = "req_get";               // Tag used to cancel the request
-        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_login, new Response.Listener<String>() {
+        pDialog.setMessage("لطفا منتظر بمانید ...");
+        showDialog();
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response); // log server response
@@ -161,7 +162,9 @@ public class UserProfile extends Activity {
 
     private void DeleteUser(final String email) {          // check login request from server
         String tag_string_req = "req_delete";               // Tag used to cancel the request
-        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_login, new Response.Listener<String>() {
+        pDialog.setMessage("لطفا منتظر بمانید ...");
+        showDialog();
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response); // log server response

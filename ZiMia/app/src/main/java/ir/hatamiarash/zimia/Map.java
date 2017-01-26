@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Map extends AppCompatActivity implements OnMapReadyCallback {
-    final static int TAG_CODE_PERMISSION_LOCATION = 1337; // tag code for permission request ( code number is optional )
+    private final static int TAG_CODE_PERMISSION_LOCATION = 1337; // tag code for permission request ( code number is optional )
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

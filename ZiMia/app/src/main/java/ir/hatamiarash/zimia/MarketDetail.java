@@ -41,15 +41,15 @@ import volley.Config_URL;
 
 public class MarketDetail extends ListActivity {
     private static final String TAG = MarketDetail.class.getSimpleName();
-    ArrayList<HashMap<String, String>> ProductsList;
+    private ArrayList<HashMap<String, String>> ProductsList;
     private ProgressDialog pDialog;
-    TextView market_name;
-    TextView market_open_hour;
-    TextView market_close_hour;
-    TextView market_address;
-    TextView other1, other2;
-    Boolean is_open = false;
-    String pid;
+    private TextView market_name;
+    private TextView market_open_hour;
+    private TextView market_close_hour;
+    private TextView market_address;
+    private TextView other1, other2;
+    private Boolean is_open = false;
+    private String pid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class MarketDetail extends ListActivity {
                     String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
                     Intent i = new Intent(getApplicationContext(), ItemDetail.class);
                     i.putExtra(Config_TAG.TAG_ID, pid);
-                    i.putExtra("item_type", "Market_Products");
+                    i.putExtra(Config_TAG.TAG_TYPE_ITEM, "Market_Products");
                     startActivityForResult(i, 100);
                 } else
                     MakeToast("این فروشگاه در حال حاضر قادر به خدمت رسانی نمی باشد");
@@ -89,7 +89,7 @@ public class MarketDetail extends ListActivity {
         });
     }
 
-    public void MakeToast(String Message) {
+    private void MakeToast(String Message) {
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -111,7 +111,7 @@ public class MarketDetail extends ListActivity {
         String tag_string_req = "req_fetch";
         pDialog.setMessage("لطفا منتظر بمانید ...");
         showDialog();
-        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Seller Response: " + response);
@@ -147,8 +147,12 @@ public class MarketDetail extends ListActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Fetch Error: " + error.getMessage());
-                MakeToast(error.getMessage());
+                if (error.getMessage() != null) {
+                    MakeToast(error.getMessage());
+                } else
+                    MakeToast("خطایی رخ داده است");
                 hideDialog();
+                finish();
             }
         }) {
             @Override
@@ -168,7 +172,7 @@ public class MarketDetail extends ListActivity {
     private void FetchSellerProducts() {
         // Tag used to cancel the request
         String tag_string_req = "req_fetch";
-        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.url_register, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Products Response: " + response);
@@ -229,8 +233,12 @@ public class MarketDetail extends ListActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Fetch Error: " + error.getMessage());
-                MakeToast(error.getMessage());
+                if (error.getMessage() != null) {
+                    MakeToast(error.getMessage());
+                } else
+                    MakeToast("خطایی رخ داده است");
                 hideDialog();
+                finish();
             }
         }) {
             @Override

@@ -42,13 +42,28 @@
             android:layout_marginBottom="10dp"
             android:background="@color/gray"
             android:gravity="center_vertical|center_horizontal"
-            android:hint="@string/hint_email"
+            android:hint="@string/hint_phone"
             android:maxLines="1"
             android:padding="10dp"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textColorHint="@color/gray3"
             android:inputType="number|phone" />
+
+        <helper.PersianEditText
+            android:id="@+id/reset_email"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/gray"
+            android:gravity="center_vertical|center_horizontal"
+            android:hint="@string/hint_email"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray3"
+            android:inputType="textEmailAddress"/>
 
         <helper.PersianEditText
             android:id="@+id/password"
@@ -94,52 +109,6 @@
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textColorHint="@color/gray3" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioGroup
-                android:id="@+id/TypeRadioGroup"
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-
-                <helper.PersianRadioButton
-                    android:id="@+id/SellerRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginStart="10dp"
-                    android:text="فروشنده"
-                    android:textSize="18sp" />
-
-                <helper.PersianRadioButton
-                    android:id="@+id/UserRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginStart="10dp"
-                    android:text="کاربر"
-                    android:textSize="18sp" />
-            </RadioGroup>
-
-            <helper.PersianTextView
-                android:id="@+id/textView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="3"
-                android:text="نوع : "
-                android:textSize="18sp"
-                android:layout_gravity="center_vertical" />
-        </LinearLayout>
 
         <helper.PersianButton
             android:id="@+id/btnRegister"

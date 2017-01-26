@@ -36,12 +36,17 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String Query = "CREATE TABLE " + TABLE_LOGIN + "("
-                + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, "
-                + KEY_ADDRESS + " TEXT, " + KEY_PHONE + " TEXT, "
-                + KEY_EMAIL + " TEXT UNIQUE, " + KEY_UID + " TEXT, "
-                + KEY_TYPE + " TEXT, " + KEY_CREATED_AT + " TEXT" + ")";
+                + KEY_ID + " INTEGER PRIMARY KEY, "
+                + KEY_NAME + " TEXT, "
+                + KEY_ADDRESS + " TEXT, "
+                + KEY_PHONE + " TEXT, "
+                + KEY_EMAIL + " TEXT UNIQUE, "
+                + KEY_UID + " TEXT, "
+                + KEY_TYPE + " TEXT, "
+                + KEY_CREATED_AT + " TEXT"
+                + ")";
         db.execSQL(Query);
-        Log.d(TAG, "Database table created");
+        Log.d(TAG, "Database table created - onCreate");
     }
 
     // drop and recreate table
@@ -56,30 +61,23 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
         String Query = "CREATE TABLE " + TABLE_LOGIN + "("
-                + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, "
-                + KEY_ADDRESS + " TEXT, " + KEY_PHONE + " TEXT, "
-                + KEY_EMAIL + " TEXT UNIQUE, " + KEY_UID + " TEXT, "
-                + KEY_TYPE + " TEXT, " + KEY_CREATED_AT + " TEXT" + ")";
+                + KEY_ID + " INTEGER PRIMARY KEY, "
+                + KEY_NAME + " TEXT, "
+                + KEY_ADDRESS + " TEXT, "
+                + KEY_PHONE + " TEXT, "
+                + KEY_EMAIL + " TEXT UNIQUE, "
+                + KEY_UID + " TEXT, "
+                + KEY_TYPE + " TEXT, "
+                + KEY_CREATED_AT + " TEXT"
+                + ")";
         db.execSQL(Query);
         db.close();
-        Log.d(TAG, "Database table created2");
+        Log.d(TAG, "Database table created - Manual");
     }
 
     // add user data to database
     public void addUser(String name, String email, String address, String phone, String uid, String type, String created_at) {
         SQLiteDatabase db = this.getWritableDatabase();
-//        name = "'" + name + "'";
-//        email = "'" + email + "'";
-//        address = "'" + address + "'";
-//        phone = "'" + phone + "'";
-//        type = "'" + type + "'";
-//        uid = "'" + uid + "'";
-//        created_at = "'" + created_at + "'";
-//        String query = "INSERT OR REPLACE INTO " + TABLE_LOGIN + "(" + KEY_NAME + ", " + KEY_ADDRESS + ", "
-//                + KEY_PHONE + ", " + KEY_EMAIL + ", " + KEY_UID + ", " + KEY_TYPE + ", "
-//                + KEY_CREATED_AT + ") VALUES(" + name + ", " + address
-//                + ", " + phone + ", " + email + ", " + uid + ", " + type + ", " + created_at + ")";
-
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, name); // Name
         values.put(KEY_EMAIL, email); // Email
@@ -98,7 +96,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // get user details from database and send them
     public HashMap<String, String> getUserDetails() {
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<>();
         String Query = "SELECT * FROM " + TABLE_LOGIN;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(Query, null);
@@ -125,7 +123,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         email = "'" + email + "'";
         address = "'" + address + "'";
         phone = "'" + phone + "'";
-        String Query = "UPDATE " + TABLE_LOGIN + " SET " + KEY_NAME + "=" + name + ", " + KEY_ADDRESS + "=" + address + ", " + KEY_PHONE + "=" + phone + " WHERE " + KEY_EMAIL + "=" + email;
+        String Query = "UPDATE " + TABLE_LOGIN + " SET "
+                + KEY_NAME + "=" + name + ", "
+                + KEY_ADDRESS + "=" + address + ", "
+                + KEY_PHONE + "=" + phone + " WHERE "
+                + KEY_EMAIL + "=" + email;
         db.execSQL(Query);
         db.close();
         Log.d(TAG, "Row Updated");

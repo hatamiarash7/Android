@@ -121,15 +121,42 @@
 
     </LinearLayout>
 
-    <helper.PersianButton
-        android:id="@+id/add"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="5dp"
-        android:background="@color/accent"
-        android:padding="5dp"
-        android:text="@string/add"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:gravity="center_vertical|center_horizontal|center">
+
+        <helper.PersianButton
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:background="@color/accent"
+            android:padding="5dp"
+            android:text="@string/add"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+        <helper.PersianButton
+            android:id="@+id/web3d_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dip"
+            android:layout_weight="1"
+            android:background="@color/md_amber_A700"
+            android:paddingEnd="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingStart="5dp"
+            android:text="@string/web3d"
+            android:textSize="20sp"/>
+    </LinearLayout>
 </LinearLayout>

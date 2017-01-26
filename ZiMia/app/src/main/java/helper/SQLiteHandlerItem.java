@@ -32,10 +32,13 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_CARD + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_PRICE + " TEXT," + KEY_COUNT + " TEXT" + ")";
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_NAME + " TEXT,"
+                + KEY_PRICE + " TEXT,"
+                + KEY_COUNT + " TEXT"
+                + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
-        Log.d(TAG, "Database table created-onCreate");
+        Log.d(TAG, "Database table created - onCreate");
     }
 
     // drop and recreate table
@@ -50,11 +53,14 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD);
         String CREATE_CARD_TABLE = "CREATE TABLE " + TABLE_CARD + "("
-                + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, "
-                + KEY_PRICE + " TEXT, " + KEY_COUNT + " TEXT" + ")";
+                + KEY_ID + " INTEGER PRIMARY KEY, "
+                + KEY_NAME + " TEXT, "
+                + KEY_PRICE + " TEXT, "
+                + KEY_COUNT + " TEXT"
+                + ")";
         db.execSQL(CREATE_CARD_TABLE);
         db.close();
-        Log.d(TAG, "Database table created-Manual");
+        Log.d(TAG, "Database table created - Manual");
     }
 
     // add item data to database
@@ -64,8 +70,14 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
         price = "'" + price + "'";
         count = "'" + count + "'";
         String query = "INSERT OR REPLACE INTO " + TABLE_CARD + "("
-                + KEY_NAME + ", " + KEY_PRICE + ", " + KEY_COUNT
-                + ") VALUES(" + name + ", " + price + ", " + count + ")";
+                + KEY_NAME + ", "
+                + KEY_PRICE + ", "
+                + KEY_COUNT
+                + ") VALUES("
+                + name + ", "
+                + price + ", "
+                + count
+                + ")";
         db.execSQL(query);
         db.close();
         Log.d(TAG, name + " inserted into database");
@@ -78,8 +90,10 @@ public class SQLiteHandlerItem extends SQLiteOpenHelper {
         price = "'" + price + "'";
         count = "'" + count + "'";
         String query = "UPDATE " + TABLE_CARD + " SET "
-                + KEY_NAME + "=" + name + ", " + KEY_PRICE + "=" + price
-                + ", " + KEY_COUNT + "=" + count + " WHERE " + KEY_NAME + "=" + name;
+                + KEY_NAME + "=" + name + ", "
+                + KEY_PRICE + "=" + price + ", "
+                + KEY_COUNT + "=" + count
+                + " WHERE " + KEY_NAME + "=" + name;
         db.execSQL(query);
         db.close();
         Log.d(TAG, name + " updated");
