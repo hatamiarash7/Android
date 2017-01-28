@@ -59,21 +59,10 @@ public class All_Restaurants extends ListActivity {
                 String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
                 Intent i = new Intent(getApplicationContext(), RestaurantDetail.class);
                 i.putExtra(Config_TAG.TAG_ID, pid);
-                startActivityForResult(i, 100);
+                startActivity(i);
             }
         });
         FetchAllRestaurants();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 100) {
-            Log.d(TAG, "result : " + String.valueOf(resultCode));
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-        }
     }
 
     private void FetchAllRestaurants() {

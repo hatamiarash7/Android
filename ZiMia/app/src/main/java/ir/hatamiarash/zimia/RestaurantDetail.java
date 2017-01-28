@@ -82,28 +82,18 @@ public class RestaurantDetail extends ListActivity {
                     Intent i = new Intent(getApplicationContext(), ItemDetail.class);
                     i.putExtra(Config_TAG.TAG_ID, pid);
                     i.putExtra(Config_TAG.TAG_TYPE_ITEM, "Restaurant_Foods");
-                    startActivityForResult(i, 100);
+                    startActivity(i);
                 } else
                     MakeToast("این فروشگاه در حال حاضر قادر به خدمت رسانی نمی باشد");
             }
         });
     }
 
-    private  void MakeToast(String Message) {
+    private void MakeToast(String Message) {
         Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 100) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-        }
     }
 
     private void FetchSellerDetails() {

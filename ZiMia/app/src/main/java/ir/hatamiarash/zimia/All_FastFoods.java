@@ -58,22 +58,12 @@ public class All_FastFoods extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
-                Intent in = new Intent(getApplicationContext(), FastFoodDetail.class);
-                in.putExtra(Config_TAG.TAG_ID, pid);
-                startActivityForResult(in, 100);
+                Intent i = new Intent(getApplicationContext(), FastFoodDetail.class);
+                i.putExtra(Config_TAG.TAG_ID, pid);
+                startActivity(i);
             }
         });
         FetchAllFastFoods();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 100) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-        }
     }
 
     private void FetchAllFastFoods() {

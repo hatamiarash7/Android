@@ -44,9 +44,8 @@ public class ResetPassword extends Activity {
     private EditText inputEmail;
     private EditText inputPhone;
     private ProgressDialog pDialog;
-    Helper helper;
+    Helper CheckEmail, CheckPhone;
     Button btnSet;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,17 +54,21 @@ public class ResetPassword extends Activity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputPhone = (EditText) findViewById(R.id.phone);
         btnSet = (Button) findViewById(R.id.btnSet);
-        pDialog = new ProgressDialog(this);                    // Progress dialog
+        pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
-        helper = new Helper(inputEmail.getText().toString());
+        CheckEmail = new Helper("email", inputEmail.getText().toString());
+        CheckPhone = new Helper("phone", inputPhone.getText().toString());
         btnSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (CheckInternet())
-                    //if (helper.isValidEmail())
-                    ResetUserPassword(inputEmail.getText().toString(), inputPhone.getText().toString());
-                //else
-                //  MakeToast("ایمیل وارد شده ایراد دارد");
+                    if (CheckEmail.isValidEmail())
+                        if (CheckPhone.isValidPhone())
+                            ResetUserPassword(inputEmail.getText().toString(), inputPhone.getText().toString());
+                        else
+                            MakeToast("شماره موبایل را بررسی نمایید");
+                    else
+                        MakeToast("ایمیل را بررسی نمایید");
             }
         });
     }

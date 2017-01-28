@@ -60,20 +60,10 @@ public class All_Markets extends ListActivity {
                 String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
                 Intent i = new Intent(getApplicationContext(), MarketDetail.class);
                 i.putExtra(Config_TAG.TAG_ID, pid);
-                startActivityForResult(i, 100);
+                startActivity(i);
             }
         });
         FetchAllMarkets();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 100) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-        }
     }
 
     private void FetchAllMarkets() {

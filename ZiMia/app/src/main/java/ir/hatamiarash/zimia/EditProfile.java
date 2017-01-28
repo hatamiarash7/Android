@@ -358,7 +358,7 @@ public class EditProfile extends Activity {
         pDialog.setMessage("در حال خروج ...");
         showDialog();
         session.setLogin(false);
-        db.deleteUsers();                    // delete user from local database
+        db.deleteUsers(); // delete user from local database
         DeleteUser(email);
         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
         MainScreenActivity.pointer.finish();

@@ -56,6 +56,7 @@ public class Register extends Activity {
     private EditText inputResetEmail;
     private ProgressDialog pDialog;
     private SQLiteHandler db;
+    private Helper CheckEmail, CheckPhone;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,11 +93,12 @@ public class Register extends Activity {
                 String address = inputAddress.getText().toString();
                 String phone = inputPhone.getText().toString();
                 String reset_email = inputResetEmail.getText().toString();
-                Helper helper = new Helper(reset_email);
+                CheckEmail = new Helper("email", reset_email);
+                CheckPhone = new Helper("phone", phone);
                 if (CheckInternet())
                     if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
-                        if (phone.startsWith("09") && phone.length() == 11)
-                            if (helper.isValidEmail())
+                        if (CheckPhone.isValidPhone())
+                            if (CheckEmail.isValidEmail())
                                 if (password.length() >= 8)
                                     if (password.equals(password2))
                                         registerUser(name, email, password, address, phone, "User", reset_email);
@@ -105,7 +107,7 @@ public class Register extends Activity {
                                 else
                                     MakeToast("کلمه عبور کوتاه است");
                             else
-                                MakeToast("ایمیل وارد شده ایراد دارد");
+                                MakeToast("ایمیل را بررسی نمایید");
                         else
                             MakeToast("شماره موبایل را بررسی نمایید");
                     else
