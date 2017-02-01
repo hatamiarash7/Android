@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">Malayer University</string>
+    <string name="app_name">دانشگاه ملایر</string>
+    <string name="title_last_news">آخرین خبر ها</string>
+    <string name="title_farhangi_news">خبر های فرهنگی</string>
+    <string name="title_basij_news">خبر های بسیج</string>
 </resources>

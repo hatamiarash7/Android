@@ -1,7 +1,3 @@
-<!--
-  ~ Copyright (c) 2016 - All Rights Reserved - Arash Hatami
-  -->
-
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -11,9 +7,9 @@
         <item name="android:colorBackground">#ffffff</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <style name="Drawer" parent="MaterialDrawerTheme.Light.DarkToolbar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -21,6 +17,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@android:color/white</item>
     </style>
+
+    <style name="Slider" parent="Drawer"/>
 
     <style name="Dark" parent="MaterialDrawerTheme.Light.DarkToolbar">
         <item name="colorPrimaryDark">@color/md_black_1000</item>

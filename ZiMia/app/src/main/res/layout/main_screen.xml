@@ -4,15 +4,16 @@
   ~ Copyright (c) 2016 - All Rights Reserved - Arash Hatami
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:gravity="center_horizontal"
-              android:orientation="vertical"
-              tools:ignore="HardcodedText"
-              tools:showIn="@layout/drawer">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:ignore="HardcodedText"
+    tools:showIn="@layout/drawer">
 
     <ImageView
         android:id="@+id/btnViewResturans"
