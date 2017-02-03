@@ -1,2 +1,0 @@
--dontwarn okio.**
--dontwarn retrofit2.Platform$Java8
