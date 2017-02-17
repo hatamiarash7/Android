@@ -1,0 +1,37 @@
+<!--
+  ~ Copyright (c) 2017 - All Rights Reserved - Arash Hatami
+  -->
+
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">#c66900</item>
+        <item name="colorPrimary">@android:color/holo_orange_dark</item>
+        <item name="colorAccent">@android:color/holo_orange_dark</item>
+        <item name="android:colorBackground">#ffffff</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="Drawer" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@android:color/white</item>
+    </style>
+
+    <style name="Dark" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="colorPrimaryDark">@color/md_black_1000</item>
+    </style>
+
+    <style name="CustomDialog" parent="android:Theme.DeviceDefault.Dialog">
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="android:textColor">#000000</item>
+        <item name="DialogTitleText">لطفا منتظر بمانید</item>
+        <item name="DialogSpotColor">@color/colorPrimary</item>
+        <item name="DialogSpotCount">5</item>
+    </style>
+</resources>
