@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017 - All Rights Reserved - Arash Hatami
+  -->
+
+<resources>
+    <color name="colorPrimary">#f8ab1a</color>
+    <color name="colorPrimaryDark">#cb8b13</color>
+    <color name="colorAccent">#f8ab1a</color>
+
+    <color name="white">#ffffff</color>
+    <color name="gray">#9999</color>
+    <color name="gray2">#222</color>
+    <color name="gray3">#555555</color>
+    <color name="black">#000000</color>
+    <color name="MyGreen">#00c006</color>
+    <color name="Blue">#2196f3</color>
+    <color name="Purple">#9c27b0</color>
+    <color name="Green">#4caf50</color>
+    <color name="Amber">#ffe507</color>
+    <color name="Red">#f44336</color>
+
+
+    <color name="textColorTertiary">#8a000000</color>
+    <color name="P_Blue">#c50017af</color>
+    <color name="Red_Transparent">#5eff000d</color>
+</resources>

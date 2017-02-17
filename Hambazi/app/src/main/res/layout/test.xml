@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".Test">
+
+    <LinearLayout
+        android:id="@+id/wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TextView
+            android:gravity="center"
+            android:layout_weight="1"
+            android:padding="30dp"
+            android:textSize="40sp"
+            android:id="@+id/sample"
+            android:text="Arash Hatami"
+            android:layout_centerHorizontal="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textView9"/>
+</RelativeLayout>

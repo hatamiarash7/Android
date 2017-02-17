@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017 - All Rights Reserved - Arash Hatami
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl">
+
+    <TextView
+        android:id="@+id/vid"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/vname"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <helper.PersianTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pid"
+        android:layout_gravity="start"
+        android:layout_marginTop="15dp"
+        android:paddingEnd="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingStart="5dp"
+        android:text="Name"
+        android:textAlignment="textStart"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textDirection="rtl"/>
+
+</RelativeLayout>
