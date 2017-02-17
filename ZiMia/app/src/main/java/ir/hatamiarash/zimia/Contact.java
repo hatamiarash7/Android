@@ -50,9 +50,9 @@ public class Contact extends AppCompatActivity {
         LocationText = (TextView) findViewById(R.id.location_address);
         DirectText = (TextView) findViewById(R.id.direct_address);
 
-        Phone = (ImageView) findViewById(R.id.contact_phone);
+        Phone    = (ImageView) findViewById(R.id.contact_phone);
         Telegram = (ImageView) findViewById(R.id.contact_telegram);
-        Email = (ImageView) findViewById(R.id.contact_email);
+        Email    = (ImageView) findViewById(R.id.contact_email);
         Website = (ImageView) findViewById(R.id.contact_website);
         Location = (ImageView) findViewById(R.id.contact_location);
         Direct = (ImageView) findViewById(R.id.contact_direct);

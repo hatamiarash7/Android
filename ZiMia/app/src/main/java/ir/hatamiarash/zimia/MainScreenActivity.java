@@ -252,7 +252,10 @@ public class MainScreenActivity extends AppCompatActivity {
                             }
                             if (drawerItem != null && drawerItem.getIdentifier() == 7) {
                                 //Popup(p_count);
-                                MakeDialog("ثبت نام انجام شد", "نام کاربری شما تلفن همراهتان می باشد");
+                                //MakeDialog("ثبت نام انجام شد", "نام کاربری شما تلفن همراهتان می باشد");
+                                Intent i = new Intent(getApplicationContext(), Test.class);
+                                // start card activity and NOT-FINISH main activity for return
+                                startActivity(i);
                                 result.closeDrawer();
                             }
                             return false;

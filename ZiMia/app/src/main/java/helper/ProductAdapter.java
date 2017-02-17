@@ -84,6 +84,10 @@ public class ProductAdapter extends BaseAdapter implements ListAdapter {
         final ImageView inc = (ImageView) view.findViewById(R.id.count_inc);
         final ImageView dec = (ImageView) view.findViewById(R.id.count_dec);
         final TextView count = (TextView) view.findViewById(R.id.item_count);
+
+        //price_off.addTextChangedListener(Helper.TextAutoResize(this.context, price_off, 12, 30));
+        //price.addTextChangedListener(Helper.TextAutoResize(this.context, price, 12, 30));
+
         inc.setVisibility(View.INVISIBLE);
         dec.setVisibility(View.INVISIBLE);
         count.setVisibility(View.INVISIBLE);

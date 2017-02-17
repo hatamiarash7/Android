@@ -3,75 +3,147 @@
   ~ Copyright (c) 2017 - All Rights Reserved - Arash Hatami
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="10dp">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/inner_background"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <com.intrusoft.library.FrissonView
+        android:id="@+id/wave_head"
+        android:layout_width="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:alphaValue="160"
+        app:tideCount="0"
+        app:tideHeight="50dp"
+        app:tintColor="@color/colorPrimary"
+        android:layout_height="400dp"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/shadow"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        app:cardBackgroundColor="@color/common_google_signin_btn_text_dark_disabled"
+        app:cardCornerRadius="40dp"
+        app:cardMaxElevation="10dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/frame"
+        app:cardBackgroundColor="@color/cardview_light_background"
+        app:cardCornerRadius="40dp"
+        app:cardMaxElevation="10dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignTop="@+id/shadow"
+        android:layout_alignLeft="@+id/shadow"
+        android:layout_alignStart="@+id/shadow"
+        >
+
+        <View
+            android:id="@+id/logo"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_login"
+            android:layout_width="120dp"
+            android:layout_height="120dp"/>
+    </android.support.v7.widget.CardView>
+
+    <helper.PersianTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:layout_below="@+id/frame"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/btn_login"
+        android:textColor="#fff"
+        android:textSize="60sp"
+        android:textStyle="bold"/>
 
-        <helper.PersianEditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@color/gray"
-            android:gravity="center_vertical|center_horizontal"
-            android:hint="@string/hint_email"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray" />
+    <helper.PersianEditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/password"
+        android:layout_marginEnd="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="85dp"
+        android:background="@color/common_google_signin_btn_text_light_disabled"
+        android:ems="10"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:hint="شماره تلفن"
+        android:inputType="number|phone"
+        android:layout_height="80dp"/>
 
-        <helper.PersianEditText
-            android:id="@+id/password"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@color/gray"
-            android:gravity="center_vertical|center_horizontal"
-            android:hint="@string/hint_password"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray" />
+    <helper.PersianEditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/btnLogin"
+        android:layout_marginEnd="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="25dp"
+        android:background="@color/common_google_signin_btn_text_light_disabled"
+        android:ems="10"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:hint="رمز عبور"
+        android:inputType="textPassword"
+        android:layout_height="80dp"/>
 
-        <!-- Login Button -->
+    <helper.PersianButton
+        android:id="@+id/btnLogin"
+        android:layout_width="fill_parent"
+        android:layout_above="@+id/btnLinkToResetPassword"
+        android:layout_marginEnd="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/colorAccent"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:text="@string/btn_login"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        android:layout_height="60dp"/>
 
-        <helper.PersianButton
-            android:id="@+id/btnLogin"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:background="@android:color/holo_orange_dark"
-            android:text="@string/btn_login"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+    <helper.PersianButton
+        android:id="@+id/btnLinkToResetPassword"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_above="@+id/btnLinkToRegisterScreen"
+        android:layout_marginEnd="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="25dp"
+        android:background="@null"
+        android:text="@string/btn_link_to_resetpassword"
+        android:textAllCaps="false"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp"/>
 
-        <!-- Link to Login Screen -->
+    <helper.PersianButton
+        android:id="@+id/btnLinkToRegisterScreen"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@null"
+        android:text="@string/btn_link_to_register"
+        android:textAllCaps="false"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="200dp"/>
 
-        <helper.PersianButton
-            android:id="@+id/btnLinkToRegisterScreen"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dip"
-            android:background="@null"
-            android:text="@string/btn_link_to_register"
-            android:textAllCaps="false"
-            android:textColor="#000000"
-            android:textSize="15sp" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

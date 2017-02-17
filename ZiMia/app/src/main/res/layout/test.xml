@@ -1,262 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2017 - All Rights Reserved - Arash Hatami
-  -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".Test">
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layoutDirection="rtl">
-
-    <TextView
-        android:id="@+id/pid"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/counter"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/added"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/backup_price"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-    <helper.RoundedImageView
-        android:id="@+id/img"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="false"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="false"
-        android:layout_margin="5dp"
-        android:contentDescription="Image"/>
-
-    <helper.PersianTextView
-        android:id="@+id/name"
+    <LinearLayout
+        android:id="@+id/wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pid"
-        android:layout_gravity="start"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="7dp"
-        android:layout_toEndOf="@+id/img"
-        android:layout_toRightOf="@+id/img"
-        android:gravity="start"
-        android:paddingEnd="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingStart="5dp"
-        android:text="Name"
-        android:textAlignment="textStart"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textDirection="rtl"/>
+        android:gravity="center">
+        <TextView
+            android:gravity="center"
+            android:layout_weight="1"
+            android:padding="30dp"
+            android:textSize="40sp"
+            android:id="@+id/sample"
+            android:text="Arash Hatami"
+            android:layout_centerHorizontal="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
-    <helper.PersianTextView
-        android:id="@+id/specification"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/name"
-        android:layout_gravity="start"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="7dp"
-        android:layout_toEndOf="@+id/img"
-        android:layout_toRightOf="@+id/img"
-        android:paddingEnd="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingStart="5dp"
-        android:text="specification"
-        android:textAlignment="textStart"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/gray3"
-        android:textDirection="rtl"
-        android:textSize="12sp"/>
-
-    <LinearLayout
-        android:id="@+id/price_group"
+    <TextView
+        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/specification"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="7dp"
-        android:layout_toEndOf="@+id/img"
-        android:layout_toLeftOf="@+id/add_group"
-        android:layout_toRightOf="@+id/img"
-        android:layout_toStartOf="@+id/add_group"
-        android:orientation="vertical">
-
-        <helper.PersianTextView
-            android:id="@+id/price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:gravity="center"
-            android:text="price"
-            android:textAlignment="center"
-            android:textDirection="rtl"
-            android:textSize="18sp"/>
-
-        <helper.PersianTextView
-            android:id="@+id/price2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:gravity="center"
-            android:text="price"
-            android:textAlignment="center"
-            android:textDirection="rtl"
-            android:textSize="18sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/add_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/specification"
-        android:layout_alignRight="@+id/specification"
-        android:layout_alignTop="@+id/price_group"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
-        android:orientation="vertical">
-
-        <helper.PersianButton
-            android:id="@+id/add"
-            android:layout_width="125dp"
-            android:layout_height="35dp"
-            android:background="@drawable/add"
-            android:text="خرید"
-            android:textColor="@color/md_white_1000"
-            android:textSize="18sp"/>
-
-        <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/add_to"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:orientation="vertical">
-
-            <helper.PersianTextView
-                android:id="@+id/item_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/count_dec"
-                android:layout_toStartOf="@+id/count_dec"
-                android:gravity="center"
-                android:text="55"
-                android:textColor="@android:color/black"
-                android:textSize="21sp"/>
-
-            <ImageView
-                android:id="@+id/count_inc"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/item_count"
-                android:layout_toStartOf="@+id/item_count"
-                app:srcCompat="@drawable/increase"/>
-
-            <ImageView
-                android:id="@+id/count_dec"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="false"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                app:srcCompat="@drawable/decrease"/>
-        </RelativeLayout>
-    </LinearLayout>
-
-    <helper.PersianTextView
-        android:id="@+id/rate"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentRight="false"
-        android:layout_alignParentStart="false"
-        android:layout_below="@+id/img"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="7dp"
-        android:background="@drawable/rate"
-        android:padding="5dp"
-        android:text="9.9"
-        android:textColor="@color/MyGreen"
-        android:textSize="18sp"/>
-
-    <helper.PersianTextView
-        android:id="@+id/extra"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/img"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="7dp"
-        android:layout_toEndOf="@+id/rate"
-        android:layout_toRightOf="@+id/rate"
-        android:background="@drawable/extra"
-        android:gravity="top|center_vertical|center_horizontal"
-        android:padding="5dp"
-        android:text="فروش ویژه"
-        android:textColor="#ff0066"
-        android:textSize="16sp"
-        />
-
-    <LinearLayout
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/price_group"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_toEndOf="@+id/extra"
-        android:layout_toRightOf="@+id/extra"
-        android:background="@drawable/web3d"
-        android:padding="4dp">
-
-        <View
-            android:id="@+id/logo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_3d"/>
-    </LinearLayout>
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textView9"/>
 </RelativeLayout>
