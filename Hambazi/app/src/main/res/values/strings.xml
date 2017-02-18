@@ -4,8 +4,8 @@
   -->
 
 <resources>
-    <string name="app_name">ZiMia</string>
-    <string name="app_name_fa">زیمیا</string>
+    <string name="app_name">HamBazi</string>
+    <string name="app_name_fa">همبازی</string>
 
     <string name="about_title">درباره ما</string>
     <string name="contact_title">تماس با ما</string>

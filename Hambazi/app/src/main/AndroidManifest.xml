@@ -23,7 +23,7 @@
         android:allowBackup="true"
         android:configChanges="keyboardHidden|orientation"
         android:fullBackupContent="true"
-        android:icon="@drawable/ic_location"
+        android:icon="@mipmap/ic_launcher"
         android:label="hambazi"
         android:supportsRtl="true"
         android:theme="@style/Drawer"
@@ -101,6 +101,11 @@
         <activity
             android:name=".Comment"
             android:label="Comment Page"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Baziche"
+            android:label="Baziche Page"
             android:noHistory="true"
             android:screenOrientation="portrait"/>
 

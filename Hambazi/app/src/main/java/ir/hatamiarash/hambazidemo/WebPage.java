@@ -4,35 +4,63 @@
 
 package ir.hatamiarash.hambazidemo;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import volley.Config_TAG;
 
-public class WebPage extends AppCompatActivity {
-    WebView page_content;
-    TextView page_title;
+public class WebPage extends Activity {
+    private WebView web3d;
+    private ProgressBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.webpage);
+        setContentView(R.layout.web);
         Intent i = getIntent();
-        String address = i.getStringExtra(Config_TAG.NAME);
-        page_content = (WebView) findViewById(R.id.page_content);
-        WebSettings webSettings = page_content.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setSupportZoom(false);
-        page_content.loadUrl("http://hambazi.tv/?video_type=" + address);
+        String Address = i.getStringExtra(Config_TAG.ADDRESS);
+        web3d = (WebView) findViewById(R.id.web_view);
+        progressBar = (ProgressBar) findViewById(R.id.pbar);
+        WebSettings webSetting = web3d.getSettings();
+        webSetting.setBuiltInZoomControls(true);
+        webSetting.setJavaScriptEnabled(true);
+        web3d.setWebViewClient(new WebViewClient());
+        web3d.loadUrl(Address);
+    }
+
+    private class WebViewClient extends android.webkit.WebViewClient {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        page_content.destroy();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && web3d.canGoBack()) {
+            web3d.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

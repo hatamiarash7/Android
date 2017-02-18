@@ -12,7 +12,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:fitsSystemWindows="true"
-    tools:context="ir.hatamiarash.zimia.MainScreenActivity">
+    tools:context="ir.hatamiarash.hambazidemo.MainScreenActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -33,38 +33,46 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="56dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         tools:ignore="HardcodedText">
 
-        <ImageView
-            android:id="@+id/btnViewResturans"
+        <com.daimajia.slider.library.SliderLayout
+            android:id="@+id/main_slider"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:contentDescription="@string/restaurants"
-            app:srcCompat="@drawable/res"/>
+            android:layout_height="200dp"
+            android:layout_marginBottom="10dp"/>
 
-        <ImageView
-            android:id="@+id/btnViewFastFoods"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:contentDescription="@string/fastfoods"
-            app:srcCompat="@drawable/fast"/>
+        <com.daimajia.slider.library.Indicators.PagerIndicator
+        android:id="@+id/custom_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"/>
 
-        <ImageView
-            android:id="@+id/btnViewMarkets"
+        <helper.PersianButton
+            android:id="@+id/baziche"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:contentDescription="@string/markets"
-            app:srcCompat="@drawable/mark"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@color/accent"
+            android:text="بازیچه"
+            />
 
-        <ImageView
-            android:id="@+id/btnViewMap"
+        <helper.PersianButton
+            android:id="@+id/shop"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="75dp"
-            android:contentDescription="@string/map"
-            app:srcCompat="@drawable/map"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@color/accent"
+            android:text="فروشگاه"/>
+
+        <helper.PersianButton
+            android:id="@+id/web360"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@color/accent"
+            android:text="360"/>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

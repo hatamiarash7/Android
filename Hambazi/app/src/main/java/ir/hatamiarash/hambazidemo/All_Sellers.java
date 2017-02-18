@@ -79,51 +79,11 @@ public class All_Sellers extends AppCompatActivity {
     private ListView listView;
     static Typeface persianTypeface;           // persian font typeface
     public Drawer result = null;
-    Button btnClosePopup;                      // close popup
-    ImageView Telegram, Website, Email;        // contact icons
     SessionManager session;                    // session for check user logged
-    private PopupWindow popupWindow;                // popup
     private AccountHeader headerResult = null; // Header for drawer
-    WebView about_web;
-    private String SellerType;
     private Vibrator vibrator;
     static public Menu menu;
-    static public MenuItem mi;
-    public BadgeView badgeView;
     public static SQLiteHandlerItem db;
-
-    private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            popupWindow.dismiss(); // close popup
-        }
-    };
-    private View.OnClickListener telegram_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("tg://resolve?domain=zimia_ir"));
-            popupWindow.dismiss(); // close popup
-            startActivity(i); // open telegram channel
-        }
-    };
-    private View.OnClickListener website_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent i = new Intent();
-            i.setAction(Intent.ACTION_VIEW);
-            i.addCategory(Intent.CATEGORY_BROWSABLE);
-            i.setData(Uri.parse("http://zimia.ir"));
-            popupWindow.dismiss(); // close popup
-            startActivity(i); // open web browser and go to website
-        }
-    };
-    private View.OnClickListener email_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent i = new Intent();
-            i.setAction(Intent.ACTION_VIEW);
-            i.addCategory(Intent.CATEGORY_BROWSABLE);
-            i.setData(Uri.parse("mailto:info@zimia.ir"));
-            popupWindow.dismiss(); // close popup
-            startActivity(i); // open email application and send email
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +91,6 @@ public class All_Sellers extends AppCompatActivity {
         setContentView(R.layout.all_sellers);
         pointer = this;
         Intent i = getIntent();
-        SellerType = i.getStringExtra(Config_TAG.ID);
         vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
         session = new SessionManager(getApplicationContext());
         db = new SQLiteHandlerItem(getApplicationContext());
@@ -147,21 +106,13 @@ public class All_Sellers extends AppCompatActivity {
                 String title = ((TextView) view.findViewById(R.id.vid)).getText().toString();
                 String name = ((TextView) view.findViewById(R.id.vname)).getText().toString();
                 Intent i = new Intent(getApplicationContext(), WebPage.class);
-                i.putExtra(Config_TAG.TITLE, title);
-                i.putExtra(Config_TAG.NAME, name);
+                i.putExtra(Config_TAG.ADDRESS, "http://hambazi.tv/?video_type=" +name);
                 startActivity(i);
             }
         });
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        String Title = null;
-        if (SellerType.equals("Restaurants"))
-            Title = getResources().getString(R.string.restaurants_fa);
-        if (SellerType.equals("FastFoods"))
-            Title = getResources().getString(R.string.fastfoods_fa);
-        if (SellerType.equals("Markets"))
-            Title = getResources().getString(R.string.markets_fa);
-        toolbar.setTitle(FontHelper.getSpannedString(this, Title));
+        toolbar.setTitle(FontHelper.getSpannedString(this, "همبازی"));
         setSupportActionBar(toolbar);
         result = new DrawerBuilder()
                 .withActivity(this)
@@ -361,5 +312,4 @@ public class All_Sellers extends AppCompatActivity {
         MakeToast("اتصال به اینترنت را بررسی نمایید", Config_TAG.WARNING);
         return false;
     }
-
 }

@@ -14,13 +14,12 @@ import helper.FontHelper;
 
 public class Rules extends AppCompatActivity {
     WebView page_content;
-    TextView page_title;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.webpage);
-        page_content = (WebView) findViewById(R.id.page_content);
+        setContentView(R.layout.web);
+        page_content = (WebView) findViewById(R.id.web_view);
         WebSettings webSettings = page_content.getSettings();
         webSettings.setJavaScriptEnabled(false);
         webSettings.setSupportZoom(false);

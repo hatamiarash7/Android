@@ -24,7 +24,7 @@ public class SplashScreen extends Activity {
             public void run() {
                 // wait some milliseconds for loading all parts of app
                 try {
-                    sleep(500);
+                    sleep(2500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {

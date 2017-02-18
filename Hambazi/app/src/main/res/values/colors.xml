@@ -4,12 +4,12 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#f8ab1a</color>
-    <color name="colorPrimaryDark">#cb8b13</color>
-    <color name="colorAccent">#f8ab1a</color>
+    <color name="colorPrimary">#f9ab13</color>
+    <color name="colorPrimaryDark">#eb9b00</color>
+    <color name="colorAccent">#f9ab13</color>
 
     <color name="white">#ffffff</color>
-    <color name="gray">#9999</color>
+    <color name="gray">#99999999</color>
     <color name="gray2">#222</color>
     <color name="gray3">#555555</color>
     <color name="black">#000000</color>

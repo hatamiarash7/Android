@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/inner_background"
+    android:background="@drawable/background"
     android:orientation="vertical">
 
     <com.intrusoft.library.FrissonView
@@ -73,11 +73,12 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="85dp"
-        android:background="@color/common_google_signin_btn_text_light_disabled"
+        android:background="@color/material_drawer_dark_divider"
         android:ems="10"
         android:gravity="center_vertical|center_horizontal|center"
         android:hint="شماره تلفن"
-        android:inputType="number|phone"/>
+        android:inputType="number|phone"
+        android:textColorHint="@color/gray"/>
 
     <helper.PersianEditText
         android:id="@+id/password"
@@ -89,11 +90,12 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
-        android:background="@color/common_google_signin_btn_text_light_disabled"
+        android:background="@color/material_drawer_dark_divider"
         android:ems="10"
         android:gravity="center_vertical|center_horizontal|center"
         android:hint="رمز عبور"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:textColorHint="@color/gray"/>
 
     <helper.PersianButton
         android:id="@+id/btnLogin"

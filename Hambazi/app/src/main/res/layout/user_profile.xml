@@ -5,7 +5,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/inner_background">
+                android:background="@drawable/background">
 
     <LinearLayout
         android:id="@+id/info"

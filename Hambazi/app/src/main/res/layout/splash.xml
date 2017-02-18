@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/splash"
+    android:background="@drawable/background"
     tools:ignore="HardcodedText">
 
     <RelativeLayout
@@ -43,6 +43,9 @@
             android:layout_height="200dp"
             android:layout_centerInParent="true"
             android:contentDescription="App Logo"
-            app:srcCompat="@drawable/logo"/>
+            app:srcCompat="@drawable/logo"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            android:scaleType="centerInside"/>
     </RelativeLayout>
 </RelativeLayout>
