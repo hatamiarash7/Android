@@ -4,15 +4,8 @@
 
 package ir.hatamiarash.zimia;
 
-import android.animation.Animator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.TextView;
-
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 
 public class Test extends AppCompatActivity {
 
@@ -21,7 +14,9 @@ public class Test extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
 
-        TextView textView = (TextView) findViewById(R.id.sample);
+
+
+        /*TextView textView = (TextView) findViewById(R.id.sample);
         final TextView textView2 = (TextView) findViewById(R.id.textView9);
         textView2.setVisibility(View.INVISIBLE);
 
@@ -46,6 +41,6 @@ public class Test extends AppCompatActivity {
                     public void onAnimationRepeat(Animator animation) {
                     }
                 })
-                .playOn(textView);
+                .playOn(textView);*/
     }
 }

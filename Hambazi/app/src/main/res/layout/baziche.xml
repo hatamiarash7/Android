@@ -15,12 +15,6 @@
     android:fitsSystemWindows="true"
     tools:context="ir.hatamiarash.hambazidemo.MainScreenActivity">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        custom:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,5 +37,11 @@
             custom:tabMode="fixed"/>
 
     </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        custom:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -11,9 +11,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -37,6 +40,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.kekstudio.dachshundtablayout.DachshundTabLayout;
+import com.kekstudio.dachshundtablayout.indicators.DachshundIndicator;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.Drawer;
@@ -69,6 +74,7 @@ import volley.Config_URL;
 
 public class Seller_Detail extends AppCompatActivity {
     private static final String TAG = Seller_Detail.class.getSimpleName();
+    private static final String TAB_TITLES[] = {"محصولات", "نظرات"};
     public static Seller_Detail pointer;  // use to finish activity from anywhere
     private ArrayList<HashMap<String, String>> ProductsList;
     private AlertDialog progressDialog;
@@ -94,39 +100,8 @@ public class Seller_Detail extends AppCompatActivity {
     static public MenuItem mi;
     public BadgeView badgeView;
     public static SQLiteHandlerItem db;
-
-    private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            popupWindow.dismiss(); // close popup
-        }
-    };
-    private View.OnClickListener telegram_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("tg://resolve?domain=zimia_ir"));
-            popupWindow.dismiss(); // close popup
-            startActivity(i); // open telegram channel
-        }
-    };
-    private View.OnClickListener website_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent i = new Intent();
-            i.setAction(Intent.ACTION_VIEW);
-            i.addCategory(Intent.CATEGORY_BROWSABLE);
-            i.setData(Uri.parse("http://zimia.ir"));
-            popupWindow.dismiss(); // close popup
-            startActivity(i); // open web browser and go to website
-        }
-    };
-    private View.OnClickListener email_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent i = new Intent();
-            i.setAction(Intent.ACTION_VIEW);
-            i.addCategory(Intent.CATEGORY_BROWSABLE);
-            i.setData(Uri.parse("mailto:info@zimia.ir"));
-            popupWindow.dismiss(); // close popup
-            startActivity(i); // open email application and send email
-        }
-    };
+    ViewPager viewPager;
+    DachshundTabLayout tabLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,13 +123,22 @@ public class Seller_Detail extends AppCompatActivity {
         other1.setVisibility(View.INVISIBLE);
         other2.setVisibility(View.INVISIBLE);
         progressDialog = new SpotsDialog(this, R.style.CustomDialog);
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
         ProductsList = new ArrayList<>();
         Intent i = getIntent();
         pid = i.getStringExtra(Config_TAG.ID);    // get param from top level
         SellerType = i.getStringExtra(Config_TAG.TYPE);
         session = new SessionManager(getApplicationContext());
         listView = (ListView) findViewById(R.id.seller_list);
+
+
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+
+        tabLayout = (DachshundTabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setAnimatedIndicator(new DachshundIndicator(tabLayout));
+
 
         if (!session.isLoggedIn()) { // user not logged
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -337,7 +321,7 @@ public class Seller_Detail extends AppCompatActivity {
                         Calendar time = Calendar.getInstance();
                         int current_hour = time.get(Calendar.HOUR_OF_DAY);
                         is_open = current_hour > Integer.parseInt(open_hour) && current_hour < Integer.parseInt(close_hour);
-                        FetchSellerProducts();
+                        //FetchSellerProducts();
                     } else {
                         // Error occurred
                         String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
@@ -414,7 +398,6 @@ public class Seller_Detail extends AppCompatActivity {
                             badgeView = new BadgeView(Seller_Detail.pointer, c);
                             runOnUiThread(new Runnable() {
                                 public void run() {
-
                                     ProductAdapter adapter = new ProductAdapter(ProductsList, Seller_Detail.pointer);
                                     listView.setAdapter(adapter);
                                 }
@@ -482,6 +465,34 @@ public class Seller_Detail extends AppCompatActivity {
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public class PagerAdapter extends FragmentStatePagerAdapter {
+        PagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 1:
+                    return Fragment_comment.newInstance();
+                case 0:
+                    return Fragment_list.newInstance(SellerType, pid,progressDialog);
+                default:
+                    return Fragment_info.newInstance();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TAB_TITLES[position];
+        }
     }
 
     public void AddBadge() {
