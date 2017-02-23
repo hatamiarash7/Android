@@ -46,7 +46,7 @@ import volley.Config_URL;
 
 public class Register extends Activity {
     private static final String TAG = Register.class.getSimpleName();
-    String[] items = new String[]{"بسیج", "فرهنگی", "علمی پژوهشی", "خوابگاه ها", "تغذیه", "آموزشی"};
+    String[] items = new String[]{"بسیج دانشجویی", "فرهنگی", "علمی پژوهشی", "خوابگاه ها", "تغذیه", "آموزشی", "حراست"};
     Button btnRegister;
     private EditText inputFullName, inputUsername, inputPassword, inputPassword2, inputJob, inputEmail;
     private ProgressDialog progressDialog;

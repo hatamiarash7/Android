@@ -131,7 +131,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         switch (type) {
             case "فرهنگی":
                 return 1;
-            case "بسیج":
+            case "بسیج دانشجویی":
                 return 2;
             case "آموزشی":
                 return 3;
@@ -141,6 +141,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 return 5;
             case "خوبگاه ها":
                 return 6;
+            case "حراست":
+                return 7;
             default:
                 return 0;
         }

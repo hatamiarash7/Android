@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:gravity="center"
-                    android:text="بسیج"
+                    android:text="بسیج دانشجویی"
                     android:textSize="28sp"/>
 
                 <com.daimajia.slider.library.SliderLayout
@@ -103,6 +103,34 @@
 
                 <com.daimajia.slider.library.Indicators.PagerIndicator
                     android:id="@+id/indicator_basij_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/herasat_news"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <helper.PersianTextView
+                    android:id="@+id/title_herasat_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center"
+                    android:text="حراست"
+                    android:textSize="28sp"/>
+
+                <com.daimajia.slider.library.SliderLayout
+                    android:id="@+id/slider_herasat_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+
+                <com.daimajia.slider.library.Indicators.PagerIndicator
+                    android:id="@+id/indicator_herasat_news"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"/>

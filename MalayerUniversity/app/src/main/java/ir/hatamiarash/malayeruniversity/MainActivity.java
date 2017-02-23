@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
     private static final String TAG = MainActivity.class.getSimpleName();
     public static MainActivity pointer;
     SliderLayout sliderShow;
-    SliderLayout Slider1, Slider2, Slider3, Slider4, Slider5, Slider6;
+    SliderLayout Slider1, Slider2, Slider3, Slider4, Slider5, Slider6, Slider7;
     public Drawer result = null;
     private AccountHeader headerResult = null;
     private long back_pressed;
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         Slider4 = (SliderLayout) findViewById(R.id.slider_farhangi_news);
         Slider5 = (SliderLayout) findViewById(R.id.slider_food_news);
         Slider6 = (SliderLayout) findViewById(R.id.slider_khabgah_news);
+        Slider7 = (SliderLayout) findViewById(R.id.slider_herasat_news);
 
         if (CheckConnection()) {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                                 }
                                 if (drawerItem != null && drawerItem.getIdentifier() == 3) {
                                     result.closeDrawer();
-                                    Intent i = new Intent(getApplicationContext(), Register.class);
+                                    Intent i = new Intent(getApplicationContext(), PostNews.class);
                                     startActivity(i);
                                     return true;
                                 }
@@ -143,9 +144,9 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                         .withAccountHeader(headerResult)
                         .addDrawerItems(
                                 new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withSetSelected(true).withTypeface(persianTypeface),
-                                new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(2).withTypeface(persianTypeface),
-                                new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
-                                new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(4).withTypeface(persianTypeface)
+                                new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(2).withTypeface(persianTypeface)
+                                //new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
+                                //new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(4).withTypeface(persianTypeface)
                         )
                         .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                             @Override
@@ -194,7 +195,6 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                         .build();                       // build drawer
             }
 
-
             FetchAllNews();
 
             sliderShow.setPresetTransformer(SliderLayout.Transformer.Fade);
@@ -231,6 +231,11 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
             Slider6.setDuration(2500);
             Slider6.setCustomAnimation(new DescriptionAnimation());
             Slider6.addOnPageChangeListener(this);
+
+            Slider7.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider7.setDuration(2500);
+            Slider7.setCustomAnimation(new DescriptionAnimation());
+            Slider7.addOnPageChangeListener(this);
         }
     }
 
@@ -276,6 +281,9 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                 Slider5.addSlider(textSliderView);
                 break;
             case "6":
+                Slider6.addSlider(textSliderView);
+                break;
+            case "7":
                 Slider6.addSlider(textSliderView);
                 break;
         }
