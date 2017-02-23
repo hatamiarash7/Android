@@ -15,7 +15,7 @@ import helper.FontHelper;
 
 public class Baziche extends AppCompatActivity {
 
-    private static final String DOG_BREEDS[] = {"سلامتی", "آموزشی", "نظامی", "دانش"};
+    private static final String DOG_BREEDS[] = {"سلامتی", "آموزشی", "نظامی", "دانش آموزی"};
     ViewPager viewPager;
     DachshundTabLayout tabLayout;
 
@@ -45,11 +45,11 @@ public class Baziche extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return Fragment1.newInstance(DOG_BREEDS[position]);
+                    return FragmentList.newInstance(DOG_BREEDS[position], Baziche.this);
                 case 1:
-                    return Fragment2.newInstance(DOG_BREEDS[position]);
+                    return FragmentList.newInstance(DOG_BREEDS[position], Baziche.this);
                 default:
-                    return Fragment1.newInstance(DOG_BREEDS[position]);
+                    return FragmentList.newInstance(DOG_BREEDS[position], Baziche.this);
             }
         }
 

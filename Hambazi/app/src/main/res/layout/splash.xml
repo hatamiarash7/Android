@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2017 - All Rights Reserved - Arash Hatami
   -->
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,6 +11,7 @@
     tools:ignore="HardcodedText">
 
     <RelativeLayout
+        android:id="@+id/loading_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -29,7 +29,37 @@
             app:srcCompat="@drawable/loading"/>
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/loading_layout"
+        android:layout_below="@+id/logo_layout"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <helper.PersianTextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="یک تلوزیون برای بازی"
+            android:textColor="@color/accent"
+            android:textSize="30sp"/>
+
+        <helper.PersianTextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:text="بی وقفه بازی کنید ..."
+            android:textColor="@color/accent"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
     <RelativeLayout
+        android:id="@+id/logo_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -42,10 +72,10 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_centerInParent="true"
-            android:contentDescription="App Logo"
-            app:srcCompat="@drawable/logo"
             android:adjustViewBounds="true"
+            android:contentDescription="App Logo"
             android:cropToPadding="true"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/logo"/>
     </RelativeLayout>
 </RelativeLayout>

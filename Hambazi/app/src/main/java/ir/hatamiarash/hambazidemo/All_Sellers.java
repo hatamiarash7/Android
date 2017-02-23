@@ -103,11 +103,11 @@ public class All_Sellers extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String title = ((TextView) view.findViewById(R.id.vid)).getText().toString();
+                /*String title = ((TextView) view.findViewById(R.id.vid)).getText().toString();
                 String name = ((TextView) view.findViewById(R.id.vname)).getText().toString();
                 Intent i = new Intent(getApplicationContext(), WebPage.class);
                 i.putExtra(Config_TAG.ADDRESS, "http://hambazi.tv/?video_type=" +name);
-                startActivity(i);
+                startActivity(i);*/
             }
         });
 
@@ -202,24 +202,7 @@ public class All_Sellers extends AppCompatActivity {
                             map.put(Config_TAG.NAME, name);
                             map.put(Config_TAG.TITLE, title);
                             RestaurantList.add(map);
-                            runOnUiThread(new Runnable() {
-                                public void run() {
-                                    ListAdapter adapter = new SimpleAdapter(
-                                            All_Sellers.this, RestaurantList,
-                                            R.layout.item_seller, new String[]{
-                                            Config_TAG.ID,
-                                            Config_TAG.NAME,
-                                            Config_TAG.TITLE
-                                    },
-                                            new int[]{
-                                                    R.id.vid,
-                                                    R.id.vname,
-                                                    R.id.title
-                                            });
-                                    //setListAdapter(adapter);
-                                    listView.setAdapter(adapter);
-                                }
-                            });
+
                         }
                     } else {
                         // Error occurred

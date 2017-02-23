@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017  - All Rights Reserved - Arash Hatami
+  -->
+
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="ir.hatamiarash.malayeruniversity">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:name="volley.AppController"
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name_fa"
+        android:screenOrientation="portrait"
+        android:supportsRtl="true"
+        android:theme="@style/Drawer"
+        tools:replace="android:label">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".NewsActivity"
+            android:label="News Detail"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".LoginActivity"
+            android:label="Login User"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UserProfile"
+            android:label="User Profile"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Contact"
+            android:label="Contact Page"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Comment"
+            android:label="Send Comment"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".WebPage"
+            android:label="Show Webpage"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Manager"
+            android:label="Show All News"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".PostNews"
+            android:label="Post A News"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Register"
+            android:label="Register A User"
+            android:screenOrientation="portrait"/>
+    </application>
+</manifest>

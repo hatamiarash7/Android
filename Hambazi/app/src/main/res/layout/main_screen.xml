@@ -55,8 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:background="@color/accent"
-            android:text="بازیچه"
+            android:background="@drawable/bb"
             />
 
         <helper.PersianButton
@@ -64,15 +63,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:background="@color/accent"
-            android:text="فروشگاه"/>
+            android:background="@drawable/ss"
+            />
 
         <helper.PersianButton
             android:id="@+id/web360"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:background="@color/accent"
-            android:text="360"/>
+            android:background="@drawable/ww"
+            />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
