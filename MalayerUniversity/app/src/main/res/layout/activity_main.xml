@@ -137,6 +137,34 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/nahad_news"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <helper.PersianTextView
+                    android:id="@+id/title_nahad_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center"
+                    android:text="نهاد رهبری"
+                    android:textSize="28sp"/>
+
+                <com.daimajia.slider.library.SliderLayout
+                    android:id="@+id/slider_nahad_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+
+                <com.daimajia.slider.library.Indicators.PagerIndicator
+                    android:id="@+id/indicator_nahad_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/elmi_news"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

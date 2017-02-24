@@ -25,8 +25,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.StringRequest;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
@@ -38,8 +38,6 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import org.json.JSONArray;
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
     private static final String TAG = MainActivity.class.getSimpleName();
     public static MainActivity pointer;
     SliderLayout sliderShow;
-    SliderLayout Slider1, Slider2, Slider3, Slider4, Slider5, Slider6, Slider7;
+    SliderLayout Slider1, Slider2, Slider3, Slider4, Slider5, Slider6, Slider7, Slider8;
     public Drawer result = null;
     private AccountHeader headerResult = null;
     private long back_pressed;
@@ -89,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         Slider5 = (SliderLayout) findViewById(R.id.slider_food_news);
         Slider6 = (SliderLayout) findViewById(R.id.slider_khabgah_news);
         Slider7 = (SliderLayout) findViewById(R.id.slider_herasat_news);
+        Slider8 = (SliderLayout) findViewById(R.id.slider_nahad_news);
 
         if (CheckConnection()) {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -236,11 +235,17 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
             Slider7.setDuration(2500);
             Slider7.setCustomAnimation(new DescriptionAnimation());
             Slider7.addOnPageChangeListener(this);
+
+            Slider8.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider8.setDuration(2500);
+            Slider8.setCustomAnimation(new DescriptionAnimation());
+            Slider8.addOnPageChangeListener(this);
+
         }
     }
 
-    private void set_sliders(String id, String cid, String uid, String title, String content, String url, String created_at, String updated_at) {
-        Log.d("DATA", title + " " + url + " " + cid);
+    private void set_sliders(String id, String cid, String uid, String author, String title, String content, String url, String created_at, String updated_at) {
+        Log.d(TAG, "uname : " + author);
         TextSliderView textSliderView = new TextSliderView(this);
         if (url.equals("null"))
             textSliderView
@@ -251,18 +256,18 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         else
             textSliderView
                     .description(title)
-                    .image(url)
+                    .image(ConvertUrl(url))
                     .setOnSliderClickListener(this)
                     .setScaleType(BaseSliderView.ScaleType.CenterCrop);
         textSliderView.bundle(new Bundle());
         textSliderView.getBundle().putString("id", id);
         textSliderView.getBundle().putString("uid", uid);
+        textSliderView.getBundle().putString("author", author);
         textSliderView.getBundle().putString("cid", cid);
         textSliderView.getBundle().putString("title", title);
         textSliderView.getBundle().putString("content", content);
         textSliderView.getBundle().putString("url", url);
         textSliderView.getBundle().putString("created_at", created_at);
-        textSliderView.getBundle().putString("updated_at", updated_at);
         sliderShow.addSlider(textSliderView);
         switch (cid) {
             case "1":
@@ -284,7 +289,10 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                 Slider6.addSlider(textSliderView);
                 break;
             case "7":
-                Slider6.addSlider(textSliderView);
+                Slider7.addSlider(textSliderView);
+                break;
+            case "8":
+                Slider8.addSlider(textSliderView);
                 break;
         }
     }
@@ -297,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Restaurants Response: " + response);
+                Log.d(TAG, "Fetch Response: " + response);
                 hideDialog();
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -314,8 +322,9 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                             String updated_at = _new.getString("updated_at");
                             int cid = _new.getInt("cid");
                             int id = _new.getInt("id");
-                            int uid = _new.getInt("uid");
-                            set_sliders(String.valueOf(id), String.valueOf(cid), String.valueOf(uid), title, content, url, created_at, updated_at);
+                            String uid = _new.getString("uid");
+                            String author = _new.getString("author");
+                            set_sliders(String.valueOf(id), String.valueOf(cid), uid, author, title, content, url, created_at, updated_at);
                         }
                     } else {
                         // Error occurred
@@ -418,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         Intent intent = new Intent(getApplicationContext(), NewsActivity.class);
         intent.putExtra("id", String.valueOf(slider.getBundle().get("id")));
         intent.putExtra("uid", String.valueOf(slider.getBundle().get("uid")));
+        intent.putExtra("author", String.valueOf(slider.getBundle().get("author")));
         intent.putExtra("cid", String.valueOf(slider.getBundle().get("cid")));
         intent.putExtra("title", String.valueOf(slider.getBundle().get("title")));
         intent.putExtra("content", String.valueOf(slider.getBundle().get("content")));
@@ -480,5 +490,9 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         } else
             check = true;
         return check;
+    }
+
+    private String ConvertUrl(String url) {
+        return "http://mu.zimia.ir/images/" + url;
     }
 }

@@ -1,37 +1,43 @@
 package ir.hatamiarash.malayeruniversity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.CursorLoader;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.SimpleMultiPartRequest;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.github.javiersantos.materialstyleddialogs.enums.Style;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import helper.FontHelper;
 import helper.Helper;
 import helper.SQLiteHandler;
 import helper.SessionManager;
+import helper.TypefaceSpan;
 import volley.AppController;
 import volley.Config_TAG;
 import volley.Config_URL;
@@ -43,9 +49,9 @@ public class PostNews extends AppCompatActivity {
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
-    private Bitmap bitmap;
     private int PICK_IMAGE_REQUEST = 1;
     ImageView image;
+    String filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +76,11 @@ public class PostNews extends AppCompatActivity {
                     if (session.isLoggedIn())
                         if (post_subject.length() <= 100)
                             if (post_subject.length() > 0 && post_body.length() > 0)
-                                SendNews(post_subject.getText().toString(), post_body.getText().toString());
+                                if (filePath != null)
+                                    SendNews(filePath, post_subject.getText().toString(), post_body.getText().toString());
+                                else {
+                                    SendWithoutImage();
+                                }
                             else
                                 Helper.MakeToast(PostNews.this, "عنوان و متن خبر را تایپ کنید", Config_TAG.ERROR);
                         else
@@ -86,21 +96,20 @@ public class PostNews extends AppCompatActivity {
 
         pic.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "عکس را انتخاب کنید"), PICK_IMAGE_REQUEST);
+                ActivityCompat.requestPermissions(PostNews.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, PICK_IMAGE_REQUEST);
             }
         });
     }
 
-    private void SendNews(final String title, final String content) {
-        String tag_string_req = "req_post";
+    private void SendNews(final String imagePath, final String title, final String content) {
         final String uid = db.getUserDetails().get("uid");
+        final String name = db.getUserDetails().get("name");
         final String cid = String.valueOf(db.GetCID(db.getUserDetails().get("type")));
         pDialog.setMessage("در حال ارسال ...");
         showDialog();
-        StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
+        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Post Response: " + response);
@@ -123,27 +132,67 @@ public class PostNews extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Post Error: " + error.getMessage());
-                if (error.getMessage() != null)
-                    Helper.MakeToast(PostNews.this, error.getMessage(), Config_TAG.ERROR);
-                else
-                    Helper.MakeToast(PostNews.this, "خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید", Config_TAG.ERROR);
+                if (error.getMessage() != null) {
+                    MakeToast(error.getMessage());
+                } else
+                    MakeToast("خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید");
                 hideDialog();
             }
-        }) {
+        });
+        smr.addFile("image", imagePath);
+        smr.addStringParam(Config_TAG.TAG, "post_news");
+        smr.addStringParam("name", name);
+        smr.addStringParam("title", title);
+        smr.addStringParam("content", content);
+        smr.addStringParam("uid", uid);
+        smr.addStringParam("cid", cid);
+        AppController.getInstance().addToRequestQueue(smr);
+    }
+
+    private void SendNewsWithoutImage(final String title, final String content) {
+        final String uid = db.getUserDetails().get("uid");
+        final String name = db.getUserDetails().get("name");
+        final String cid = String.valueOf(db.GetCID(db.getUserDetails().get("type")));
+        Log.d(TAG, uid + " " + cid);
+        pDialog.setMessage("در حال ارسال ...");
+        showDialog();
+        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                String image = getStringImage(bitmap);
-                params.put(Config_TAG.TAG, "post_news");
-                params.put("title", title);
-                params.put("content", content);
-                params.put("uid", uid);
-                params.put("cid", cid);
-                params.put("image", image);
-                return params;
+            public void onResponse(String response) {
+                Log.d(TAG, "Post Response: " + response);
+                hideDialog();
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean(Config_TAG.ERROR);
+                    if (!error) {
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        MainActivity.pointer.finish();
+                        startActivity(i);
+                        finish();
+                    } else
+                        Helper.MakeToast(PostNews.this, jObj.getString(Config_TAG.ERROR_MSG), Config_TAG.ERROR);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-        };
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Post Error: " + error.getMessage());
+                if (error.getMessage() != null) {
+                    MakeToast(error.getMessage());
+                } else
+                    MakeToast("خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید");
+                hideDialog();
+            }
+        });
+        smr.addStringParam(Config_TAG.TAG, "post_news2");
+        smr.addStringParam("name", name);
+        smr.addStringParam("title", title);
+        smr.addStringParam("content", content);
+        smr.addStringParam("uid", uid);
+        smr.addStringParam("cid", cid);
+        AppController.getInstance().addToRequestQueue(smr);
     }
 
     private void showDialog() {
@@ -160,20 +209,56 @@ public class PostNews extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri filePath = data.getData();
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                image.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Uri picUri = data.getData();
+            filePath = getPath(picUri);
+            Log.d("picUri", picUri.toString());
+            Log.d("filePath", filePath);
+            image.setImageURI(picUri);
         }
     }
 
-    public String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-        byte[] imageBytes = outputStream.toByteArray();
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    private String getPath(Uri contentUri) {
+        String[] project = {MediaStore.Images.Media.DATA};
+        CursorLoader loader = new CursorLoader(getApplicationContext(), contentUri, project, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
+    }
+
+    private void MakeToast(String Message) {
+        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
+        SpannableString efr = new SpannableString(Message);
+        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+    }
+
+    private void SendWithoutImage() {
+        new MaterialStyledDialog.Builder(PostNews.this)
+                .setTitle(FontHelper.getSpannedString(PostNews.this, "ارسال خبر"))
+                .setDescription(FontHelper.getSpannedString(PostNews.this, "خبر را بدون تصویر ارسال می نمایید ؟"))
+                .setStyle(Style.HEADER_WITH_TITLE)
+                .setHeaderColor(R.color.Theme_Green)
+                .withDarkerOverlay(true)
+                .withDialogAnimation(true)
+                .setCancelable(true)
+                .setPositiveText(FontHelper.getSpannedString(PostNews.this, "بله"))
+                .setNegativeText(FontHelper.getSpannedString(PostNews.this, "خیر"))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Log.d(TAG, "News Post Requested");
+                        SendNewsWithoutImage(post_subject.getText().toString(), post_body.getText().toString());
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Log.d(TAG, "News Post Aborted");
+                    }
+                })
+                .show();
     }
 }

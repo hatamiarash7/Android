@@ -23,8 +23,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.StringRequest;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Style;
 
@@ -36,6 +36,7 @@ import java.util.Map;
 
 import helper.FontHelper;
 import helper.Helper;
+import helper.SQLiteHandler;
 import helper.SessionManager;
 import helper.TypefaceSpan;
 import volley.AppController;
@@ -45,10 +46,11 @@ import volley.Config_URL;
 public class NewsActivity extends Activity {
     private static final String TAG = NewsActivity.class.getSimpleName();
     ImageView divider;
-    TextView title, content;
+    TextView title, content, date_author;
     Button delete;
     SessionManager session;
     ProgressDialog pDialog;
+    private SQLiteHandler db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,27 +60,35 @@ public class NewsActivity extends Activity {
         pDialog = new ProgressDialog(this);                                      // new dialog
         pDialog.setCancelable(false);
 
+        db = new SQLiteHandler(getApplicationContext());
+
         divider = (ImageView) findViewById(R.id.divider);
         divider.setImageResource(R.drawable.divider);
         title = (TextView) findViewById(R.id.news_title);
         content = (TextView) findViewById(R.id.news_text);
         delete = (Button) findViewById(R.id.delete);
+        date_author = (TextView) findViewById(R.id.date_author);
 
         Intent i = getIntent();
         final String news_id = i.getStringExtra("id");
         final String news_uid = i.getStringExtra("uid");
         final String news_cid = i.getStringExtra("cid");
+        String news_author = i.getStringExtra("author");
         String news_title = i.getStringExtra("title");
         String news_content = i.getStringExtra("content");
         String news_url = i.getStringExtra("url");
         String news_created_at = i.getStringExtra("created_at");
-        String news_updated_at = i.getStringExtra("updated_at");
 
         title.setText(news_title);
         content.setText(news_content);
+        date_author.setText("در " + news_created_at + " - توسط : " + news_author);
         delete.setVisibility(View.INVISIBLE);
 
-        if (session.isLoggedIn())
+        if (session.isLoggedIn() && db.getUserDetails().get("username").equals("admin"))
+            delete.setVisibility(View.VISIBLE);
+
+
+        if (session.isLoggedIn() && db.getUserDetails().get("uid").equals(news_uid))
             delete.setVisibility(View.VISIBLE);
 
         delete.setOnClickListener(new View.OnClickListener() {            // register button's event

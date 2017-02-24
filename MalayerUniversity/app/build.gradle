@@ -7,6 +7,7 @@ def minSdk = hasProperty('minSdk') ? minSdk : 15
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "ir.hatamiarash.malayeruniversity"
         minSdkVersion minSdk
@@ -42,5 +43,7 @@ dependencies {
     compile 'com.github.javiersantos:MaterialStyledDialogs:2.0'
     compile 'com.daimajia.easing:library:2.0@aar'
     compile 'com.daimajia.androidanimations:library:2.0@aar'
-    compile 'com.android.volley:volley:1.0.0'
+    //compile 'com.android.volley:volley:1.0.0'
+    compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+    compile 'dev.dworks.libs:volleyplus:+'
 }

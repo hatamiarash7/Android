@@ -93,7 +93,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(Query, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            Log.d(TAG, "Sqlite: " + cursor.getString(1));
+            Log.d(TAG, "Sqlite: " + cursor.getString(1) + " " + cursor.getString(2));
             user.put("uid", cursor.getString(1));
             user.put("name", cursor.getString(2));
             user.put("email", cursor.getString(3));
@@ -143,6 +143,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 return 6;
             case "حراست":
                 return 7;
+            case "نهاد رهبری":
+                return 8;
             default:
                 return 0;
         }
