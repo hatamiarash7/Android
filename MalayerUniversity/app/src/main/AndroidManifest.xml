@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2017  - All Rights Reserved - Arash Hatami
+  ~ Copyright (c) 2017 - Arash Hatami - All Rights Reserved
   -->
 
 <manifest
@@ -65,5 +65,14 @@
             android:name=".Register"
             android:label="Register A User"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".EditPost"
+            android:label="Edit A Post"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".EditUser"
+            android:label="Edit A User"
+            android:screenOrientation="portrait"/>
+
     </application>
 </manifest>

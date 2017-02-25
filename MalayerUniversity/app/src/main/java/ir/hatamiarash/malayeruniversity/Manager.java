@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017 - Arash Hatami - All Rights Reserved
+ */
+
 package ir.hatamiarash.malayeruniversity;
 
 import android.app.ProgressDialog;
@@ -86,7 +90,7 @@ public class Manager extends AppCompatActivity {
                             String updated_at = _new.getString("updated_at");
                             int cid = _new.getInt("cid");
                             int id = _new.getInt("id");
-                            int uid = _new.getInt("uid");
+                            String uid = _new.getString("uid");
                             map.put(Config_TAG.TITLE, title);
                             map.put(Config_TAG.BODY, content);
                             map.put(Config_TAG.PICTURE, image);

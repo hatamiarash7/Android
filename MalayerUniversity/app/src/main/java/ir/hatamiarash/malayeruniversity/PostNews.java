@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017 - Arash Hatami - All Rights Reserved
+ */
+
 package ir.hatamiarash.malayeruniversity;
 
 import android.Manifest;
@@ -68,7 +72,7 @@ public class PostNews extends AppCompatActivity {
         pic = (Button) findViewById(R.id.add_pic);
         image = (ImageView) findViewById(R.id.image);
 
-        post_subject.setError(FontHelper.getSpannedString(this, "100 کارکتر"));
+        post_subject.setError(FontHelper.getSpannedString(this, "حداکثر 100 کارکتر"));
 
         send.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -84,7 +88,7 @@ public class PostNews extends AppCompatActivity {
                             else
                                 Helper.MakeToast(PostNews.this, "عنوان و متن خبر را تایپ کنید", Config_TAG.ERROR);
                         else
-                            Helper.MakeToast(PostNews.this, "عنوان طولانی است", Config_TAG.ERROR);
+                            Helper.MakeToast(PostNews.this, "عنوان خبر طولانی است", Config_TAG.ERROR);
                     else {
                         Helper.MakeToast(PostNews.this, "شما وارد نشده اید", Config_TAG.ERROR);
                         Intent i = new Intent(getApplicationContext(), LoginActivity.class);

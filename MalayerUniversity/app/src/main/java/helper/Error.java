@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017 - Arash Hatami - All Rights Reserved
+ */
+
 package helper;
 
 import com.android.volley.NetworkResponse;

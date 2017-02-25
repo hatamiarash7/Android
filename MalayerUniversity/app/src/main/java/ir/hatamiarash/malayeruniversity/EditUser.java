@@ -2,9 +2,7 @@
  * Copyright (c) 2017 - Arash Hatami - All Rights Reserved
  */
 
-package helper;
+package ir.hatamiarash.malayeruniversity;
 
-public class MultipartRequest{
-
-
+public class EditUser {
 }

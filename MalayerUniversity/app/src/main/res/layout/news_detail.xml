@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2017  - All Rights Reserved - Arash Hatami
+  ~ Copyright (c) 2017 - Arash Hatami - All Rights Reserved
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,7 +9,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <ImageView
+    <com.android.volley.ui.NetworkImageView
         android:id="@+id/news_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"

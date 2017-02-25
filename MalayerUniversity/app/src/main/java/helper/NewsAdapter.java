@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 - All Rights Reserved - Arash Hatami
+ * Copyright (c) 2017 - Arash Hatami - All Rights Reserved
  */
 
 package helper;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ir.hatamiarash.malayeruniversity.EditPost;
 import ir.hatamiarash.malayeruniversity.Manager;
 import ir.hatamiarash.malayeruniversity.R;
 import volley.AppController;
@@ -93,7 +94,11 @@ public class NewsAdapter extends BaseAdapter implements ListAdapter {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = new Intent(context, EditPost.class);
+                i.putExtra("nid", nid.getText().toString());
+                i.putExtra("uid", uid.getText().toString());
+                i.putExtra("cid", cid.getText().toString());
+                context.startActivity(i);
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
