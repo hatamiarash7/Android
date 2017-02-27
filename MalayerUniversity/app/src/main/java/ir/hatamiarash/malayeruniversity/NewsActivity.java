@@ -7,6 +7,7 @@ package ir.hatamiarash.malayeruniversity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,6 +37,7 @@ import java.util.Map;
 
 import helper.FontHelper;
 import helper.Helper;
+import helper.LoadImageTask;
 import helper.SQLiteHandler;
 import helper.SessionManager;
 import helper.TypefaceSpan;
@@ -43,9 +45,9 @@ import volley.AppController;
 import volley.Config_TAG;
 import volley.Config_URL;
 
-public class NewsActivity extends Activity {
+public class NewsActivity extends Activity implements LoadImageTask.Listener {
     private static final String TAG = NewsActivity.class.getSimpleName();
-    ImageView divider;
+    ImageView divider,image;
     TextView title, content, date_author;
     Button delete;
     SessionManager session;
@@ -57,7 +59,7 @@ public class NewsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_detail);
         session = new SessionManager(getApplicationContext());
-        pDialog = new ProgressDialog(this);                                      // new dialog
+        pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
         db = new SQLiteHandler(getApplicationContext());
@@ -68,6 +70,7 @@ public class NewsActivity extends Activity {
         content = (TextView) findViewById(R.id.news_text);
         delete = (Button) findViewById(R.id.delete);
         date_author = (TextView) findViewById(R.id.date_author);
+        image = (ImageView) findViewById(R.id.news_image);
 
         Intent i = getIntent();
         final String news_id = i.getStringExtra("id");
@@ -83,6 +86,8 @@ public class NewsActivity extends Activity {
         content.setText(news_content);
         date_author.setText("در " + news_created_at + " - توسط : " + news_author);
         delete.setVisibility(View.INVISIBLE);
+
+        new LoadImageTask(this).execute(ConvertUrl(news_url));
 
         if (session.isLoggedIn() && db.getUserDetails().get("username").equals("admin"))
             delete.setVisibility(View.VISIBLE);
@@ -185,5 +190,19 @@ public class NewsActivity extends Activity {
         SpannableString efr = new SpannableString(Message);
         efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onImageLoaded(Bitmap bitmap) {
+        image.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void onError() {
+        MakeToast("Error Loading Image !");
+    }
+
+    private String ConvertUrl(String url) {
+        return "http://mu.zimia.ir/images/" + url;
     }
 }

@@ -128,7 +128,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="15dp"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:gravity="center_horizontal">
 
         <helper.PersianButton
             android:id="@+id/btnLogout"
@@ -138,24 +138,8 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginStart="5dp"
-            android:layout_weight="1"
             android:background="@color/accent"
             android:text="@string/btn_logout"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="15sp"/>
-
-        <helper.PersianButton
-            android:id="@+id/btnEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_weight="1"
-            android:background="@color/accent"
-            android:text="@string/btn_edit"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="15sp"/>

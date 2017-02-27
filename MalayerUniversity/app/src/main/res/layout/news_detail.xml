@@ -4,72 +4,79 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-    <com.android.volley.ui.NetworkImageView
-        android:id="@+id/news_image"
+    <ScrollView
+        android:id="@+id/image_scroll"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        />
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/news_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"/>
+    </ScrollView>
 
     <ImageView
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        app:srcCompat="@drawable/divider"
-        android:adjustViewBounds="true"
-        android:cropToPadding="true"
-        android:layout_marginTop="5dp"
+        android:layout_height="1dp"
+        android:layout_below="@+id/image_scroll"
         android:layout_marginBottom="5dp"
-        android:scaleType="centerCrop"
         android:layout_marginEnd="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginStart="5dp"
-        android:layout_height="1dp"
-        android:layout_below="@+id/news_image"/>
+        android:layout_marginTop="5dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/divider"/>
 
     <helper.PersianTextView
         android:id="@+id/news_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
         android:gravity="start"
         android:text="عنوان خبر"
         android:textAlignment="textStart"
-        android:textDirection="rtl"
-        android:textSize="24sp"
         android:textColor="@color/black"
+        android:textDirection="rtl"
+        android:textSize="24sp"/>
+
+    <helper.PersianTextView
+        android:id="@+id/date_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/news_title"
         android:layout_marginEnd="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
-        android:layout_below="@+id/divider"/>
-
-    <helper.PersianTextView
-        android:text="در تاریخ - توسط"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/date_author"
-        android:layout_below="@+id/news_title"
+        android:layout_marginTop="5dp"
         android:gravity="start"
+        android:text="در تاریخ - توسط"
         android:textAlignment="textStart"
         android:textDirection="rtl"
         android:textSize="12sp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginStart="10dp"
         />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="10dp"
-        android:layout_below="@+id/date_author">
+        android:layout_below="@+id/date_author"
+        android:paddingTop="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -95,11 +102,11 @@
     </ScrollView>
 
     <Button
-        android:text="حذف خبر"
+        android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/delete"
         android:layout_alignParentBottom="true"
         android:layout_margin="5dp"
+        android:text="حذف خبر"
         android:textSize="18sp"/>
 </RelativeLayout>

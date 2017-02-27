@@ -39,7 +39,7 @@ import volley.Config_URL;
 public class UserProfile extends AppCompatActivity {
     private static final String TAG = UserProfile.class.getSimpleName();
     String username;
-    Button btnLogout, btnEdit, btnNewUser, btnManageUsers, btnPostNews, btnManageNews;
+    Button btnLogout, btnNewUser, btnManageUsers, btnPostNews, btnManageNews;
     private TextView txtName, txtEmail, txtJob;
     private SQLiteHandler db;
     private SessionManager session;
@@ -55,7 +55,6 @@ public class UserProfile extends AppCompatActivity {
         txtEmail = (TextView) findViewById(R.id.profile_email);
         txtJob = (TextView) findViewById(R.id.profile_type);
         btnLogout = (Button) findViewById(R.id.btnLogout);
-        btnEdit = (Button) findViewById(R.id.btnEdit);
         btnNewUser = (Button) findViewById(R.id.new_user);
         btnManageNews = (Button) findViewById(R.id.manage_news);
         btnPostNews = (Button) findViewById(R.id.post_news);
@@ -83,14 +82,6 @@ public class UserProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 logoutUser(); // logout user
-            }
-        });
-        btnEdit.setOnClickListener(new View.OnClickListener() { // logout button's event
-            @Override
-            public void onClick(View v) {
-                /*Intent i = new Intent(getApplicationContext(), EditProfile.class);
-                startActivity(i);
-                finish();*/
             }
         });
         btnManageUsers.setOnClickListener(new View.OnClickListener() {
