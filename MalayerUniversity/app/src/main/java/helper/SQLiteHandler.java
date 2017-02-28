@@ -120,7 +120,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     // delete all users
-    public void deleteUsers() {
+    public void deleteUser() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_LOGIN, null, null);
         db.close();

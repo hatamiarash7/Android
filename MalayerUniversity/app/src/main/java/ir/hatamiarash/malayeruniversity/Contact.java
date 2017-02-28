@@ -5,8 +5,11 @@
 package ir.hatamiarash.malayeruniversity;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +31,9 @@ public class Contact extends AppCompatActivity {
     ImageView back;
     private LinearLayout telegram, instagram;
     private TextView name, job;
+    TextView copyright;
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,15 +48,25 @@ public class Contact extends AppCompatActivity {
         instagram = (LinearLayout) findViewById(R.id.instagram);
         name = (TextView) findViewById(R.id.name);
         job = (TextView) findViewById(R.id.job);
+        copyright = (TextView) findViewById(R.id.copyright);
 
         name.setVisibility(View.INVISIBLE);
         job.setVisibility(View.INVISIBLE);
         telegram.setVisibility(View.INVISIBLE);
         instagram.setVisibility(View.INVISIBLE);
 
+        try {
+            PackageManager manager = this.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            String version = info.versionName;
+            copyright.setText("2017 - v" + version);
+        } catch (PackageManager.NameNotFoundException e) {
+            copyright.setText("2017 - MalayerUniversity");
+        }
+
         YoYo.with(Techniques.SlideInLeft)
                 .interpolate(new AccelerateDecelerateInterpolator())
-                .duration(500)
+                .duration(900)
                 .withListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
@@ -62,7 +77,7 @@ public class Contact extends AppCompatActivity {
                         name.setVisibility(View.VISIBLE);
                         YoYo.with(Techniques.SlideInDown)
                                 .interpolate(new AccelerateDecelerateInterpolator())
-                                .duration(1000)
+                                .duration(800)
                                 .withListener(new Animator.AnimatorListener() {
                                     @Override
                                     public void onAnimationStart(Animator animation) {
@@ -73,7 +88,7 @@ public class Contact extends AppCompatActivity {
                                         job.setVisibility(View.VISIBLE);
                                         YoYo.with(Techniques.SlideInDown)
                                                 .interpolate(new AccelerateDecelerateInterpolator())
-                                                .duration(1000)
+                                                .duration(800)
                                                 .withListener(new Animator.AnimatorListener() {
                                                     @Override
                                                     public void onAnimationStart(Animator animation) {
@@ -84,7 +99,7 @@ public class Contact extends AppCompatActivity {
                                                         telegram.setVisibility(View.VISIBLE);
                                                         YoYo.with(Techniques.SlideInLeft)
                                                                 .interpolate(new AccelerateDecelerateInterpolator())
-                                                                .duration(1000)
+                                                                .duration(800)
                                                                 .withListener(new Animator.AnimatorListener() {
                                                                     @Override
                                                                     public void onAnimationStart(Animator animation) {
@@ -95,7 +110,7 @@ public class Contact extends AppCompatActivity {
                                                                         instagram.setVisibility(View.VISIBLE);
                                                                         YoYo.with(Techniques.SlideInRight)
                                                                                 .interpolate(new AccelerateDecelerateInterpolator())
-                                                                                .duration(1000)
+                                                                                .duration(800)
                                                                                 .playOn(instagram);
                                                                     }
 

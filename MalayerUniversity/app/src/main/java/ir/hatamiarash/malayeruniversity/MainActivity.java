@@ -12,14 +12,11 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -38,6 +35,8 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import org.json.JSONArray;
@@ -49,7 +48,6 @@ import java.util.HashMap;
 import helper.FontHelper;
 import helper.Helper;
 import helper.SessionManager;
-import helper.TypefaceSpan;
 import slider.DescriptionAnimation;
 import volley.AppController;
 import volley.Config_TAG;
@@ -72,13 +70,16 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer);
+
         persianTypeface = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
         session = new SessionManager(getApplicationContext());
         pointer = this;
         pDialog = new ProgressDialog(this); // Progress dialog
         pDialog.setCancelable(true);
+
         sliderShow = (SliderLayout) findViewById(R.id.slider_last_news);
         Slider1 = (SliderLayout) findViewById(R.id.slider_basij_news);
         Slider2 = (SliderLayout) findViewById(R.id.slider_amoozesh_news);
@@ -143,9 +144,10 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                         .withAccountHeader(headerResult)
                         .addDrawerItems(
                                 new PrimaryDrawerItem().withName("خانه").withIcon(FontAwesome.Icon.faw_home).withIdentifier(1).withSetSelected(true).withTypeface(persianTypeface),
-                                new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(2).withTypeface(persianTypeface)
-                                //new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
-                                //new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(4).withTypeface(persianTypeface)
+                                new PrimaryDrawerItem().withName("ورود").withIcon(FontAwesome.Icon.faw_credit_card).withIdentifier(2).withTypeface(persianTypeface),
+                                new SectionDrawerItem().withName("جزئیات").withTypeface(persianTypeface),
+                                new SecondaryDrawerItem().withName("درباره ما").withIcon(FontAwesome.Icon.faw_users).withIdentifier(3).withTypeface(persianTypeface),
+                                new SecondaryDrawerItem().withName("تماس با ما").withIcon(FontAwesome.Icon.faw_comment).withIdentifier(4).withTypeface(persianTypeface)
                         )
                         .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                             @Override
@@ -165,21 +167,13 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                                         result.closeDrawer(); // close drawer
                                 }
                                 if (drawerItem != null && drawerItem.getIdentifier() == 3) {
-                                    Intent i = new Intent(getApplicationContext(), WebPage.class);
-                                    i.putExtra(Config_TAG.TITLE, "درباره ما");
-                                    i.putExtra(Config_TAG.ADDRESS, "about");
-                                    startActivity(i);
-                                    result.closeDrawer();
-                                    return true;
-                                }
-                                if (drawerItem != null && drawerItem.getIdentifier() == 4) {
                                     Intent i = new Intent(getApplicationContext(), Contact.class);
                                     // start card activity and NOT-FINISH main activity for return
                                     startActivity(i);
                                     result.closeDrawer();
                                     return true;
                                 }
-                                if (drawerItem != null && drawerItem.getIdentifier() == 5) {
+                                if (drawerItem != null && drawerItem.getIdentifier() == 4) {
                                     Intent i = new Intent(getApplicationContext(), Comment.class);
                                     // start card activity and NOT-FINISH main activity for return
                                     startActivity(i);
@@ -196,56 +190,54 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
 
             FetchAllNews();
 
-            sliderShow.setPresetTransformer(SliderLayout.Transformer.Fade);
+            sliderShow.setPresetTransformer(SliderLayout.Transformer.Default);
             sliderShow.setDuration(2500);
             sliderShow.setCustomAnimation(new DescriptionAnimation());
             sliderShow.addOnPageChangeListener(this);
 
-            Slider1.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider1.setPresetTransformer(SliderLayout.Transformer.Default);
             Slider1.setDuration(2500);
             Slider1.setCustomAnimation(new DescriptionAnimation());
             Slider1.addOnPageChangeListener(this);
 
-            Slider2.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider2.setPresetTransformer(SliderLayout.Transformer.Default);
             Slider2.setDuration(2500);
             Slider2.setCustomAnimation(new DescriptionAnimation());
             Slider2.addOnPageChangeListener(this);
 
-            Slider3.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider3.setPresetTransformer(SliderLayout.Transformer.Default);
             Slider3.setDuration(2500);
             Slider3.setCustomAnimation(new DescriptionAnimation());
             Slider3.addOnPageChangeListener(this);
 
-            Slider4.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider4.setPresetTransformer(SliderLayout.Transformer.Default);
             Slider4.setDuration(2500);
             Slider4.setCustomAnimation(new DescriptionAnimation());
             Slider4.addOnPageChangeListener(this);
 
-            Slider5.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider5.setPresetTransformer(SliderLayout.Transformer.Default);
             Slider5.setDuration(2500);
             Slider5.setCustomAnimation(new DescriptionAnimation());
             Slider5.addOnPageChangeListener(this);
 
-            Slider6.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider6.setPresetTransformer(SliderLayout.Transformer.Default);
             Slider6.setDuration(2500);
             Slider6.setCustomAnimation(new DescriptionAnimation());
             Slider6.addOnPageChangeListener(this);
 
-            Slider7.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider7.setPresetTransformer(SliderLayout.Transformer.Default);
             Slider7.setDuration(2500);
             Slider7.setCustomAnimation(new DescriptionAnimation());
             Slider7.addOnPageChangeListener(this);
 
-            Slider8.setPresetTransformer(SliderLayout.Transformer.Fade);
+            Slider8.setPresetTransformer(SliderLayout.Transformer.Default);
             Slider8.setDuration(2500);
             Slider8.setCustomAnimation(new DescriptionAnimation());
             Slider8.addOnPageChangeListener(this);
-
         }
     }
 
-    private void set_sliders(String id, String cid, String uid, String author, String title, String content, String url, String created_at, String updated_at) {
-        Log.d(TAG, "uname : " + author);
+    private void set_sliders(String id, String cid, String uid, String author, String title, String content, String url, String created_at) {
         TextSliderView textSliderView = new TextSliderView(this);
         if (url.equals("null"))
             textSliderView
@@ -256,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         else
             textSliderView
                     .description(title)
-                    .image(ConvertUrl(url))
+                    .image(Config_URL.image_URL + url)
                     .setOnSliderClickListener(this)
                     .setScaleType(BaseSliderView.ScaleType.CenterCrop);
         textSliderView.bundle(new Bundle());
@@ -319,17 +311,16 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                             String url = _new.getString("image");
                             String content = _new.getString("content");
                             String created_at = _new.getString("created_at");
-                            String updated_at = _new.getString("updated_at");
                             int cid = _new.getInt("cid");
                             int id = _new.getInt("id");
                             String uid = _new.getString("uid");
                             String author = _new.getString("author");
-                            set_sliders(String.valueOf(id), String.valueOf(cid), uid, author, title, content, url, created_at, updated_at);
+                            set_sliders(String.valueOf(id), String.valueOf(cid), uid, author, title, content, url, created_at);
                         }
                     } else {
                         // Error occurred
                         String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
-                        MakeToast(errorMsg);
+                        Helper.MakeToast(MainActivity.this, errorMsg, Config_TAG.ERROR);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -340,9 +331,9 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Fetch Error: " + error.getMessage());
                 if (error.getMessage() != null) {
-                    MakeToast(error.getMessage());
+                    Helper.MakeToast(MainActivity.this, error.getMessage(), Config_TAG.ERROR);
                 } else
-                    MakeToast("خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید");
+                    Helper.MakeToast(MainActivity.this, "خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید", Config_TAG.ERROR);
                 hideDialog();
                 finish();
             }
@@ -377,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
             // kill app completely
             android.os.Process.killProcess(android.os.Process.myPid());
         } else
-            MakeToast("برای خروج دوباره کلیک کنید");
+            Helper.MakeToast(this, "برای خروج دوباره کلیک کنید", Config_TAG.WARNING);
         // set current time for counter
         back_pressed = System.currentTimeMillis();
     }
@@ -433,7 +424,6 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         intent.putExtra("content", String.valueOf(slider.getBundle().get("content")));
         intent.putExtra("url", String.valueOf(slider.getBundle().get("url")));
         intent.putExtra("created_at", String.valueOf(slider.getBundle().get("created_at")));
-        intent.putExtra("updated_At", String.valueOf(slider.getBundle().get("updated_At")));
         startActivity(intent);
     }
 
@@ -461,13 +451,6 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         return super.onOptionsItemSelected(item);
     }
 
-    private void MakeToast(String Message) {
-        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
-        SpannableString efr = new SpannableString(Message);
-        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
-    }
-
     private boolean CheckConnection() {
         boolean check;
         if (!Helper.CheckInternet(this)) {
@@ -490,9 +473,5 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         } else
             check = true;
         return check;
-    }
-
-    private String ConvertUrl(String url) {
-        return "http://mu.zimia.ir/images/" + url;
     }
 }

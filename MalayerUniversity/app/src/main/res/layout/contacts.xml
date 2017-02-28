@@ -23,7 +23,7 @@
         frisson:gradientType="linear"
         frisson:gradient_endColor="#00000000"
         frisson:gradient_startColor="#cc000000"
-        frisson:src="@drawable/arash"
+        frisson:src="@drawable/mu"
         frisson:tideCount="3"
         frisson:tideHeight="40dp"
         frisson:tintColor="#000000"/>
@@ -57,16 +57,37 @@
             android:textSize="20sp"/>
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="24dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_back"/>
+
+    <TextView
+        android:text="2017 - A.Hatami"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/copyright"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textSize="18sp"
+        android:textColor="#212121"
+        android:layout_marginBottom="7dp"/>
+
     <LinearLayout
         android:id="@+id/contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
-        android:layout_centerHorizontal="true"
         android:orientation="horizontal"
         android:padding="10dp"
         android:weightSum="2"
-        android:layout_above="@+id/copyright">
+        android:layout_above="@+id/copyright"
+        android:layout_centerHorizontal="true">
 
         <LinearLayout
             android:id="@+id/telegram"
@@ -141,26 +162,4 @@
                 android:textSize="18sp"/>
         </LinearLayout>
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/back"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="24dp"
-        android:padding="10dp"
-        android:src="@drawable/ic_back"/>
-
-    <TextView
-        android:text="2017 - A.Hatami"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/copyright"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:fontFamily="sans-serif-smallcaps"
-        android:textSize="18sp"
-        android:textColor="#212121"
-        android:layout_marginBottom="7dp"/>
 </RelativeLayout>

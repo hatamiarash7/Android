@@ -47,9 +47,9 @@ import volley.Config_URL;
 
 public class NewsActivity extends Activity implements LoadImageTask.Listener {
     private static final String TAG = NewsActivity.class.getSimpleName();
-    ImageView divider,image;
+    ImageView divider, image;
     TextView title, content, date_author;
-    Button delete;
+    Button delete, edit;
     SessionManager session;
     ProgressDialog pDialog;
     private SQLiteHandler db;
@@ -69,6 +69,7 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
         title = (TextView) findViewById(R.id.news_title);
         content = (TextView) findViewById(R.id.news_text);
         delete = (Button) findViewById(R.id.delete);
+        edit = (Button) findViewById(R.id.edit);
         date_author = (TextView) findViewById(R.id.date_author);
         image = (ImageView) findViewById(R.id.news_image);
 
@@ -86,17 +87,18 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
         content.setText(news_content);
         date_author.setText("در " + news_created_at + " - توسط : " + news_author);
         delete.setVisibility(View.INVISIBLE);
+        edit.setVisibility(View.INVISIBLE);
 
-        new LoadImageTask(this).execute(ConvertUrl(news_url));
+        new LoadImageTask(this).execute(Config_URL.image_URL + news_url);
 
-        if (session.isLoggedIn() && db.getUserDetails().get("username").equals("admin"))
+        if ((session.isLoggedIn() && db.getUserDetails().get("username").equals("admin")) ||
+                (session.isLoggedIn() && db.getUserDetails().get("uid").equals(news_uid))) {
             delete.setVisibility(View.VISIBLE);
+            edit.setVisibility(View.VISIBLE);
+        }
 
-
-        if (session.isLoggedIn() && db.getUserDetails().get("uid").equals(news_uid))
-            delete.setVisibility(View.VISIBLE);
-
-        delete.setOnClickListener(new View.OnClickListener() {            // register button's event
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View view) {
                 if (Helper.CheckInternet(NewsActivity.this))
                     new MaterialStyledDialog.Builder(NewsActivity.this)
@@ -122,6 +124,17 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
                                 }
                             })
                             .show();
+            }
+        });
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(NewsActivity.this, EditPost.class);
+                i.putExtra("nid", news_id);
+                i.putExtra("uid", news_uid);
+                i.putExtra("cid", news_cid);
+                startActivity(i);
+                finish();
             }
         });
     }
@@ -199,10 +212,6 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
 
     @Override
     public void onError() {
-        MakeToast("Error Loading Image !");
-    }
-
-    private String ConvertUrl(String url) {
-        return "http://mu.zimia.ir/images/" + url;
+        Helper.MakeToast(NewsActivity.this, "مشکل در بارگزاری تصویر", Config_TAG.ERROR);
     }
 }

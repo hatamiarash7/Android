@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +45,7 @@ import volley.AppController;
 import volley.Config_TAG;
 import volley.Config_URL;
 
-public class Register extends Activity {
+public class Register extends AppCompatActivity {
     private static final String TAG = Register.class.getSimpleName();
     String[] items = new String[]{"بسیج دانشجویی", "فرهنگی", "علمی پژوهشی", "خوابگاه ها", "تغذیه", "آموزشی", "حراست", "نهاد رهبری"};
     Button btnRegister;

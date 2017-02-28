@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -20,10 +21,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.github.javiersantos.materialstyleddialogs.enums.Style;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +62,7 @@ public class LoginActivity extends Activity {
         inputUsername = (EditText) findViewById(R.id.username);                        // email text input
         inputPassword = (EditText) findViewById(R.id.password);                  // password text input
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnLinkToResetPassword = (Button) findViewById(R.id.btnLinkToResetPassword);
 
         pDialog = new ProgressDialog(this);                                      // new dialog
         pDialog.setCancelable(false);                                            // set unacceptable dialog
@@ -81,6 +87,25 @@ public class LoginActivity extends Activity {
                         MakeToast("مشخصات را وارد نمایید");
             }
         });
+        btnLinkToResetPassword.setOnClickListener(new View.OnClickListener() {                     // login button's event
+            public void onClick(View view) {
+                new MaterialStyledDialog.Builder(LoginActivity.this)
+                        .setTitle(FontHelper.getSpannedString(LoginActivity.this, "با سلام"))
+                        .setDescription(FontHelper.getSpannedString(LoginActivity.this, "کاربر گرامی ، جهت دریافت رمز عبور جدید لطفا با مسئول مربوطه تماس حاصل فرمایید"))
+                        .setStyle(Style.HEADER_WITH_TITLE)
+                        .withDarkerOverlay(true)
+                        .withDialogAnimation(true)
+                        .setCancelable(false)
+                        .setPositiveText(FontHelper.getSpannedString(LoginActivity.this, "باشه"))
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                Log.d(TAG, "DialogPositive");
+                            }
+                        })
+                        .show();
+            }
+        });
     }
 
     private void CheckLogin(final String email, final String password) {
@@ -103,11 +128,25 @@ public class LoginActivity extends Activity {
                         String type = user.getString(Config_TAG.TYPE);
                         db.addUser(id, name, email, username, type);
                         String msg = "سلام " + name;
-                        MakeToast(msg);
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                        MainActivity.pointer.finish();
-                        startActivity(i);
-                        finish();
+                        new MaterialStyledDialog.Builder(LoginActivity.this)
+                                .setTitle(FontHelper.getSpannedString(LoginActivity.this, msg))
+                                .setDescription(FontHelper.getSpannedString(LoginActivity.this, "مدیر گرامی ، به علت این که این برنامه هم اکنون در مراحل آزمایشی قرار دارد لطفا مشکلات برنامه ، نظرات و پیشنهادات خود را جهت هرچه بهتر شدن امور به مسئول مربوطه انتقال دهید.\nبا تشکر ، حاتمی"))
+                                .setStyle(Style.HEADER_WITH_TITLE)
+                                .withDarkerOverlay(true)
+                                .withDialogAnimation(true)
+                                .setCancelable(false)
+                                .setPositiveText(FontHelper.getSpannedString(LoginActivity.this, "باشه"))
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        Log.d(TAG, "DialogPositive");
+                                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                        MainActivity.pointer.finish();
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                })
+                                .show();
                     } else {
                         String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
                         MakeToast(errorMsg);

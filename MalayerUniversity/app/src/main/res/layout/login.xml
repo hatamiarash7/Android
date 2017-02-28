@@ -125,5 +125,5 @@
         android:textAllCaps="false"
         android:textColor="@color/colorAccent"
         android:textSize="15sp"
-        android:visibility="invisible"/>
+        />
 </RelativeLayout>

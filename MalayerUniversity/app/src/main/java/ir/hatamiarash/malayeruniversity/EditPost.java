@@ -6,16 +6,12 @@ package ir.hatamiarash.malayeruniversity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -28,10 +24,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import helper.FontHelper;
 import helper.Helper;
 import helper.SessionManager;
-import helper.TypefaceSpan;
 import volley.AppController;
 import volley.Config_TAG;
 import volley.Config_URL;
@@ -98,7 +92,7 @@ public class EditPost extends AppCompatActivity {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean(Config_TAG.ERROR);
                     if (!error) {
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent i = new Intent(EditPost.this, MainActivity.class);
                         MainActivity.pointer.finish();
                         startActivity(i);
                         finish();
@@ -113,9 +107,9 @@ public class EditPost extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Post Error: " + error.getMessage());
                 if (error.getMessage() != null) {
-                    MakeToast(error.getMessage());
+                    Helper.MakeToast(EditPost.this, error.getMessage(), Config_TAG.ERROR);
                 } else
-                    MakeToast("خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید");
+                    Helper.MakeToast(EditPost.this, "خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید", Config_TAG.ERROR);
                 hideDialog();
             }
         });
@@ -150,7 +144,7 @@ public class EditPost extends AppCompatActivity {
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
-                        MakeToast(errorMsg); // show error message
+                        Helper.MakeToast(EditPost.this, errorMsg, Config_TAG.ERROR);
                     }
                 } catch (JSONException e) {
                     // JSON error
@@ -162,9 +156,9 @@ public class EditPost extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Fetch Error: " + error.getMessage());
                 if (error.getMessage() != null) {
-                    MakeToast(error.getMessage());
+                    Helper.MakeToast(EditPost.this, error.getMessage(), Config_TAG.ERROR);
                 } else
-                    MakeToast("خطایی رخ داده است - اتصال به اینترنت را بررسی نمایید");
+                    Helper.MakeToast(EditPost.this, "خطایی رخ داده است - اتصال به اینترنت را بررسی نمایید", Config_TAG.ERROR);
                 hideDialog();
                 finish();
             }
@@ -191,12 +185,5 @@ public class EditPost extends AppCompatActivity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
-    }
-
-    private void MakeToast(String Message) {
-        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
-        SpannableString efr = new SpannableString(Message);
-        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
     }
 }

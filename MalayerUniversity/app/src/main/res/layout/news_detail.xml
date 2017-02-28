@@ -101,7 +101,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <helper.PersianButton
         android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -109,4 +109,15 @@
         android:layout_margin="5dp"
         android:text="حذف خبر"
         android:textSize="18sp"/>
+
+    <helper.PersianButton
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="ویرایش خبر"
+        android:textSize="18sp"
+        android:layout_toEndOf="@+id/delete"
+        android:layout_toRightOf="@+id/delete"
+        android:layout_marginBottom="5dp"/>
 </RelativeLayout>
