@@ -15,7 +15,7 @@ import helper.FontHelper;
 
 public class Baziche extends AppCompatActivity {
 
-    private static final String DOG_BREEDS[] = {"سلامتی", "آموزشی", "نظامی", "دانش آموزی"};
+    private static final String TYPES[] = {"همه", "خارجی", "دخترانه", "مشاغل", "آموزشی", "بوردی"};
     ViewPager viewPager;
     DachshundTabLayout tabLayout;
 
@@ -45,22 +45,30 @@ public class Baziche extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return FragmentList.newInstance(DOG_BREEDS[position], Baziche.this);
+                    return FragmentList.newInstance(TYPES[position], Baziche.this);
                 case 1:
-                    return FragmentList.newInstance(DOG_BREEDS[position], Baziche.this);
+                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                case 2:
+                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                case 3:
+                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                case 4:
+                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                case 5:
+                    return FragmentList.newInstance(TYPES[position], Baziche.this);
                 default:
-                    return FragmentList.newInstance(DOG_BREEDS[position], Baziche.this);
+                    return FragmentList.newInstance(TYPES[position], Baziche.this);
             }
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 6;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return DOG_BREEDS[position];
+            return TYPES[position];
         }
     }
 }

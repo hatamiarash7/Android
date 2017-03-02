@@ -111,7 +111,7 @@ public class PostNews extends AppCompatActivity {
         final String uid = db.getUserDetails().get("uid");
         final String name = db.getUserDetails().get("name");
         final String cid = String.valueOf(db.GetCID(db.getUserDetails().get("type")));
-        pDialog.setMessage("در حال ارسال ...");
+        pDialog.setMessage(FontHelper.getSpannedString(this, "در حال ارسال ..."));
         showDialog();
         SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
@@ -158,7 +158,7 @@ public class PostNews extends AppCompatActivity {
         final String name = db.getUserDetails().get("name");
         final String cid = String.valueOf(db.GetCID(db.getUserDetails().get("type")));
         Log.d(TAG, uid + " " + cid);
-        pDialog.setMessage("در حال ارسال ...");
+        pDialog.setMessage(FontHelper.getSpannedString(this, "در حال ارسال ..."));
         showDialog();
         SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override

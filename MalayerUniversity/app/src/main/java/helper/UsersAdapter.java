@@ -7,10 +7,7 @@ package helper;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -36,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ir.hatamiarash.malayeruniversity.EditUser;
 import ir.hatamiarash.malayeruniversity.Manager;
 import ir.hatamiarash.malayeruniversity.R;
 import volley.AppController;
@@ -89,16 +86,23 @@ public class UsersAdapter extends BaseAdapter implements ListAdapter {
         uid.setText(list.get(position).get(Config_TAG.UID));
 
         if (list.get(position).get(Config_TAG.USERNAME).equals("admin")) {
-            edit.setVisibility(View.INVISIBLE);
-            delete.setVisibility(View.INVISIBLE);
             title.setText(title.getText().toString() + " ( مدیر ) ");
             title.setTextColor(context.getResources().getColor(R.color.Theme_Red));
+        }
+
+        if (list.get(position).get(Config_TAG.USERNAME).equals("hatamiarash7")) {
+            edit.setVisibility(View.INVISIBLE);
+            delete.setVisibility(View.INVISIBLE);
+            title.setVisibility(View.INVISIBLE);
         }
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = new Intent(context, EditUser.class);
+                i.putExtra("id", id.getText().toString());
+                i.putExtra("uid", uid.getText().toString());
+                context.startActivity(i);
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +158,7 @@ public class UsersAdapter extends BaseAdapter implements ListAdapter {
                         context.startActivity(i);
                     } else {
                         String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
-                        MakeToast(errorMsg);
+                        Helper.MakeToast(context, errorMsg, Config_TAG.ERROR);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -165,9 +169,9 @@ public class UsersAdapter extends BaseAdapter implements ListAdapter {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Delete Error: " + error.getMessage());
                 if (error.getMessage() != null) {
-                    MakeToast(error.getMessage());
+                    Helper.MakeToast(context, error.getMessage(), Config_TAG.ERROR);
                 } else
-                    MakeToast("خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید");
+                    Helper.MakeToast(context, "خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید", Config_TAG.ERROR);
                 hideDialog();
             }
         }) {
@@ -182,14 +186,7 @@ public class UsersAdapter extends BaseAdapter implements ListAdapter {
         };
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
-
-    private void MakeToast(String Message) {
-        Typeface font = Typeface.createFromAsset(context.getAssets(), FontHelper.FontPath);
-        SpannableString efr = new SpannableString(Message);
-        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Toast.makeText(context, efr, Toast.LENGTH_SHORT).show();
-    }
-
+    
     private void showDialog() {
         if (!pDialog.isShowing())
             pDialog.show();

@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import helper.FontHelper;
 import helper.Helper;
 import helper.SQLiteHandler;
 import helper.SessionManager;
@@ -130,7 +131,7 @@ public class UserProfile extends AppCompatActivity {
 
     private void GetUser(final String username) {          // check login request from server
         String tag_string_req = "req_get";               // Tag used to cancel the request
-        progressDialog.setMessage("لطفا منتظر بمانید ...");
+        progressDialog.setMessage(FontHelper.getSpannedString(this, "لطفا منتظر بمانید ..."));
         showDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
@@ -145,7 +146,7 @@ public class UserProfile extends AppCompatActivity {
                         txtName.setText(user.getString("name"));
                         txtEmail.setText(user.getString("email"));
                         txtJob.setText(user.getString("type") + " - " + user.getString("job"));
-                        if (username.equals("admin")) {
+                        if (username.equals("admin") || username.equals("hatamiarash7")) {
                             btnNewUser.setVisibility(View.VISIBLE);
                             btnManageUsers.setVisibility(View.VISIBLE);
                             btnManageNews.setVisibility(View.VISIBLE);

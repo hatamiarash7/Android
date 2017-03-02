@@ -4,12 +4,7 @@
 
 package ir.hatamiarash.malayeruniversity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -40,7 +34,6 @@ import java.util.Map;
 import helper.FontHelper;
 import helper.Helper;
 import helper.SQLiteHandler;
-import ir.hatamiarash.MyToast.CustomToast;
 import volley.AppController;
 import volley.Config_TAG;
 import volley.Config_URL;
@@ -51,7 +44,7 @@ public class Register extends AppCompatActivity {
     Button btnRegister;
     private EditText inputFullName, inputUsername, inputPassword, inputPassword2, inputJob, inputEmail;
     private ProgressDialog progressDialog;
-    private SQLiteHandler db;
+    SQLiteHandler db;
     private Helper CheckEmail;
     private Spinner inputType;
 
@@ -78,9 +71,9 @@ public class Register extends AppCompatActivity {
         inputUsername.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         inputJob.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
-        progressDialog = new ProgressDialog(this);                                      // new dialog
+        progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-        db = new SQLiteHandler(getApplicationContext());      // SQLite database handler
+        db = new SQLiteHandler(getApplicationContext());
 
         // Register Button Click event
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -93,20 +86,20 @@ public class Register extends AppCompatActivity {
                 String email = inputEmail.getText().toString();
                 String type = inputType.getSelectedItem().toString();
                 CheckEmail = new Helper("email", email);
-                if (CheckInternet())
+                if (Helper.CheckInternet(Register.this))
                     if (!name.isEmpty() && !username.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !job.isEmpty())
                         if (CheckEmail.isValidEmail() || email.equals(""))
                             if (password.length() >= 8)
                                 if (password.equals(password2))
                                     registerUser(name, username, password, job, type, email);
                                 else
-                                    MakeToast("کلمه عبور تطابق ندارد", Config_TAG.WARNING);
+                                    Helper.MakeToast(Register.this, "کلمه عبور تطابق ندارد", Config_TAG.WARNING);
                             else
-                                MakeToast("کلمه عبور کوتاه است", Config_TAG.WARNING);
+                                Helper.MakeToast(Register.this, "کلمه عبور کوتاه است", Config_TAG.WARNING);
                         else
-                            MakeToast("ایمیل را بررسی نمایید", Config_TAG.WARNING);
+                            Helper.MakeToast(Register.this, "ایمیل را بررسی نمایید", Config_TAG.WARNING);
                     else
-                        MakeToast("تمامی کادر ها را پر نمایید", Config_TAG.WARNING);
+                        Helper.MakeToast(Register.this, "تمامی کادر ها را پر نمایید", Config_TAG.WARNING);
             }
         });
     }
@@ -114,7 +107,7 @@ public class Register extends AppCompatActivity {
     private void registerUser(final String name, final String username, final String password, final String job, final String type, final String email) {
         // Tag used to cancel the request
         String string_req = "req_register";
-        progressDialog.setMessage("در حال ثبت ...");
+        progressDialog.setMessage(FontHelper.getSpannedString(this, "در حال ثبت ..."));
         showDialog();
         StringRequest strReq = new StringRequest(Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
@@ -129,7 +122,7 @@ public class Register extends AppCompatActivity {
                     } else {
                         // Error occurred in registration. Get the error message
                         String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
-                        MakeToast(errorMsg, Config_TAG.ERROR);
+                        Helper.MakeToast(Register.this, errorMsg, Config_TAG.ERROR);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -140,9 +133,9 @@ public class Register extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Registration Error: " + error.getMessage());
                 if (error.getMessage() != null) {
-                    MakeToast(error.getMessage(), Config_TAG.ERROR);
+                    Helper.MakeToast(Register.this, error.getMessage(), Config_TAG.ERROR);
                 } else
-                    MakeToast("خطایی رخ داده است - اتصال به اینترنت را بررسی نمایید", Config_TAG.ERROR);
+                    Helper.MakeToast(Register.this, "خطایی رخ داده است - اتصال به اینترنت را بررسی نمایید", Config_TAG.ERROR);
                 hideDialog();
             }
         }) {
@@ -175,30 +168,6 @@ public class Register extends AppCompatActivity {
     private void hideDialog() {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
-    }
-
-    private void MakeToast(String Message, String TAG) {
-        if (TAG.equals(Config_TAG.WARNING))
-            CustomToast.custom(this, Message, R.drawable.ic_alert, getResources().getColor(R.color.black), getResources().getColor(R.color.white), Toast.LENGTH_SHORT, true, true).show();
-        if (TAG.equals(Config_TAG.SUCCESS))
-            CustomToast.custom(this, Message, R.drawable.ic_success, getResources().getColor(R.color.black), getResources().getColor(R.color.white), Toast.LENGTH_SHORT, true, true).show();
-        if (TAG.equals(Config_TAG.ERROR))
-            CustomToast.custom(this, Message, R.drawable.ic_error, getResources().getColor(R.color.black), getResources().getColor(R.color.white), Toast.LENGTH_SHORT, true, true).show();
-    }
-
-    private boolean CheckInternet() { // check network connection for run from possible exceptions
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        PackageManager PM = getPackageManager();
-        if (PM.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
-            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
-                return true;
-        } else {
-            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
-                return true;
-        }
-        MakeToast("اتصال به اینترنت را بررسی نمایید", Config_TAG.WARNING);
-        return false;
     }
 
     private void MakeDialog(String Title, String Message) {

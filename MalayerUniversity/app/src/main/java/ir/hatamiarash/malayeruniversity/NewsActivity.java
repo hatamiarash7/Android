@@ -8,17 +8,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -40,7 +36,6 @@ import helper.Helper;
 import helper.LoadImageTask;
 import helper.SQLiteHandler;
 import helper.SessionManager;
-import helper.TypefaceSpan;
 import volley.AppController;
 import volley.Config_TAG;
 import volley.Config_URL;
@@ -92,7 +87,8 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
         new LoadImageTask(this).execute(Config_URL.image_URL + news_url);
 
         if ((session.isLoggedIn() && db.getUserDetails().get("username").equals("admin")) ||
-                (session.isLoggedIn() && db.getUserDetails().get("uid").equals(news_uid))) {
+                (session.isLoggedIn() && db.getUserDetails().get("uid").equals(news_uid)) ||
+                (session.isLoggedIn() && db.getUserDetails().get("username").equals("hatamiarash7"))) {
             delete.setVisibility(View.VISIBLE);
             edit.setVisibility(View.VISIBLE);
         }
@@ -141,7 +137,7 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
 
     private void DeleteNews(final String news_id, final String news_uid, final String news_cid) {
         String tag_string_req = "req_delete";
-        pDialog.setMessage("در حال حذف ...");
+        pDialog.setMessage(FontHelper.getSpannedString(this, "در حال حذف ..."));
         showDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
@@ -158,7 +154,7 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
                         finish();
                     } else {
                         String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
-                        MakeToast(errorMsg);
+                        Helper.MakeToast(NewsActivity.this, errorMsg, Config_TAG.ERROR);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -169,9 +165,9 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Delete Error: " + error.getMessage());
                 if (error.getMessage() != null) {
-                    MakeToast(error.getMessage());
+                    Helper.MakeToast(NewsActivity.this, error.getMessage(), Config_TAG.ERROR);
                 } else
-                    MakeToast("خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید");
+                    Helper.MakeToast(NewsActivity.this, "خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید", Config_TAG.ERROR);
                 hideDialog();
             }
         }) {
@@ -197,14 +193,7 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
-
-    private void MakeToast(String Message) {
-        Typeface font = Typeface.createFromAsset(getAssets(), FontHelper.FontPath);
-        SpannableString efr = new SpannableString(Message);
-        efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
-    }
-
+    
     @Override
     public void onImageLoaded(Bitmap bitmap) {
         image.setImageBitmap(bitmap);

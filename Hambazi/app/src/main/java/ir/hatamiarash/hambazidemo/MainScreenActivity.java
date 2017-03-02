@@ -102,6 +102,8 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
             file_maps.put("بازی های بوردی", R.drawable.p1);
             file_maps.put("بازی های مادر و کودک", R.drawable.p2);
             file_maps.put("بازی های فیزیکی حرکتی", R.drawable.p3);
+            file_maps.put("مسابقات تلوزیونی", R.drawable.p4);
+            file_maps.put("بازی های ویدئویی", R.drawable.p5);
 
             for (String name : file_maps.keySet()) {
                 TextSliderView textSliderView = new TextSliderView(this);
@@ -119,7 +121,7 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
 
                 MainSlider.addSlider(textSliderView);
             }
-            MainSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
+            MainSlider.setPresetTransformer(SliderLayout.Transformer.Fade);
             MainSlider.setDuration(2500);
             MainSlider.setCustomAnimation(new DescriptionAnimation());
             MainSlider.addOnPageChangeListener(this);
@@ -230,7 +232,7 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
             temp_login = (Button) findViewById(R.id.temp_login);
             temp_signup = (Button) findViewById(R.id.temp_signup);
             lobby = (VideoView) findViewById(R.id.lobby);
-            Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.lobby);
+            Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.splash);
             lobby.setVideoURI(uri);
             lobby.start();
             temp_login.setOnClickListener(new View.OnClickListener() {
@@ -266,7 +268,6 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
         if (Helper.CheckInternet(this))
             initService();
     }
-    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -298,14 +299,6 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
         if (!is_logged)
             lobby.pause();
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (session.isLoggedIn())
-            MainSlider.stopAutoCycle();
-        super.onDestroy();
-        releaseService();
     }
 
     @Override
@@ -360,7 +353,7 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
         public void onServiceConnected(ComponentName name, IBinder boundService) {
             service = IUpdateCheckService.Stub.asInterface(boundService);
             try {
-                long vCode = service.getVersionCode("ir.hatamiarash.zimia");
+                long vCode = service.getVersionCode("ir.hatamiarash.hambazi");
                 Log.e(Config_TAG.UPDATE_CHECK, "VersionCode:" + vCode);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -106,7 +106,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return user;
     }
 
-    public void updateUser(String name, String email, String username) {
+    public void updateUser(String username,String name, String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         name = "'" + name + "'";
         email = "'" + email + "'";

@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import helper.FontHelper;
 import helper.Helper;
 import helper.SessionManager;
 import volley.AppController;
@@ -125,7 +126,7 @@ public class EditPost extends AppCompatActivity {
 
     private void GetNews(final String nid, final String cid, final String uid) {          // check login request from server
         String tag_string_req = "req_get";               // Tag used to cancel the request
-        pDialog.setMessage("لطفا منتظر بمانید ...");
+        pDialog.setMessage(FontHelper.getSpannedString(this, "لطفا منتظر بمانید ..."));
         showDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
@@ -142,7 +143,6 @@ public class EditPost extends AppCompatActivity {
                         post_body.setText(content);
                         post_subject.setText(title);
                     } else {
-                        // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
                         Helper.MakeToast(EditPost.this, errorMsg, Config_TAG.ERROR);
                     }

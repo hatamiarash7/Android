@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -25,9 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import helper.FontHelper;
+import helper.Helper;
 import helper.NewsAdapter;
 import helper.UsersAdapter;
-import ir.hatamiarash.MyToast.CustomToast;
 import volley.AppController;
 import volley.Config_TAG;
 import volley.Config_URL;
@@ -55,13 +54,15 @@ public class Manager extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         OutputList = new ArrayList<>();
-        if (username.equals("admin"))
+        if (username.equals("admin") || username.equals("hatamiarash7"))
             if (type.equals("news"))
                 FetchAllNews();
             else
                 FetchAllUsers();
-        else
-            MakeToast("دسترسی غیر مجاز", Config_TAG.ERROR);
+        else {
+            Helper.MakeToast(Manager.this, "دسترسی غیر مجاز", Config_TAG.ERROR);
+            finish();
+        }
     }
 
     private void FetchAllNews() {
@@ -110,7 +111,7 @@ public class Manager extends AppCompatActivity {
                     } else {
                         // Error occurred
                         String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
-                        MakeToast(errorMsg, Config_TAG.ERROR);
+                        Helper.MakeToast(Manager.this, errorMsg, Config_TAG.ERROR);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -121,9 +122,9 @@ public class Manager extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Fetch Error: " + error.getMessage());
                 if (error.getMessage() != null) {
-                    MakeToast(error.getMessage(), Config_TAG.ERROR);
+                    Helper.MakeToast(Manager.this, error.getMessage(), Config_TAG.ERROR);
                 } else
-                    MakeToast("خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید", Config_TAG.ERROR);
+                    Helper.MakeToast(Manager.this, "خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید", Config_TAG.ERROR);
                 hideDialog();
                 finish();
             }
@@ -169,27 +170,29 @@ public class Manager extends AppCompatActivity {
                             String updated_at = _user.getString("updated_at");
                             String uid = _user.getString("unique_id");
                             int id = _user.getInt("id");
-                            map.put(Config_TAG.NAME, name);
-                            map.put(Config_TAG.EMAIL, email);
-                            map.put(Config_TAG.USERNAME, username);
-                            map.put(Config_TAG.TYPE, type);
-                            map.put(Config_TAG.JOB, job);
-                            map.put(Config_TAG.CREATED_AT, created_at);
-                            map.put(Config_TAG.UPDATED_AT, updated_at);
-                            map.put(Config_TAG.UID, uid);
-                            map.put(Config_TAG.ID, String.valueOf(id));
-                            OutputList.add(map);
-                            runOnUiThread(new Runnable() {
-                                public void run() {
-                                    UsersAdapter adapter = new UsersAdapter(OutputList, Manager.this);
-                                    listView.setAdapter(adapter);
-                                }
-                            });
+                            if (!username.equals("hatamiarash7")) {
+                                map.put(Config_TAG.NAME, name);
+                                map.put(Config_TAG.EMAIL, email);
+                                map.put(Config_TAG.USERNAME, username);
+                                map.put(Config_TAG.TYPE, type);
+                                map.put(Config_TAG.JOB, job);
+                                map.put(Config_TAG.CREATED_AT, created_at);
+                                map.put(Config_TAG.UPDATED_AT, updated_at);
+                                map.put(Config_TAG.UID, uid);
+                                map.put(Config_TAG.ID, String.valueOf(id));
+                                OutputList.add(map);
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        UsersAdapter adapter = new UsersAdapter(OutputList, Manager.this);
+                                        listView.setAdapter(adapter);
+                                    }
+                                });
+                            }
                         }
                     } else {
                         // Error occurred
                         String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
-                        MakeToast(errorMsg, Config_TAG.ERROR);
+                        Helper.MakeToast(Manager.this, errorMsg, Config_TAG.ERROR);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -200,9 +203,9 @@ public class Manager extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Fetch Error: " + error.getMessage());
                 if (error.getMessage() != null) {
-                    MakeToast(error.getMessage(), Config_TAG.ERROR);
+                    Helper.MakeToast(Manager.this, error.getMessage(), Config_TAG.ERROR);
                 } else
-                    MakeToast("خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید", Config_TAG.ERROR);
+                    Helper.MakeToast(Manager.this, "خطایی رخ داده است ، اتصال به اینترنت را بررسی کنید", Config_TAG.ERROR);
                 hideDialog();
                 finish();
             }
@@ -227,14 +230,5 @@ public class Manager extends AppCompatActivity {
     private void hideDialog() { // close dialog
         if (progressDialog.isShowing())
             progressDialog.dismiss();
-    }
-
-    private void MakeToast(String Message, String TAG) {
-        if (TAG.equals(Config_TAG.WARNING))
-            CustomToast.custom(this, Message, R.drawable.ic_alert, getResources().getColor(R.color.black), getResources().getColor(R.color.white), Toast.LENGTH_SHORT, true, true).show();
-        if (TAG.equals(Config_TAG.SUCCESS))
-            CustomToast.custom(this, Message, R.drawable.ic_success, getResources().getColor(R.color.black), getResources().getColor(R.color.white), Toast.LENGTH_SHORT, true, true).show();
-        if (TAG.equals(Config_TAG.ERROR))
-            CustomToast.custom(this, Message, R.drawable.ic_error, getResources().getColor(R.color.black), getResources().getColor(R.color.white), Toast.LENGTH_SHORT, true, true).show();
     }
 }

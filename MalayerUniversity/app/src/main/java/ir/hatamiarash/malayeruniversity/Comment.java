@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import helper.FontHelper;
 import helper.Helper;
 import volley.AppController;
 import volley.Config_TAG;
@@ -72,7 +73,7 @@ public class Comment extends AppCompatActivity {
 
     private void SendEmail(final String subject, final String body, final String type) {
         String string_req = "req_send";
-        progressDialog.setMessage("در حال ارسال ...");
+        progressDialog.setMessage(FontHelper.getSpannedString(this, "در حال ارسال ..."));
         showDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
