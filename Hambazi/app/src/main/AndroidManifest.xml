@@ -74,11 +74,6 @@
             android:noHistory="true"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".All_Sellers"
-            android:label="All Sellers"
-            android:noHistory="true"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".ResetPassword"
             android:label="Reset Forgotten Password"
             android:noHistory="true"

@@ -22,11 +22,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
-    private static final String KEY_ADDRESS = "address";
     private static final String KEY_PHONE = "phone";
     private static final String KEY_UID = "uid";
-    private static final String KEY_CREATED_AT = "created_at";
     private static final String KEY_TYPE = "type";
+    private static final String KEY_AGE = "age";
+    private static final String KEY_SEX = "sex";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,13 +37,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String Query = "CREATE TABLE " + TABLE_LOGIN + "("
                 + KEY_ID + " INTEGER PRIMARY KEY, "
+                + KEY_UID + " TEXT, "
                 + KEY_NAME + " TEXT, "
-                + KEY_ADDRESS + " TEXT, "
                 + KEY_PHONE + " TEXT, "
                 + KEY_EMAIL + " TEXT UNIQUE, "
-                + KEY_UID + " TEXT, "
                 + KEY_TYPE + " TEXT, "
-                + KEY_CREATED_AT + " TEXT"
+                + KEY_AGE + " TEXT, "
+                + KEY_SEX + " TEXT"
                 + ")";
         db.execSQL(Query);
         Log.d(TAG, "Database table created - onCreate");
@@ -62,13 +62,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
         String Query = "CREATE TABLE " + TABLE_LOGIN + "("
                 + KEY_ID + " INTEGER PRIMARY KEY, "
+                + KEY_UID + " TEXT, "
                 + KEY_NAME + " TEXT, "
-                + KEY_ADDRESS + " TEXT, "
                 + KEY_PHONE + " TEXT, "
                 + KEY_EMAIL + " TEXT UNIQUE, "
-                + KEY_UID + " TEXT, "
                 + KEY_TYPE + " TEXT, "
-                + KEY_CREATED_AT + " TEXT"
+                + KEY_AGE + " TEXT, "
+                + KEY_SEX + " TEXT"
                 + ")";
         db.execSQL(Query);
         db.close();
@@ -76,17 +76,16 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     // add user data to database
-    public void addUser(String name, String email, String address, String phone, String uid, String type, String created_at) {
+    public void addUser(String uid, String name, String email, String phone, String type, String age, String sex) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, name); // Name
-        values.put(KEY_EMAIL, email); // Email
-        values.put(KEY_UID, uid); // Email
-        values.put(KEY_ADDRESS, address); // Email
-        values.put(KEY_PHONE, phone); // Email
-        values.put(KEY_TYPE, type); // Email
-        values.put(KEY_CREATED_AT, created_at); // Created At
-
+        values.put(KEY_UID, uid);
+        values.put(KEY_NAME, name);
+        values.put(KEY_EMAIL, email);
+        values.put(KEY_PHONE, phone);
+        values.put(KEY_TYPE, type);
+        values.put(KEY_AGE, age);
+        values.put(KEY_SEX, sex);
         // Inserting Row
         long id = db.insert(TABLE_LOGIN, null, values);
         //db.execSQL(query);
@@ -102,14 +101,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(Query, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            Log.d(TAG, "Sqlite: " + cursor.getString(1));
-            user.put("name", cursor.getString(1));
-            user.put("address", cursor.getString(2));
-            user.put("phone", cursor.getString(3));
-            user.put("email", cursor.getString(4));
-            user.put("uid", cursor.getString(5));
-            user.put("type", cursor.getString(6));
-            user.put("created_at", cursor.getString(7));
+            user.put("uid", cursor.getString(1));
+            user.put("name", cursor.getString(2));
+            user.put("email", cursor.getString(3));
+            user.put("phone", cursor.getString(4));
+            user.put("type", cursor.getString(5));
+            user.put("age", cursor.getString(6));
+            user.put("sex", cursor.getString(7));
         }
         cursor.close();
         db.close();
@@ -117,15 +115,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return user;
     }
 
-    public void updateUser(String name, String email, String address, String phone) {
+    public void updateUser(String name, String email, String phone) {
         SQLiteDatabase db = this.getWritableDatabase();
         name = "'" + name + "'";
         email = "'" + email + "'";
-        address = "'" + address + "'";
         phone = "'" + phone + "'";
         String Query = "UPDATE " + TABLE_LOGIN + " SET "
                 + KEY_NAME + "=" + name + ", "
-                + KEY_ADDRESS + "=" + address + ", "
                 + KEY_PHONE + "=" + phone + " WHERE "
                 + KEY_EMAIL + "=" + email;
         db.execSQL(Query);

@@ -30,7 +30,7 @@ import helper.Helper;
 public class Contact extends AppCompatActivity {
     ImageView back;
     private LinearLayout telegram, instagram;
-    private TextView name, job;
+    private TextView name, job, instagram_name, telegram_name;
     TextView copyright;
 
     @SuppressLint("SetTextI18n")
@@ -49,11 +49,15 @@ public class Contact extends AppCompatActivity {
         name = (TextView) findViewById(R.id.name);
         job = (TextView) findViewById(R.id.job);
         copyright = (TextView) findViewById(R.id.copyright);
+        instagram_name = (TextView) findViewById(R.id.instagram_name);
+        telegram_name = (TextView) findViewById(R.id.telegram_name);
 
         name.setVisibility(View.INVISIBLE);
         job.setVisibility(View.INVISIBLE);
         telegram.setVisibility(View.INVISIBLE);
         instagram.setVisibility(View.INVISIBLE);
+        instagram_name.addTextChangedListener(Helper.TextAutoResize(this, instagram_name, 14, 20));
+        //telegram_name.addTextChangedListener(Helper.TextAutoResize(this, telegram_name, 14, 20));
 
         try {
             PackageManager manager = this.getPackageManager();

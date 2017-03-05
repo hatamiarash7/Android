@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2017 - Arash Hatami - All Rights Reserved
   -->
@@ -101,7 +102,8 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginStart="10dp"
                 android:text="ارسال پست جدید"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"/>
 
             <helper.PersianButton
                 android:id="@+id/manage_news"

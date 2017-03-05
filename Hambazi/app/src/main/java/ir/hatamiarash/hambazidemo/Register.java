@@ -35,11 +35,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
-import ir.hatamiarash.MyToast.CustomToast;
 import helper.FontHelper;
 import helper.Helper;
 import helper.SQLiteHandler;
 import helper.SessionManager;
+import ir.hatamiarash.MyToast.CustomToast;
 import volley.AppController;
 import volley.Config_TAG;
 import volley.Config_URL;
@@ -53,9 +53,13 @@ public class Register extends Activity {
     private EditText inputEmail;
     private EditText inputPassword;
     private EditText inputPassword2;
-    private EditText inputAddress;
     private EditText inputPhone;
-    private EditText inputResetEmail;
+    private EditText inputJob;
+    private EditText inputCountry;
+    private EditText inputState;
+    private EditText inputCity;
+    private EditText inputAge;
+    private EditText inputSex;
     private AlertDialog progressDialog;
     private SQLiteHandler db;
     private Helper CheckEmail, CheckPhone;
@@ -68,12 +72,18 @@ public class Register extends Activity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         inputPassword2 = (EditText) findViewById(R.id.password2);
-        inputAddress = (EditText) findViewById(R.id.address);
-        inputResetEmail = (EditText) findViewById(R.id.reset_email);
+        inputPhone = (EditText) findViewById(R.id.phone);
+        inputJob = (EditText) findViewById(R.id.job);
+        inputCountry = (EditText) findViewById(R.id.country);
+        inputState = (EditText) findViewById(R.id.state);
+        inputCity = (EditText) findViewById(R.id.city);
+        inputAge = (EditText) findViewById(R.id.age);
+        inputSex = (EditText) findViewById(R.id.sex);
         btnRegister = (Button) findViewById(R.id.btnRegister);
         btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
-        inputPhone = inputEmail;
-        inputEmail.setError("همانند نمونه 09123456789");
+
+        inputPhone.setError("همانند نمونه 09123456789");
+        inputEmail.setError("اختیاری");
         inputPassword.setError("حداقل 8 حرف");
         progressDialog = new SpotsDialog(this, R.style.CustomDialog);
         progressDialog.setCancelable(false);
@@ -92,18 +102,32 @@ public class Register extends Activity {
                 String email = inputEmail.getText().toString();
                 String password = inputPassword.getText().toString();
                 String password2 = inputPassword2.getText().toString();
-                String address = inputAddress.getText().toString();
                 String phone = inputPhone.getText().toString();
-                String reset_email = inputResetEmail.getText().toString();
-                CheckEmail = new Helper("email", reset_email);
+                String job = inputJob.getText().toString();
+                String age = inputAge.getText().toString();
+                String sex = inputSex.getText().toString();
+                String country = inputCountry.getText().toString();
+                String state = inputState.getText().toString();
+                String city = inputCity.getText().toString();
+
+                CheckEmail = new Helper("email", email);
                 CheckPhone = new Helper("phone", phone);
                 if (CheckInternet())
-                    if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && !password2.isEmpty() && !address.isEmpty() && !phone.isEmpty())
+                    if (!name.isEmpty() &&
+                            !password.isEmpty() &&
+                            !password2.isEmpty() &&
+                            !job.isEmpty() &&
+                            !age.isEmpty() &&
+                            !sex.isEmpty() &&
+                            !country.isEmpty() &&
+                            !state.isEmpty() &&
+                            !city.isEmpty() &&
+                            !phone.isEmpty())
                         if (CheckPhone.isValidPhone())
                             if (CheckEmail.isValidEmail())
                                 if (password.length() >= 8)
                                     if (password.equals(password2))
-                                        registerUser(name, email, password, address, phone, "User", reset_email);
+                                        registerUser(name, email, password, phone, age, sex, country, state, city, job);
                                     else
                                         MakeToast("کلمه عبور تطابق ندارد", Config_TAG.WARNING);
                                 else
@@ -126,7 +150,7 @@ public class Register extends Activity {
         });
     }
 
-    private void registerUser(final String name, final String email, final String password, final String address, final String phone, final String type, final String reset_email) {
+    private void registerUser(final String name, final String email, final String password, final String phone, final String age, final String sex, final String country, final String state, final String city, final String job) {
         // Tag used to cancel the request
         String string_req = "req_register";
         showDialog();
@@ -139,16 +163,6 @@ public class Register extends Activity {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean(Config_TAG.ERROR);
                     if (!error) {
-                        // User successfully stored in MySQL , Now store the user in SQLite
-                        String uid = jObj.getString(Config_TAG.UID);
-                        JSONObject user = jObj.getJSONObject(Config_TAG.USER);
-                        String name = user.getString(Config_TAG.NAME);
-                        String email = user.getString(Config_TAG.EMAIL);
-                        String address = user.getString(Config_TAG.ADDRESS);
-                        String phone = user.getString(Config_TAG.PHONE);
-                        String created_at = user.getString(Config_TAG.CREATED_AT);
-                        // Inserting row in users table
-                        db.addUser(name, email, address, phone, uid, created_at, type);
                         MakeDialog("ثبت نام انجام شد", "نام کاربری شما تلفن همراهتان می باشد");
                     } else {
                         // Error occurred in registration. Get the error message
@@ -177,11 +191,14 @@ public class Register extends Activity {
                 params.put(Config_TAG.TAG, "user_register");
                 params.put(Config_TAG.NAME, name);
                 params.put(Config_TAG.EMAIL, email);
-                params.put(Config_TAG.ADDRESS, address);
                 params.put(Config_TAG.PHONE, phone);
                 params.put(Config_TAG.PASSWORD, password);
-                params.put(Config_TAG.TYPE, type);
-                params.put(Config_TAG.RESET_EMAIL, reset_email);
+                params.put("job", job);
+                params.put("age", age);
+                params.put("sex", sex);
+                params.put("country", country);
+                params.put("state", state);
+                params.put("city", city);
                 return params;
             }
         };

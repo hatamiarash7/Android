@@ -141,8 +141,8 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
                 public void onClick(View view) {
                     if (Helper.CheckInternet(MainScreenActivity.this)) {
                         vibrator.vibrate(50);
-                        Intent i = new Intent(getApplicationContext(), All_Sellers.class);
-                        startActivity(i);
+                        /*Intent i = new Intent(getApplicationContext(), All_Sellers.class);
+                        startActivity(i);*/
                     }
                 }
             });

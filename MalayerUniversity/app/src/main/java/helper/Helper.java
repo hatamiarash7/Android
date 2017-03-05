@@ -78,10 +78,60 @@ public class Helper {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                final int widthLimitPixels = view.getWidth() - view.getPaddingRight() - view.getPaddingLeft();
+                Paint paint = new Paint();
+                float fontSizeSP = PixelsToSP(context, view.getTextSize());
+                paint.setTextSize(SPToPixels(context, fontSizeSP));
+                String viewText = view.getText().toString();
+                float widthPixels = paint.measureText(viewText);
+                if (widthPixels < widthLimitPixels) {
+                    while (widthPixels < widthLimitPixels && fontSizeSP <= MAX_SP) {
+                        ++fontSizeSP;
+                        paint.setTextSize(SPToPixels(context, fontSizeSP));
+                        widthPixels = paint.measureText(viewText);
+                    }
+                    --fontSizeSP;
+                } else {
+                    while (widthPixels > widthLimitPixels || fontSizeSP > MAX_SP) {
+                        if (fontSizeSP < MIN_SP) {
+                            fontSizeSP = MIN_SP;
+                            break;
+                        }
+                        --fontSizeSP;
+                        paint.setTextSize(SPToPixels(context, fontSizeSP));
+                        widthPixels = paint.measureText(viewText);
+                    }
+                }
+                view.setTextSize(fontSizeSP);
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                final int widthLimitPixels = view.getWidth() - view.getPaddingRight() - view.getPaddingLeft();
+                Paint paint = new Paint();
+                float fontSizeSP = PixelsToSP(context, view.getTextSize());
+                paint.setTextSize(SPToPixels(context, fontSizeSP));
+                String viewText = view.getText().toString();
+                float widthPixels = paint.measureText(viewText);
+                if (widthPixels < widthLimitPixels) {
+                    while (widthPixels < widthLimitPixels && fontSizeSP <= MAX_SP) {
+                        ++fontSizeSP;
+                        paint.setTextSize(SPToPixels(context, fontSizeSP));
+                        widthPixels = paint.measureText(viewText);
+                    }
+                    --fontSizeSP;
+                } else {
+                    while (widthPixels > widthLimitPixels || fontSizeSP > MAX_SP) {
+                        if (fontSizeSP < MIN_SP) {
+                            fontSizeSP = MIN_SP;
+                            break;
+                        }
+                        --fontSizeSP;
+                        paint.setTextSize(SPToPixels(context, fontSizeSP));
+                        widthPixels = paint.measureText(viewText);
+                    }
+                }
+                view.setTextSize(fontSizeSP);
             }
 
             @Override

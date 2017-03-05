@@ -64,7 +64,7 @@
         android:textStyle="bold"/>
 
     <helper.PersianEditText
-        android:id="@+id/email"
+        android:id="@+id/phone"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_above="@+id/password"
@@ -78,6 +78,7 @@
         android:gravity="center_vertical|center_horizontal|center"
         android:hint="شماره تلفن"
         android:inputType="number|phone"
+        android:textColor="#fff"
         android:textColorHint="@color/gray"/>
 
     <helper.PersianEditText
@@ -95,6 +96,7 @@
         android:gravity="center_vertical|center_horizontal|center"
         android:hint="رمز عبور"
         android:inputType="textPassword"
+        android:textColor="#fff"
         android:textColorHint="@color/gray"/>
 
     <helper.PersianButton
@@ -133,6 +135,8 @@
         android:id="@+id/btnLinkToRegisterScreen"
         android:layout_width="match_parent"
         android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -142,8 +146,6 @@
         android:text="@string/btn_link_to_register"
         android:textAllCaps="false"
         android:textColor="@color/colorAccent"
-        android:textSize="15sp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp"/>
+        android:textSize="15sp"/>
 
 </RelativeLayout>

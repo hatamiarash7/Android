@@ -30,9 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
-import ir.hatamiarash.MyToast.CustomToast;
 import helper.SQLiteHandler;
 import helper.SessionManager;
+import ir.hatamiarash.MyToast.CustomToast;
 import volley.AppController;
 import volley.Config_TAG;
 import volley.Config_URL;
@@ -42,7 +42,7 @@ public class Login extends Activity {
     Button btnLogin;                                               // login button
     Button btnLinkToRegister;                                      // register activity button
     Button btnLinkToResetPassword;
-    private EditText inputEmail;                                   // email input
+    private EditText inputPhone;                                   // email input
     private EditText inputPassword;                                // password input
     private AlertDialog progressDialog;                                // dialog window
     private SessionManager session;                                // session for check user logged status
@@ -52,7 +52,7 @@ public class Login extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        inputEmail = (EditText) findViewById(R.id.email);                        // email text input
+        inputPhone = (EditText) findViewById(R.id.phone);                        // email text input
         inputPassword = (EditText) findViewById(R.id.password);                  // password text input
         btnLogin = (Button) findViewById(R.id.btnLogin);                         // login button
         btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen); // register activity button
@@ -69,12 +69,12 @@ public class Login extends Activity {
         }
         btnLogin.setOnClickListener(new View.OnClickListener() {                     // login button's event
             public void onClick(View view) {
-                String email = inputEmail.getText().toString();                      // get email from text input
+                String phone = inputPhone.getText().toString();                      // get email from text input
                 String password = inputPassword.getText().toString();                // get password from text input
                 if (CheckInternet())                                                 // check network connection status
-                    if (email.trim().length() > 0 && password.trim().length() > 0) { // check empty fields
+                    if (phone.trim().length() > 0 && password.trim().length() > 0) { // check empty fields
                         showDialog();                                                // show dialog
-                        CheckLogin(email, password);                                 // check user login request from server
+                        CheckLogin(phone, password);                                 // check user login request from server
                     } else
                         MakeToast("مشخصات را وارد نمایید", Config_TAG.WARNING);
             }
@@ -99,7 +99,7 @@ public class Login extends Activity {
         });
     }
 
-    private void CheckLogin(final String email, final String password) { // check login request from server
+    private void CheckLogin(final String phone, final String password) { // check login request from server
         String string_req = "req_login";                             // Tag used to cancel the request
         StringRequest strReq = new StringRequest(Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
             @Override
@@ -110,62 +110,16 @@ public class Login extends Activity {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean(Config_TAG.ERROR);
                     if (!error) {                          // Check for error node in json
-                        SetUser(email);
-                    } else {
-                        // Error in login. Get the error message
-                        String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
-                        MakeToast(errorMsg, Config_TAG.ERROR); // show error message
-                    }
-                } catch (JSONException e) {
-                    // JSON error
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage());
-                if (error.getMessage() != null) {
-                    MakeToast(error.getMessage(), Config_TAG.ERROR);
-                } else
-                    MakeToast("خطایی رخ داده است - اتصال به اینترنت را بررسی نمایید", Config_TAG.ERROR);
-                hideDialog();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {           // Posting parameters to login url
-                Map<String, String> params = new HashMap<>();
-                params.put(Config_TAG.TAG, "user_login");
-                params.put(Config_TAG.EMAIL, email);
-                params.put(Config_TAG.PASSWORD, password);
-                return params;
-            }
-        };
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, string_req);
-    }
-
-    private void SetUser(final String email) {             // check login request from server
-        String string_req = "req_login";               // Tag used to cancel the request
-        StringRequest strReq = new StringRequest(Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Login Response: " + response); // log server response
-                hideDialog();                              // close dialog
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean(Config_TAG.ERROR);
-                    if (!error) {                          // Check for error node in json
                         session.setLogin(true);            // set login status true
-                        String uid = jObj.getString(Config_TAG.UID);
                         JSONObject user = jObj.getJSONObject(Config_TAG.USER);
+                        String uid = user.getString(Config_TAG.UID);
                         String name = user.getString(Config_TAG.NAME);
                         String email = user.getString(Config_TAG.EMAIL);
-                        String address = user.getString(Config_TAG.ADDRESS);
                         String phone = user.getString(Config_TAG.PHONE);
                         String type = user.getString(Config_TAG.TYPE);
-                        String created_at = user.getString(Config_TAG.CREATED_AT);
-                        db.addUser(name, email, address, phone, uid, type, created_at); // save user to local database
+                        String age = user.getString("age");
+                        String sex = user.getString("sex");
+                        db.addUser(uid, name, email, phone, type, age, sex);
                         String msg = "سلام " + name;
                         MakeToast(msg, Config_TAG.WARNING); // show welcome notification
                         Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
@@ -199,8 +153,9 @@ public class Login extends Activity {
             @Override
             protected Map<String, String> getParams() {           // Posting parameters to login url
                 Map<String, String> params = new HashMap<>();
-                params.put(Config_TAG.TAG, "user_set");
-                params.put(Config_TAG.EMAIL, email);
+                params.put(Config_TAG.TAG, "user_login");
+                params.put(Config_TAG.PHONE, phone);
+                params.put(Config_TAG.PASSWORD, password);
                 return params;
             }
         };

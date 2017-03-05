@@ -177,7 +177,7 @@ public class EditProfile extends Activity {
                         String address = user.getString(Config_TAG.ADDRESS);
                         String phone = user.getString(Config_TAG.PHONE);
                         // Inserting row in users table
-                        db.updateUser(name, email, address, phone);
+                        //db.updateUser(name, email, phone);
                         MakeToast("اطلاعات شما به روزرسانی شد", Config_TAG.SUCCESS);
                         if (!isPhoneChanged) {
                             Intent intent = new Intent(EditProfile.this, MainScreenActivity.class);
