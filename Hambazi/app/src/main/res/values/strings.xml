@@ -34,7 +34,7 @@
     <string name="hint_count">تعداد</string>
 
     <string name="btn_logout">خروج</string>
-    <string name="btn_edit">ویرایش</string>
+    <string name="btn_edit">ویرایش مشخصات</string>
     <string name="btn_charge">شارژ کیف پول</string>
     <string name="btn_confirm">تایید</string>
     <string name="btn_change_password">تغییر کلمه عبور</string>

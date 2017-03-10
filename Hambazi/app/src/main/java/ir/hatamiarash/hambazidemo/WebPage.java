@@ -25,7 +25,7 @@ public class WebPage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web);
         Intent i = getIntent();
-        String Address = i.getStringExtra(Config_TAG.ADDRESS);
+        String Address = i.getStringExtra("address");
         web3d = (WebView) findViewById(R.id.web_view);
         progressBar = (ProgressBar) findViewById(R.id.pbar);
         WebSettings webSetting = web3d.getSettings();

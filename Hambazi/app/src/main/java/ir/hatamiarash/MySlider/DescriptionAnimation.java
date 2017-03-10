@@ -37,7 +37,6 @@ public class DescriptionAnimation implements BaseAnimationInterface {
 
     @Override
     public void onNextItemAppear(View next) {
-
         View descriptionLayout = next.findViewById(R.id.description_layout);
         if (descriptionLayout != null) {
             float layoutY = ViewHelper.getY(descriptionLayout);

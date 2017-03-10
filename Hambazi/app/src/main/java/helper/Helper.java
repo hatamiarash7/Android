@@ -126,4 +126,51 @@ public class Helper {
         float ScaleDensity = context.getResources().getDisplayMetrics().scaledDensity;
         return PX * ScaleDensity;
     }
+
+    public static int ConvertGenres(String genre) {
+        int result;
+        switch (genre) {
+            case "همه":
+                result = 5;
+                break;
+            case "خارجی":
+                result = 4;
+                break;
+            case "دخترانه":
+                result = 3;
+                break;
+            case "مشاغل":
+                result = 2;
+                break;
+            case "آموزشی":
+                result = 1;
+                break;
+            case "بردی":
+                result = 0;
+                break;
+            default:
+                result = -1;
+                break;
+        }
+        return result;
+    }
+
+    public static String ConvertTypes(int type) {
+        String result;
+        switch (type) {
+            case 0:
+                result = "برنزی";
+                break;
+            case 1:
+                result = "نقره ای";
+                break;
+            case 2:
+                result = "طلایی";
+                break;
+            default:
+                result = "null";
+                break;
+        }
+        return result;
+    }
 }

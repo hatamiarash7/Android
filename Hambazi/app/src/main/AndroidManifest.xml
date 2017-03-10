@@ -24,10 +24,10 @@
         android:configChanges="keyboardHidden|orientation"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="hambazi"
-        android:supportsRtl="true"
+        android:label="@string/app_name_fa"
+        android:supportsRtl="false"
         android:theme="@style/Drawer"
-        tools:replace="android:icon,android:label">
+        tools:replace="android:icon,android:label,android:supportsRtl">
         <activity
             android:name=".SplashScreen"
             android:label="@string/app_name"
@@ -101,6 +101,11 @@
         <activity
             android:name=".Baziche"
             android:label="Baziche Page"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".GameActivity"
+            android:label="Game Page"
             android:noHistory="true"
             android:screenOrientation="portrait"/>
 

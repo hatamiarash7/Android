@@ -15,7 +15,7 @@ import helper.FontHelper;
 
 public class Baziche extends AppCompatActivity {
 
-    private static final String TYPES[] = {"همه", "خارجی", "دخترانه", "مشاغل", "آموزشی", "بوردی"};
+    private static final String TABS[] = {"همه", "خارجی", "دخترانه", "مشاغل", "آموزشی", "بردی"};
     ViewPager viewPager;
     DachshundTabLayout tabLayout;
 
@@ -45,19 +45,21 @@ public class Baziche extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                    return FragmentGames.newInstance(TABS[position], Baziche.this);
                 case 1:
-                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                    return FragmentGames.newInstance(TABS[position], Baziche.this);
                 case 2:
-                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                    return FragmentGames.newInstance(TABS[position], Baziche.this);
                 case 3:
-                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                    return FragmentGames.newInstance(TABS[position], Baziche.this);
                 case 4:
-                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                    return FragmentGames.newInstance(TABS[position], Baziche.this);
                 case 5:
-                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                    return FragmentGames.newInstance(TABS[position], Baziche.this);
+                case 6:
+                    return FragmentGames.newInstance(TABS[position], Baziche.this);
                 default:
-                    return FragmentList.newInstance(TYPES[position], Baziche.this);
+                    return FragmentGames.newInstance(TABS[position], Baziche.this);
             }
         }
 
@@ -68,7 +70,7 @@ public class Baziche extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return TYPES[position];
+            return TABS[position];
         }
     }
 }

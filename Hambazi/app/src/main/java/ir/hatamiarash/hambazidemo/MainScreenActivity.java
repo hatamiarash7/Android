@@ -99,7 +99,7 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
             MainSlider = (SliderLayout) findViewById(R.id.main_slider);
 
             HashMap<String, Integer> file_maps = new HashMap<>();
-            file_maps.put("بازی های بوردی", R.drawable.p1);
+            file_maps.put("بازی های بردی", R.drawable.p1);
             file_maps.put("بازی های مادر و کودک", R.drawable.p2);
             file_maps.put("بازی های فیزیکی حرکتی", R.drawable.p3);
             file_maps.put("مسابقات تلوزیونی", R.drawable.p4);
@@ -121,7 +121,7 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
 
                 MainSlider.addSlider(textSliderView);
             }
-            MainSlider.setPresetTransformer(SliderLayout.Transformer.Fade);
+            MainSlider.setPresetTransformer(SliderLayout.Transformer.Default);
             MainSlider.setDuration(2500);
             MainSlider.setCustomAnimation(new DescriptionAnimation());
             MainSlider.addOnPageChangeListener(this);
@@ -151,9 +151,9 @@ public class MainScreenActivity extends AppCompatActivity implements BaseSliderV
                 public void onClick(View view) {
                     if (Helper.CheckInternet(MainScreenActivity.this)) {
                         vibrator.vibrate(50);
-                        Intent i = new Intent(getApplicationContext(), WebPage.class);
+                        /*Intent i = new Intent(getApplicationContext(), WebPage.class);
                         i.putExtra(Config_TAG.ADDRESS, "http://mehrdad.arash-hatami.ir");
-                        startActivity(i);
+                        startActivity(i);*/
                     }
                 }
             });
