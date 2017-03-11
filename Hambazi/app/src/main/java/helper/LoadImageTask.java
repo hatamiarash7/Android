@@ -21,6 +21,7 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     public interface Listener {
         void onImageLoaded(Bitmap bitmap);
+
         void onError();
     }
 
@@ -36,10 +37,9 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if (bitmap != null) {
+        if (bitmap != null)
             mListener.onImageLoaded(bitmap);
-        } else {
+        else
             mListener.onError();
-        }
     }
 }

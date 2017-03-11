@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/product_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/product_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"/>
+
+            <helper.PersianTextView
+                android:id="@+id/product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/product_photo"
+                android:layout_toStartOf="@+id/product_photo"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="نام محصول"
+                android:textSize="24sp"/>
+
+            <helper.PersianTextView
+                android:id="@+id/product_price_off"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/product_price"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/product_photo"
+                android:layout_toStartOf="@+id/product_photo"
+                android:gravity="start"
+                android:text="1000 تومان"
+                android:textAlignment="textStart"/>
+
+            <helper.PersianTextView
+                android:id="@+id/product_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/product_photo"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_toLeftOf="@+id/product_photo"
+                android:layout_toStartOf="@+id/product_photo"
+                android:gravity="start"
+                android:text="1000 تومان"
+                android:textAlignment="textStart"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

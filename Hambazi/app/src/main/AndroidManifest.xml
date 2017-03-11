@@ -108,6 +108,16 @@
             android:label="Game Page"
             android:noHistory="true"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SellersActivity"
+            android:label="Sellers Page"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SellerActivity"
+            android:label="Seller Page"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

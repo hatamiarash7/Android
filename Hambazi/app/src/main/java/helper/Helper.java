@@ -10,10 +10,13 @@ import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.jetbrains.annotations.Contract;
 
 import ir.hatamiarash.MyToast.CustomToast;
 import ir.hatamiarash.hambazidemo.R;
@@ -76,6 +79,7 @@ public class Helper {
             CustomToast.custom(context, Message, R.drawable.ic_error, context.getResources().getColor(R.color.black), context.getResources().getColor(R.color.white), Toast.LENGTH_SHORT, true, true).show();
     }
 
+    @Contract("_, _, _, _ -> !null")
     public static TextWatcher TextAutoResize(final Context context, final TextView view, final int MIN_SP, final int MAX_SP) {
         return new TextWatcher() {
             @Override
@@ -127,6 +131,7 @@ public class Helper {
         return PX * ScaleDensity;
     }
 
+    @Contract(pure = true)
     public static int ConvertGenres(String genre) {
         int result;
         switch (genre) {
@@ -155,6 +160,7 @@ public class Helper {
         return result;
     }
 
+    @Contract(pure = true)
     public static String ConvertTypes(int type) {
         String result;
         switch (type) {
@@ -172,5 +178,12 @@ public class Helper {
                 break;
         }
         return result;
+    }
+
+    @NonNull
+    public static String CalculatePrice(String price, int off) {
+        int temp = Integer.parseInt(price);
+        int new_price = temp - (temp * off / 100);
+        return String.valueOf(new_price);
     }
 }
