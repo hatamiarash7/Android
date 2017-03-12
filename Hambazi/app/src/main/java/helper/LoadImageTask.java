@@ -21,7 +21,6 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     public interface Listener {
         void onImageLoaded(Bitmap bitmap);
-
         void onError();
     }
 

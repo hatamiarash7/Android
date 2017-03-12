@@ -88,4 +88,6 @@ dependencies {
     compile 'org.jetbrains:annotations-java5:15.0'
     // blur image
     compile 'jp.wasabeef:blurry:2.1.0'
+    // spinner
+    compile 'com.github.ybq:Android-SpinKit:1.1.0'
 }

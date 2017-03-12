@@ -1,5 +1,7 @@
 package helper;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,11 +14,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import ir.hatamiarash.hambazidemo.R;
+import volley.Config_URL;
 
-public class Adapter_Product extends RecyclerView.Adapter<Adapter_Product.ProductViewHolder> {
+public class Adapter_Product extends RecyclerView.Adapter<Adapter_Product.ProductViewHolder> implements LoadImageTask.Listener {
+    private static final String TAG = Adapter_Product.class.getSimpleName();
     private List<Product>products;
+    private Context context;
 
-    public Adapter_Product(List<Product> products){
+    public Adapter_Product(Context context,List<Product> products){
+        this.context=context;
         this.products = products;
         Log.d("Adapter", "Size : " + this.products.size());
     }
@@ -58,10 +64,24 @@ public class Adapter_Product extends RecyclerView.Adapter<Adapter_Product.Produc
         productViewHolder.product_price.setText(products.get(i).price);
         productViewHolder.product_price_off.setText(products.get(i).price_off);
         //productViewHolder.product_photo.setImageResource(products.get(i).image);
+        /*if (!products.get(i).image.equals("null"))
+            new LoadImageTask(context).execute(Config_URL.image_URL + products.get(i).image);
+        else
+            productViewHolder.product_photo.setImageDrawable(context.getResources().getDrawable(R.drawable.nnull));*/
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onImageLoaded(Bitmap bitmap) {
+        //productViewHolder.product_photo.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void onError() {
+        Log.d(TAG, "مشکل در بارگزاری تصویر");
     }
 }

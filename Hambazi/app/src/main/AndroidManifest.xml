@@ -27,6 +27,7 @@
         android:label="@string/app_name_fa"
         android:supportsRtl="false"
         android:theme="@style/Drawer"
+        android:hardwareAccelerated="true"
         tools:replace="android:icon,android:label,android:supportsRtl">
         <activity
             android:name=".SplashScreen"

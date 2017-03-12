@@ -3,12 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="15dp">
+    android:padding="5dp">
 
     <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/product"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,7 +45,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="نام محصول"
-                android:textSize="24sp"/>
+                android:textSize="20sp"/>
 
             <helper.PersianTextView
                 android:id="@+id/product_price_off"

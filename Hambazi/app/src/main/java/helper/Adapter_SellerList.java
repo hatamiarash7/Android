@@ -64,7 +64,7 @@ public class Adapter_SellerList extends BaseAdapter implements ListAdapter, Load
 
         image.setImageDrawable(context.getResources().getDrawable(R.drawable.nnull));
         if (!image_name.equals("null"))
-            new LoadImageTask(this).execute(Config_URL.image_URL + "seller_" + image_name);
+            new LoadImageTask(this).execute(Config_URL.image_URL + image_name);
         else
             image.setImageDrawable(context.getResources().getDrawable(R.drawable.nnull));
 

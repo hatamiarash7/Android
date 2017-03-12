@@ -11,22 +11,24 @@
     tools:ignore="HardcodedText">
 
     <RelativeLayout
-        android:id="@+id/loading_layout"
+        android:id="@+id/logo_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginBottom="50dp">
+        android:layout_marginTop="50dp">
 
         <ImageView
-            android:id="@+id/loading"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:id="@+id/logo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_centerInParent="true"
-            android:contentDescription="Loading Logo"
-            app:srcCompat="@drawable/loading"/>
+            android:adjustViewBounds="true"
+            android:contentDescription="App Logo"
+            android:cropToPadding="true"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/logo"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -59,23 +61,42 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/logo_layout"
+        android:id="@+id/loading_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="50dp">
+        android:layout_marginBottom="50dp">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+        <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spinner"
+            style="@style/SpinKitView.Large.Circle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
-            android:adjustViewBounds="true"
-            android:contentDescription="App Logo"
-            android:cropToPadding="true"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/logo"/>
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorAccent"/>
+
+        <!--<ImageView
+            android:id="@+id/loading"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="Loading Logo"
+            app:srcCompat="@drawable/loading"/>-->
     </RelativeLayout>
+
+    <!--    <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:progressDrawable="@drawable/circle"
+            android:layout_below="@+id/loading_layout"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>-->
+
 </RelativeLayout>
