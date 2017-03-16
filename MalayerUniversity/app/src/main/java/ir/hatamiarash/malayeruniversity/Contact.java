@@ -30,7 +30,7 @@ import helper.Helper;
 public class Contact extends AppCompatActivity {
     ImageView back;
     private LinearLayout telegram, instagram;
-    private TextView name, job, instagram_name, telegram_name;
+    TextView name, job, instagram_name, telegram_name, count;
     TextView copyright;
 
     @SuppressLint("SetTextI18n")
@@ -38,6 +38,10 @@ public class Contact extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contacts);
+
+        Intent i = getIntent();
+        String device_count = i.getStringExtra("devices");
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
@@ -51,13 +55,15 @@ public class Contact extends AppCompatActivity {
         copyright = (TextView) findViewById(R.id.copyright);
         instagram_name = (TextView) findViewById(R.id.instagram_name);
         telegram_name = (TextView) findViewById(R.id.telegram_name);
+        count = (TextView) findViewById(R.id.count);
 
         name.setVisibility(View.INVISIBLE);
         job.setVisibility(View.INVISIBLE);
         telegram.setVisibility(View.INVISIBLE);
         instagram.setVisibility(View.INVISIBLE);
         instagram_name.addTextChangedListener(Helper.TextAutoResize(this, instagram_name, 14, 20));
-        //telegram_name.addTextChangedListener(Helper.TextAutoResize(this, telegram_name, 14, 20));
+        telegram_name.addTextChangedListener(Helper.TextAutoResize(this, telegram_name, 14, 20));
+        count.setText("Total Installed : " + device_count);
 
         try {
             PackageManager manager = this.getPackageManager();

@@ -71,11 +71,23 @@
         android:id="@+id/copyright"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="2017 - A.Hatami"
+        android:textColor="#212121"
+        android:textSize="18sp"
+        android:layout_above="@+id/count"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="7dp"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="2017 - A.Hatami"
+        android:text="تعداد نصب فعال"
         android:textColor="#212121"
         android:textSize="18sp"/>
 
@@ -167,4 +179,5 @@
                 android:id="@+id/instagram_name"/>
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

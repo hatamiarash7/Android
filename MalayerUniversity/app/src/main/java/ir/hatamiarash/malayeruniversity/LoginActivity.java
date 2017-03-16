@@ -121,25 +121,46 @@ public class LoginActivity extends Activity {
                         String type = user.getString(Config_TAG.TYPE);
                         db.addUser(id, name, email, username, type);
                         String msg = "سلام " + name;
-                        new MaterialStyledDialog.Builder(LoginActivity.this)
-                                .setTitle(FontHelper.getSpannedString(LoginActivity.this, msg))
-                                .setDescription(FontHelper.getSpannedString(LoginActivity.this, "مدیر گرامی ، به علت این که این برنامه هم اکنون در مراحل آزمایشی قرار دارد لطفا مشکلات برنامه ، نظرات و پیشنهادات خود را جهت هرچه بهتر شدن امور به مسئول مربوطه انتقال دهید.\nبا تشکر ، حاتمی"))
-                                .setStyle(Style.HEADER_WITH_TITLE)
-                                .withDarkerOverlay(true)
-                                .withDialogAnimation(true)
-                                .setCancelable(false)
-                                .setPositiveText(FontHelper.getSpannedString(LoginActivity.this, "باشه"))
-                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        Log.d(TAG, "DialogPositive");
-                                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                                        MainActivity.pointer.finish();
-                                        startActivity(i);
-                                        finish();
-                                    }
-                                })
-                                .show();
+                        if (!username.equals("cafebazaar"))
+                            new MaterialStyledDialog.Builder(LoginActivity.this)
+                                    .setTitle(FontHelper.getSpannedString(LoginActivity.this, msg))
+                                    .setDescription(FontHelper.getSpannedString(LoginActivity.this, "مدیر گرامی ، به علت این که این برنامه هم اکنون در مراحل آزمایشی قرار دارد لطفا مشکلات برنامه ، نظرات و پیشنهادات خود را جهت هرچه بهتر شدن امور به مسئول مربوطه انتقال دهید.\nبا تشکر ، حاتمی"))
+                                    .setStyle(Style.HEADER_WITH_TITLE)
+                                    .withDarkerOverlay(true)
+                                    .withDialogAnimation(true)
+                                    .setCancelable(false)
+                                    .setPositiveText(FontHelper.getSpannedString(LoginActivity.this, "باشه"))
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            Log.d(TAG, "DialogPositive");
+                                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                            MainActivity.pointer.finish();
+                                            startActivity(i);
+                                            finish();
+                                        }
+                                    })
+                                    .show();
+                        else
+                            new MaterialStyledDialog.Builder(LoginActivity.this)
+                                    .setTitle(FontHelper.getSpannedString(LoginActivity.this, "کافه بازار"))
+                                    .setDescription(FontHelper.getSpannedString(LoginActivity.this, "مسئول محترم کافه بازار ، با توجه به در دسترس بودن برنامه برای دانشجویان و مدیران مربوطه ، بخش مربوط به ارسال خبر برای شما غیرفعال می باشد.\nبا تشکر ، حاتمی"))
+                                    .setStyle(Style.HEADER_WITH_TITLE)
+                                    .withDarkerOverlay(true)
+                                    .withDialogAnimation(true)
+                                    .setCancelable(false)
+                                    .setPositiveText(FontHelper.getSpannedString(LoginActivity.this, "باشه"))
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            Log.d(TAG, "DialogPositive");
+                                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                            MainActivity.pointer.finish();
+                                            startActivity(i);
+                                            finish();
+                                        }
+                                    })
+                                    .show();
                     } else {
                         String errorMsg = jObj.getString(Config_TAG.ERROR_MSG);
                         Helper.MakeToast(LoginActivity.this, errorMsg, Config_TAG.ERROR);

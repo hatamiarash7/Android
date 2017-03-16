@@ -94,10 +94,13 @@ public class UserProfile extends AppCompatActivity {
         btnManageNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), Manager.class);
-                i.putExtra(Config_TAG.USERNAME, username);
-                i.putExtra(Config_TAG.TYPE, "news");
-                startActivity(i);
+                if (!db.getUserDetails().get("username").equals("cafebazaar")) {
+                    Intent i = new Intent(getApplicationContext(), Manager.class);
+                    i.putExtra(Config_TAG.USERNAME, username);
+                    i.putExtra(Config_TAG.TYPE, "news");
+                    startActivity(i);
+                } else
+                    Helper.MakeToast(UserProfile.this, "کافه بازار", Config_TAG.ERROR);
             }
         });
         btnPostNews.setOnClickListener(new View.OnClickListener() {

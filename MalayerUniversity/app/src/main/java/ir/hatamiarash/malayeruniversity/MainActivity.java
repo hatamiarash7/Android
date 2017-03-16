@@ -5,9 +5,17 @@
 package ir.hatamiarash.malayeruniversity;
 
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +36,7 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.farsitel.bazaar.IUpdateCheckService;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Style;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
@@ -65,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
     SessionManager session;
     private Boolean is_logged = false;
     static Typeface persianTypeface;
+    private IUpdateCheckService service;
+    private UpdateServiceConnection connection;
+    int devices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         Slider8 = (SliderLayout) findViewById(R.id.slider_nahad_news);
 
         if (CheckConnection()) {
+            FetchAllNews();
+
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setTitle(FontHelper.getSpannedString(this, getResources().getString(R.string.app_name_fa)));
             setSupportActionBar(toolbar);
@@ -168,6 +182,8 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                                 }
                                 if (drawerItem != null && drawerItem.getIdentifier() == 3) {
                                     Intent i = new Intent(getApplicationContext(), Contact.class);
+                                    if (devices < 20) devices = 20;
+                                    i.putExtra("devices", String.valueOf(devices));
                                     // start card activity and NOT-FINISH main activity for return
                                     startActivity(i);
                                     result.closeDrawer();
@@ -187,8 +203,6 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                         .withDrawerGravity(Gravity.END) // set drawer to end of screen ( rtl )
                         .build();                       // build drawer
             }
-
-            FetchAllNews();
 
             sliderShow.setPresetTransformer(SliderLayout.Transformer.Default);
             sliderShow.setDuration(2500);
@@ -235,6 +249,9 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
             Slider8.setCustomAnimation(new DescriptionAnimation());
             Slider8.addOnPageChangeListener(this);
         }
+
+        if (Helper.CheckInternet(this))
+            initService();
     }
 
     private void set_sliders(String id, String cid, String uid, String author, String title, String content, String url, String created_at) {
@@ -292,6 +309,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
     private void FetchAllNews() {
         // Tag used to cancel the request
         String tag_string_req = "req_fetch";
+        final String DeviceUniqueId = Helper.GenerateDeviceIdentifier(MainActivity.this);
         pDialog.setMessage(FontHelper.getSpannedString(this, "در حال به روزرسانی ..."));
         showDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST, Config_URL.base_URL, new Response.Listener<String>() {
@@ -305,6 +323,8 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                     if (!error) {
                         // Restaurants List fetched from server
                         JSONArray news = jObj.getJSONArray("news");
+                        devices = jObj.getInt("devices");
+                        Log.e(TAG, "Devices Count : " + String.valueOf(devices));
                         for (int i = 0; i < news.length(); i++) {
                             JSONObject _new = news.getJSONObject(i);
                             String title = _new.getString("title");
@@ -343,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                 // Posting params to register url
                 java.util.Map<String, String> params = new HashMap<>();
                 params.put(Config_TAG.TAG, "all_news");
+                params.put("device_id", DeviceUniqueId);
                 return params;
             }
         };
@@ -410,6 +431,12 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        releaseService();
+    }
+
+    @Override
     public void onPageSelected(int position) {
     }
 
@@ -473,5 +500,60 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         } else
             check = true;
         return check;
+    }
+
+    class UpdateServiceConnection implements ServiceConnection {
+        public void onServiceConnected(ComponentName name, IBinder boundService) {
+            service = IUpdateCheckService.Stub.asInterface(boundService);
+            try {
+                long vCode = service.getVersionCode("ir.hatamiarash.malayeruniversity");
+                Log.e(Config_TAG.UPDATE_CHECK, "onServiceConnected(): Connected - VersionCode:" + vCode);
+                PackageManager manager = MainActivity.this.getPackageManager();
+                PackageInfo info = manager.getPackageInfo(MainActivity.this.getPackageName(), 0);
+                int version = info.versionCode;
+                if (vCode > version) {
+                    new MaterialStyledDialog.Builder(MainActivity.this)
+                            .setTitle(FontHelper.getSpannedString(MainActivity.this, "نسخه جدید"))
+                            .setDescription(FontHelper.getSpannedString(MainActivity.this, "نسخه جدیدی از برنامه موجود است ، لطفا به روزرسانی را انجام دهید"))
+                            .setStyle(Style.HEADER_WITH_TITLE)
+                            .withDarkerOverlay(true)
+                            .withDialogAnimation(true)
+                            .setCancelable(false)
+                            .setPositiveText(FontHelper.getSpannedString(MainActivity.this, "باشه"))
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setData(Uri.parse("bazaar://details?id=ir.hatamiarash.malayeruniversity"));
+                                    intent.setPackage("com.farsitel.bazaar");
+                                    startActivity(intent);
+                                }
+                            })
+                            .show();
+                }
+            } catch (RemoteException | PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+            service = null;
+            Log.e(Config_TAG.UPDATE_CHECK, "onServiceDisconnected(): Disconnected");
+        }
+    }
+
+    private void initService() {
+        Log.i(Config_TAG.UPDATE_CHECK, "initService()");
+        connection = new UpdateServiceConnection();
+        Intent intent = new Intent("com.farsitel.bazaar.service.UpdateCheckService.BIND");
+        intent.setPackage("com.farsitel.bazaar");
+        boolean ret = bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        Log.e(Config_TAG.UPDATE_CHECK, "initService() bound value : " + ret);
+    }
+
+    private void releaseService() {
+        unbindService(connection);
+        connection = null;
+        Log.d(Config_TAG.UPDATE_CHECK, "releaseService(): unbound");
     }
 }

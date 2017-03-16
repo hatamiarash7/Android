@@ -201,6 +201,6 @@ public class NewsActivity extends Activity implements LoadImageTask.Listener {
 
     @Override
     public void onError() {
-        Helper.MakeToast(NewsActivity.this, "مشکل در بارگزاری تصویر", Config_TAG.ERROR);
+        Log.e(TAG, "مشکل در بارگزاری تصویر");
     }
 }

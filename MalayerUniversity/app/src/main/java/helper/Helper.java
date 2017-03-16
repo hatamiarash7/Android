@@ -4,16 +4,22 @@
 
 package helper;
 
+import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Vibrator;
+import android.os.Build;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.security.MessageDigest;
 
 import ir.hatamiarash.MyToast.CustomToast;
 import ir.hatamiarash.malayeruniversity.R;
@@ -173,5 +179,48 @@ public class Helper {
     public static float SPToPixels(Context context, float PX) {
         float ScaleDensity = context.getResources().getDisplayMetrics().scaledDensity;
         return PX * ScaleDensity;
+    }
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("HardwareIds")
+    public static String GenerateDeviceIdentifier(Context context) {
+        String pseudoId = "35" +
+                Build.BOARD.length() % 10 +
+                Build.BRAND.length() % 10 +
+                Build.CPU_ABI.length() % 10 +
+                Build.DEVICE.length() % 10 +
+                Build.DISPLAY.length() % 10 +
+                Build.HOST.length() % 10 +
+                Build.ID.length() % 10 +
+                Build.MANUFACTURER.length() % 10 +
+                Build.MODEL.length() % 10 +
+                Build.PRODUCT.length() % 10 +
+                Build.TAGS.length() % 10 +
+                Build.TYPE.length() % 10 +
+                Build.USER.length() % 10;
+        String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        String btId = "";
+        if (bluetoothAdapter != null)
+            btId = bluetoothAdapter.getAddress();
+        String longId = pseudoId + androidId + btId;
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(longId.getBytes(), 0, longId.length());
+            byte md5Bytes[] = messageDigest.digest();
+            String identifier = "";
+            for (byte md5Byte : md5Bytes) {
+                int b = (0xFF & md5Byte);
+                if (b <= 0xF)
+                    identifier += "0";
+                identifier += Integer.toHexString(b);
+            }
+            identifier = identifier.toUpperCase();
+            Log.e("Device Identifier", "ID : " + identifier);
+            return identifier;
+        } catch (Exception e) {
+            Log.e("TAG", e.toString());
+        }
+        return "null";
     }
 }

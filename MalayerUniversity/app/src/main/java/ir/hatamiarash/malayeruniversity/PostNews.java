@@ -76,25 +76,28 @@ public class PostNews extends AppCompatActivity {
 
         send.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (Helper.CheckInternet(PostNews.this))
-                    if (session.isLoggedIn())
-                        if (post_subject.length() <= 100)
-                            if (post_subject.length() > 0 && post_body.length() > 0)
-                                if (filePath != null)
-                                    SendNews(filePath, post_subject.getText().toString(), post_body.getText().toString());
-                                else {
-                                    SendWithoutImage();
-                                }
+                if (!db.getUserDetails().get("username").equals("cafebazaar")) {
+                    if (Helper.CheckInternet(PostNews.this))
+                        if (session.isLoggedIn())
+                            if (post_subject.length() <= 100)
+                                if (post_subject.length() > 0 && post_body.length() > 0)
+                                    if (filePath != null)
+                                        SendNews(filePath, post_subject.getText().toString(), post_body.getText().toString());
+                                    else {
+                                        SendWithoutImage();
+                                    }
+                                else
+                                    Helper.MakeToast(PostNews.this, "عنوان و متن خبر را تایپ کنید", Config_TAG.ERROR);
                             else
-                                Helper.MakeToast(PostNews.this, "عنوان و متن خبر را تایپ کنید", Config_TAG.ERROR);
-                        else
-                            Helper.MakeToast(PostNews.this, "عنوان خبر طولانی است", Config_TAG.ERROR);
-                    else {
-                        Helper.MakeToast(PostNews.this, "شما وارد نشده اید", Config_TAG.ERROR);
-                        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(i);
-                        finish();
-                    }
+                                Helper.MakeToast(PostNews.this, "عنوان خبر طولانی است", Config_TAG.ERROR);
+                        else {
+                            Helper.MakeToast(PostNews.this, "شما وارد نشده اید", Config_TAG.ERROR);
+                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                } else
+                    Helper.MakeToast(PostNews.this, "کافه بازار", Config_TAG.ERROR);
             }
         });
 
@@ -196,6 +199,7 @@ public class PostNews extends AppCompatActivity {
         smr.addStringParam("content", content);
         smr.addStringParam("uid", uid);
         smr.addStringParam("cid", cid);
+        smr.setFixedStreamingMode(true);
         AppController.getInstance().addToRequestQueue(smr);
     }
 
